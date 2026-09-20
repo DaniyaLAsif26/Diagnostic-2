@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+/* Brand palette taken from the Vision Diagnostic Centre seal.
+   Usable anywhere as bg-brand, text-brand-dark, ring-brand-light/15, etc. */
+@theme {
+  --color-brand: #1d2f70;
+  --color-brand-light: #2c4494;
+  --color-brand-mid: #22356e;
+  --color-brand-dark: #0f1b3d;
+}
