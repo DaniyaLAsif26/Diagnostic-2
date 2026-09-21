@@ -1,4 +1,5 @@
 import { stroke } from '../../Forms/styles/iconStroke'
+import { useNavigate } from 'react-router-dom'
 
 // Placeholder rows - replace with data from the API
 const tests = [
@@ -8,6 +9,13 @@ const tests = [
 ]
 
 export default function Tests() {
+
+  const navigate = useNavigate()
+
+  const handleClick = () =>{
+  navigate('/admin/tests/add')
+}
+
   return (
     <div className="min-h-dvh bg-slate-50 p-6 lg:p-8">
       {/* Header */}
@@ -30,7 +38,9 @@ export default function Tests() {
             </svg>
           </div>
 
-          <button className="flex shrink-0 items-center gap-2 rounded-xl bg-brand-dark px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid active:scale-[0.99]">
+          <button 
+          onClick={handleClick}
+          className="flex shrink-0 items-center gap-2 rounded-xl bg-brand-dark px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid active:scale-[0.99]">
             <svg viewBox="0 0 24 24" {...stroke} strokeWidth={2} className="size-4">
               <path d="M12 5v14M5 12h14" />
             </svg>

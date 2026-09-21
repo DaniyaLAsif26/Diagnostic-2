@@ -5,12 +5,11 @@ import { stroke } from './styles/iconStroke'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
-import axios from 'axios';
 import { useForm } from 'react-hook-form'
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-const BackendURL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+import api from '../../api/api'
 
 const loginSchema = z.object({
   email:
@@ -41,7 +40,7 @@ export default function LoginForm() {
   const submitLogin = async (data) => {
     
     try {
-      const res = await axios.post(`${BackendURL}/api/login`, { data })
+      const res = await api.post("/login", data)
 
       if (res.data.success) {
         navigate('/admin/dashboard')

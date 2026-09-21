@@ -13,10 +13,10 @@ const links = [
 
 export default function AdminSidebar() {
   return (
-    <aside className="flex h-dvh w-69 shrink-0 flex-col bg-brand-dark p-4 text-white">
+    <aside className="sticky top-0 flex h-dvh w-69 shrink-0 flex-col bg-brand-dark p-4 text-white">
       <Logo light className="border-b border-white/10 px-2 pb-5 pt-2" />
 
-      <nav className="mt-5 flex flex-1 flex-col gap-1">
+      <nav className="mt-5 flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto">
         {links.map(({ label, icon }) => (
           <NavLink
             key={label}

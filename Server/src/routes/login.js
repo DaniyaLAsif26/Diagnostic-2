@@ -8,7 +8,7 @@ const router = Router()
 
 router.route('/login').post(asyncHandler(async (req, res) => {
 
-    const {email,password,rememberMe} = req.body.data
+    const {email,password,rememberMe} = req.body
 
     if(!email || !password){
         throw new ApiError(400, "Email or Password is required")

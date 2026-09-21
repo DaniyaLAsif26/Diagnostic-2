@@ -9,7 +9,8 @@ const app = express();
 app.use(express.json())
 
 app.use(cors({
-    origin: "http://localhost:5173"
+    origin: "http://localhost:5173",
+    credentials: true,
 }))
 
 app.get('/api/health', (_, res) => {
@@ -19,9 +20,11 @@ app.get('/api/health', (_, res) => {
     })
 })
 
-import loginRouter from './src/routes/login.js'
+import loginRoute from './src/routes/login.js'
+import testsRoute from './src/routes/tests.js'
 
-app.use('/api' , loginRouter )
+app.use('/api' , loginRoute )
+app.use('/api/tests' , testsRoute )
 
 async function start() {
     await prisma.$connect();
