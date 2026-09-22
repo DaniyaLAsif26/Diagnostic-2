@@ -1,25 +1,50 @@
 import { stroke } from '../../Forms/styles/iconStroke'
 import { useNavigate } from 'react-router-dom'
 
-// Placeholder rows - replace with data from the API
-const tests = [
-  { name: 'Complete Blood Count', code: 'CBC', category: 'Hematology', sample: 'Blood', price: 800, active: true },
-  { name: 'Lipid Profile', code: 'LIP', category: 'Biochemistry', sample: 'Blood', price: 1500, active: true },
-  { name: 'Urine Routine', code: 'URE', category: 'Pathology', sample: 'Urine', price: 400, active: false },
-]
+import { createColumnHelper, tableFeatures, useTable } from '@tanstack/react-table';
+import {useQuery} from '@tanstack/react-query'
+
+import api from '../../../api/api.js'
+
+const features = tableFeatures({}); 
+const columnHelper = createColumnHelper()
+
+const columns = columnHelper.columns([
+  columnHelper.accessor('name', { header: 'Test Name' }),
+  columnHelper.accessor('price', { header: 'Price' }),
+  columnHelper.accessor('category', { header: 'Category' }),
+  columnHelper.accessor('relevance', { header: 'Relevance' }),
+  columnHelper.accessor('preparation', { header: 'Preparation' }),
+]);
+
 
 export default function Tests() {
 
+const allTests = async() =>{
+  const res = await api.get('/tests/all')
+  return res.data.data.allTests
+}
+
+  const {data , isPending ,isError , error} = useQuery({
+    queryKey : ['tests'],
+    queryFn : allTests
+  })
+
   const navigate = useNavigate()
+
+  const table = useTable({ features, columns, data });
 
   const handleClick = () =>{
   navigate('/admin/tests/add')
 }
 
+  if (isPending) return <p>Loading...</p>;
+  if (isError) return <p>Error: {error.message}</p>;
+
   return (
     <div className="min-h-dvh bg-slate-50 p-6 lg:p-8">
       {/* Header */}
-      <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <header className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-brand-dark">Tests</h1>
           <p className="mt-1 text-sm text-slate-500">Manage all diagnostic tests offered at the centre.</p>
@@ -38,7 +63,18 @@ export default function Tests() {
             </svg>
           </div>
 
-          <button 
+          <div className="relative shrink-0">
+            <select className="appearance-none rounded-xl border border-slate-200 bg-white py-2.5 pl-4 pr-10 text-sm text-slate-700 outline-none transition focus:border-brand-light focus:ring-4 focus:ring-brand-light/15">
+              <option value="">All Types</option>
+              <option value="laboratory">Laboratory</option>
+              <option value="radiology">Radiology</option>
+            </select>
+            <svg viewBox="0 0 24 24" {...stroke} className="pointer-events-none absolute right-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-400">
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </div>
+
+          <button
           onClick={handleClick}
           className="flex shrink-0 items-center gap-2 rounded-xl bg-brand-dark px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid active:scale-[0.99]">
             <svg viewBox="0 0 24 24" {...stroke} strokeWidth={2} className="size-4">
@@ -49,38 +85,27 @@ export default function Tests() {
         </div>
       </header>
 
-      {/* Tests table */}
       <div className="mt-6 overflow-x-auto rounded-2xl bg-white shadow-sm ring-1 ring-slate-900/5">
         <table className="w-full min-w-160 text-left text-sm">
           <thead className="bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-500">
-            <tr>
-              <th className="px-5 py-3.5">Test</th>
-              <th className="px-5 py-3.5">Category</th>
-              <th className="px-5 py-3.5">Sample</th>
-              <th className="px-5 py-3.5">Price</th>
-              <th className="px-5 py-3.5">Status</th>
-              <th className="px-5 py-3.5 text-right">Actions</th>
-            </tr>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <th key={header.id} className="px-5 py-3.5">
+                    <table.FlexRender header={header} />
+                  </th>
+                ))}
+              </tr>
+            ))}
           </thead>
-          <tbody className="divide-y divide-slate-100">
-            {tests.map((t) => (
-              <tr key={t.code} className="transition hover:bg-slate-50/70">
-                <td className="px-5 py-4">
-                  <p className="font-semibold text-slate-900">{t.name}</p>
-                  <p className="text-xs text-slate-400">{t.code}</p>
-                </td>
-                <td className="px-5 py-4 text-slate-600">{t.category}</td>
-                <td className="px-5 py-4 text-slate-600">{t.sample}</td>
-                <td className="px-5 py-4 font-medium text-slate-900">Rs. {t.price}</td>
-                <td className="px-5 py-4">
-                  <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${t.active ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
-                    {t.active ? 'Active' : 'Inactive'}
-                  </span>
-                </td>
-                <td className="px-5 py-4 text-right">
-                  <button className="rounded-lg px-2.5 py-1.5 text-xs font-medium text-brand-light transition hover:bg-brand-light/10">Edit</button>
-                  <button className="rounded-lg px-2.5 py-1.5 text-xs font-medium text-red-500 transition hover:bg-red-50">Delete</button>
-                </td>
+          <tbody className="divide-y divide-slate-100 text-slate-600">
+            {table.getRowModel().rows.map((row) => (
+              <tr key={row.id} className="transition hover:bg-brand-light/[0.03]">
+                {row.getAllCells().map((cell) => (
+                  <td key={cell.id} className="px-5 py-4 first:font-semibold first:text-slate-900">
+                    <table.FlexRender cell={cell} />
+                  </td>
+                ))}
               </tr>
             ))}
           </tbody>

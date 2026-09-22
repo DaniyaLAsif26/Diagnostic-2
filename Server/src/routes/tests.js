@@ -49,4 +49,18 @@ router.route('/add').post(asyncHandler(async (req, res) => {
 
 }))
 
+router.route('/all').get(asyncHandler (async (req,res)=>{
+    const allTests = await prisma.test.findMany()
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            {allTests},
+            "All Tests"
+        )
+    )
+}))
+
 export default router;
