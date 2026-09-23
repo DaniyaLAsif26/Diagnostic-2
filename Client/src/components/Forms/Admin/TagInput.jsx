@@ -41,9 +41,10 @@ export default function TagInput({ value = [], onChange, ...props }) {
                 {value.map((tag, index) => (
                     <span
                         key={tag}
-                        className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-sm">
+                        className="inline-flex items-center gap-1.5 rounded-full bg-brand-light/10 px-3 py-1 text-sm font-medium text-brand">
                         {tag}
                         <button
+                            className="text-brand/60 transition hover:text-red-500"
                             type="button"
                             onClick={() => removeTag(index)}
                             aria-label={`Remove ${tag}`}>

@@ -1,6 +1,6 @@
-import Logo from '../../Logo/Logo'
 import { stroke } from '../../Forms/styles/iconStroke'
 import { NavLink } from 'react-router-dom'
+import LOGO from '../../../assets/logo.png'
 
 const links = [
   { label: 'Dashboard', icon: <path d="M3 3h7v9H3zM14 3h7v5h-7zM14 12h7v9h-7zM3 16h7v5H3z" /> },
@@ -11,35 +11,47 @@ const links = [
   { label: 'Settings', icon: <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-2.9-1.2l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.7 1.7 0 0 0 3 14H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.2-2.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.7 1.7 0 0 0 10 3V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1A1.7 1.7 0 0 0 21 10h.1a2 2 0 0 1 0 4H21a1.7 1.7 0 0 0-1.6 1" /> },
 ]
 
-export default function AdminSidebar() {
-  return (
-    <aside className="sticky top-0 flex h-dvh w-69 shrink-0 flex-col bg-brand-dark p-4 text-white">
-      <Logo light className="border-b border-white/10 px-2 pb-5 pt-2" />
+const item = 'flex items-center gap-3 whitespace-nowrap rounded-xl px-3.5 py-2.5 text-sm font-medium transition'
 
-      <nav className="mt-5 flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto">
+export default function AdminSidebar({ open, onToggle }) {
+  // Labels fade in/out while the sidebar width animates
+  const text = `transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0'}`
+
+  return (
+    <aside className={`flex shrink-0 flex-col overflow-hidden bg-brand-dark px-3 pb-4 text-white transition-[width] duration-300 ${open ? 'w-64' : 'w-18'}`}>
+      <div className="flex h-16 shrink-0 items-center border-b border-white/10">
+        <button onClick={onToggle} aria-label="Toggle sidebar" className="rounded-xl p-3 text-white/80 transition hover:bg-white/5 hover:text-white">
+          <svg viewBox="0 0 24 24" {...stroke} className="size-5"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+        </button>
+
+        {/* Branding, visible only when the sidebar is open */}
+        <div className={`ml-1 flex shrink-0 items-center gap-2.5 whitespace-nowrap ${text}`}>
+          <img src={LOGO} alt="Vision Diagnostic Centre" className="size-9 rounded-full bg-white p-0.5" />
+          <p className="text-sm font-bold uppercase leading-tight">Vision Diagnostic<br />Centre</p>
+        </div>
+      </div>
+
+      <nav className="mt-4 flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto overflow-x-hidden">
         {links.map(({ label, icon }) => (
           <NavLink
             key={label}
             to={label.toLowerCase()}
+            title={label}
             className={({ isActive }) =>
-              `flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition ${
-                isActive
-                  ? 'bg-brand-light text-white shadow-lg shadow-black/20'
-                  : 'text-white/60 hover:bg-white/5 hover:text-white'
-              }`
+              `${item} ${isActive ? 'bg-brand-light text-white shadow-lg shadow-black/20' : 'text-white/60 hover:bg-white/5 hover:text-white'}`
             }
           >
-            <svg viewBox="0 0 24 24" {...stroke} className="size-4.5">{icon}</svg>
-            {label}
+            <svg viewBox="0 0 24 24" {...stroke} className="size-4.5 shrink-0">{icon}</svg>
+            <span className={text}>{label}</span>
           </NavLink>
         ))}
       </nav>
 
-      <button className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium text-white/60 transition hover:bg-red-500/10 hover:text-red-400">
-        <svg viewBox="0 0 24 24" {...stroke} className="size-4.5">
+      <button title="Logout" className={`${item} text-white/60 hover:bg-red-500/10 hover:text-red-400`}>
+        <svg viewBox="0 0 24 24" {...stroke} className="size-4.5 shrink-0">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
         </svg>
-        Logout
+        <span className={text}>Logout</span>
       </button>
     </aside>
   )

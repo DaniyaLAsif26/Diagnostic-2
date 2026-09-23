@@ -26,6 +26,8 @@ model Test {
     id Int @id @default(autoincrement())
     name String @db.VarChar(100) @unique
     price Int 
+    offerPrice Int @default(0) @map("offer_price")
+    isPopular Boolean @default(false) @map("is_popular")
     category Category
     relevance String[]
     preparation String?
