@@ -1,17 +1,3 @@
-import { FieldArray, useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Controller } from 'react-hook-form'
-
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-
-import api from '../../../api/api'
-import TagInput from './TagInput'
-import { stroke } from '../styles/iconStroke'
-
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-
 const label = 'mb-1.5 block text-sm font-medium text-slate-700'
 const input = 'w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-light focus:ring-4 focus:ring-brand-light/15'
 
@@ -20,10 +6,9 @@ const categories = [
     { value: 'RADIOLOGY', title: 'Radiology', hint: 'X-ray, ultrasound & scans', icon: <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 12h10" /> },
 ]
 
-// Shows a field's validation message (renders nothing when there is no error)
+
 const Err = ({ e }) => e && <p role="alert" className="mt-1.5 pl-1 text-xs font-medium text-red-600">{e.message}</p>
 
-// White card with an icon header, used for each group of fields
 const Card = ({ icon, title, hint, children }) => (
     <section className="rounded-2xl bg-white shadow-sm ring-1 ring-slate-900/5">
         <div className="flex items-center gap-3 border-b border-slate-100 px-6 py-4">
@@ -39,40 +24,27 @@ const Card = ({ icon, title, hint, children }) => (
     </section>
 )
 
+import { FieldArray, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Controller } from 'react-hook-form'
+
+import { stroke } from '../styles/iconStroke'
+
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+import api from '../../../api/api'
+import TagInput from './TagInput'
+import { testSchema } from '../../../schemas/testSchema'
+
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+
 export default function AddTestForm() {
 
     const navigate = useNavigate()
     const queryClient = useQueryClient()
 
     const [error, setError] = useState('')
-
-    const testSchema = z.object({
-        name:
-            z.string()
-                .min(1, "Test name is required"),
-
-        price:
-            z.number({ error: "Enter a number" })
-                .positive("Price must be a greater than 0"),
-
-        offerPrice:
-            z.number()
-                .optional(),
-
-        category:
-            z.enum(["LABORATORY", "RADIOLOGY"], { error: "select a category" }),
-
-        isPopular:
-            z.boolean()
-                .optional(),
-
-        relevance:
-            z.array(z.string())
-                .min(1, "Add at least one relevance"),
-
-        preparation:
-            z.string()
-    })
 
     const {
         register,
