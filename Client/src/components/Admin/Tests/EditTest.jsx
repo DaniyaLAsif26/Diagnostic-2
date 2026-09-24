@@ -29,13 +29,16 @@ import { useMutation } from "@tanstack/react-query"
 
 import { testSchema } from '../../../schemas/testSchema.js'
 
+import { toast } from 'sonner'
+
+import api from "../../../api/api.js"
+
 export default function EditTest({ data, testId }) {
 
     const navigate = useNavigate()
     const queryClient = useQueryClient()
 
     const [editing, setEditing] = useState(false)
-    const [error, setError] = useState('')
 
     const {
         register,
@@ -56,19 +59,28 @@ export default function EditTest({ data, testId }) {
                 return result
             }, {})
 
-            return updatedTestValues
+            const res = await api.patch(`/tests/edit/${testId}`, updatedTestValues)
+
         }
         else {
-            setError("Please make some edits before saving")
+            toast.error("Please make some edits before saving")
             return
         }
     }
 
     const updateTest = useMutation({
-        mutationFn: editTestFn
+        mutationFn: editTestFn,
+        onSuccess: () => {
+            setEditing(false)
+            toast.success("Test updated successfully")
+            queryClient.invalidateQueries({ queryKey: ['tests', testId] })
+        },
+        onError: (err) => {
+            toast.error(err.message || err.response?.data?.message)
+        }
     })
 
-   const editTest = () => updateTest.mutate()
+    const editTest = () => updateTest.mutate()
 
     return (
         <form onSubmit={handleSubmit(editTest)} className="p-6 lg:p-8">
@@ -91,7 +103,6 @@ export default function EditTest({ data, testId }) {
                         <button type="button" onClick={() => {
                             setEditing(false)
                             reset(data)
-                                ;
                         }}
                             className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-100">
                             Cancel
@@ -101,7 +112,10 @@ export default function EditTest({ data, testId }) {
                         ?
                         <button
                             type="button"
-                            onClick={() => setEditing(!editing)}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setEditing(!editing)
+                            }}
                             className="flex items-center gap-2 rounded-xl bg-brand-dark px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid active:scale-[0.99]">
                             <svg viewBox="0 0 24 24" {...stroke} className="size-4">
                                 {editing
@@ -113,6 +127,7 @@ export default function EditTest({ data, testId }) {
                         :
                         <button
                             type="submit"
+                            disabled={updateTest.isPending}
                             className="flex items-center gap-2 rounded-xl bg-brand-dark px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid active:scale-[0.99]">
                             <svg viewBox="0 0 24 24" {...stroke} className="size-4">
                                 {editing

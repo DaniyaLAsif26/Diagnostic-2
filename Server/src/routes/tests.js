@@ -99,4 +99,39 @@ router.route('/:id').get(asyncHandler(async (req, res) => {
         )
 }))
 
+router.route('/edit/:id').patch(asyncHandler(async (req, res) => {
+    const id = Number(req.params.id)
+
+    if (!id) {
+        return new ApiError(
+            404,
+            'Test Id id required'
+        )
+    }
+
+    const editedTest = await prisma.test.update({
+        where: {
+            id: id
+        },
+        data: req.body
+    })
+
+    if (!editedTest) {
+        return new ApiError(
+            404,
+            'Test not found'
+        )
+    }
+    
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                { editedTest },
+                "Test updated successfully"
+            )
+        )
+}))
+
 export default router;
