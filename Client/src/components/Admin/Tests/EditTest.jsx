@@ -52,35 +52,37 @@ export default function EditTest({ data, testId }) {
         mode: 'onBlur'
     })
 
-    const editTestFn = async () => {
-        if (isDirty) {
-            const updatedTestValues = Object.keys(dirtyFields).reduce((result, key) => {
-                result[key] = getValues(key)
-                return result
-            }, {})
-
-            const res = await api.patch(`/tests/edit/${testId}`, updatedTestValues)
-
-        }
-        else {
-            toast.error("Please make some edits before saving")
-            return
-        }
-    }
-
     const updateTest = useMutation({
-        mutationFn: editTestFn,
+        mutationFn: (updatedTestValues) =>
+            api.patch(`/tests/edit/${testId}`, updatedTestValues),
         onSuccess: () => {
-            setEditing(false)
             toast.success("Test updated successfully")
+            setEditing(false)
+            reset(getValues())
             queryClient.invalidateQueries({ queryKey: ['tests', testId] })
         },
         onError: (err) => {
-            toast.error(err.message || err.response?.data?.message)
+            toast.error(err.response?.data?.message || err.message || "Something went wrong")
         }
     })
 
-    const editTest = () => updateTest.mutate()
+    const editTest = () => {
+        if (!isDirty) {
+            toast.info('No changes to save')
+            return
+        }
+
+        // const updatedTestValues = Object.keys(dirtyFields).reduce((result, key) => {
+        //     result[key] = getValues(key)
+        //     return result
+        // }, {})
+
+        const updatedTestValues = Object.fromEntries(
+            Object.keys(dirtyFields).map((key) => [key, getValues(key)])
+        )
+
+        updateTest.mutate(updatedTestValues)
+    }
 
     return (
         <form onSubmit={handleSubmit(editTest)} className="p-6 lg:p-8">
@@ -134,7 +136,7 @@ export default function EditTest({ data, testId }) {
                                     ? <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2M17 21v-8H7v8M7 3v5h8" />
                                     : <path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" />}
                             </svg>
-                            Save
+                            {updateTest.isPending ? 'Saving' : 'Save'}
                         </button>
                     }
                 </div>
