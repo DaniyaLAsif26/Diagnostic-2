@@ -30,7 +30,7 @@ export default function Packages() {
                 placeholder={'Search Packages'}
                 category={category}
                 setCategory={setCategory}
-                addLink={'/admin/packages/add'}
+                addLink={'/admin/package/add'}
                 addBtn={'Add Package'}
             />
 

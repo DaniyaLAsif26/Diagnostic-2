@@ -7,6 +7,7 @@ import Tests from '../components/Admin/Tests/Tests.jsx'
 import AddTestForm from '../components/Forms/Admin/AddTestForm.jsx'
 import Packages from '../components/Admin/Packages/Packages.jsx'
 import TestProfile from '../components/Admin/Tests/TestProfile.jsx'
+import AddPackageForm from '../components/Forms/Admin/AddPackageForm.jsx'
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -22,6 +23,7 @@ export const router = createBrowserRouter(
                 <Route path="tests" element={<Tests/>}/>
                 <Route path="packages" element={<Packages/>}/>
                 <Route path="tests/add" element={<AddTestForm/>}/>
+                <Route path="package/add" element={<AddPackageForm/>}/>
                 <Route path="tests/:id/:name" element={<TestProfile/>}/>
             </Route>
         </>

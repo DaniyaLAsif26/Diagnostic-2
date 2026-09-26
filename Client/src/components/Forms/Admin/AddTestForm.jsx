@@ -53,7 +53,8 @@ export default function AddTestForm() {
         formState: { errors }
     } = useForm({
         defaultValues: {
-            relevance: []
+            relevance: [],
+            offerPrice : 0
         },
         resolver: zodResolver(testSchema),
         mode: 'onBlur'

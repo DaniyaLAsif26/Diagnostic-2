@@ -134,4 +134,36 @@ router.route('/edit/:id').patch(asyncHandler(async (req, res) => {
         )
 }))
 
+router.route("/delete/:id").delete(asyncHandler(async (req, res) => {
+    const id = Number(req.params.id)
+
+    if (!id) {
+        return new ApiError(
+            404,
+            "Test id is required"
+        )
+    }
+
+    const test = await prisma.test.delete({
+        where: { id }
+    })
+
+    if (!test) {
+        return new ApiError(
+            404,
+            "Test not found"
+        )
+    }
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                {},
+                "Test deleted successfully"
+            )
+        )
+}))
+
 export default router;

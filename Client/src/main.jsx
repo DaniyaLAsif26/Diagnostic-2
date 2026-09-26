@@ -7,8 +7,8 @@ import App from './App.jsx'
 const queryClient = new QueryClient({
   defaultOptions : {
     queries : {
-      staleTime : 1 *60*1000,
-      gcTime : 10*60*1000
+      staleTime : 26*1000,
+      gcTime : 3*60*1000
     }
   }
 })

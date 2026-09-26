@@ -45,6 +45,7 @@ export default function EditTest({ data, testId }) {
         handleSubmit,
         reset,
         getValues,
+        control,
         formState: { errors, isDirty, dirtyFields }
     } = useForm({
         defaultValues: data,
@@ -60,6 +61,8 @@ export default function EditTest({ data, testId }) {
             setEditing(false)
             reset(getValues())
             queryClient.invalidateQueries({ queryKey: ['tests', testId] })
+
+            queryClient.invalidateQueries({ queryKey: ['tests'], exact: true })
         },
         onError: (err) => {
             toast.error(err.response?.data?.message || err.message || "Something went wrong")
@@ -82,6 +85,28 @@ export default function EditTest({ data, testId }) {
         )
 
         updateTest.mutate(updatedTestValues)
+    }
+
+    const deleteTest = useMutation({
+        mutationFn: (id) => api.delete(`/tests/delete/${id}`),
+
+        onSuccess: () => {
+            queryClient.removeQueries({ queryKey: ['tests', testId] })
+            queryClient.invalidateQueries({ queryKey: ['tests'], exact: true })
+
+            navigate('/admin/tests')
+            toast.success("Test deleted Successfully")
+        },
+
+        onError: (err) => {
+            toast.error(err.response?.data?.message || err.message || "Something went wrong")
+        }
+    })
+
+    const handleTestDelete = (data) => {
+        if (window.confirm(`Delete test ${data.name} ? This can't be undone.`)) {
+            deleteTest.mutate(data.id)
+        }
     }
 
     return (
@@ -108,6 +133,17 @@ export default function EditTest({ data, testId }) {
                         }}
                             className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-100">
                             Cancel
+                        </button>
+                    )}
+                    {!editing && (
+                        <button
+                            onClick={() => handleTestDelete(data)}
+                            type="button"
+                            className="flex items-center gap-2 rounded-xl border border-red-200 bg-white px-5 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-50 active:scale-[0.99]">
+                            <svg viewBox="0 0 24 24" {...stroke} className="size-4">
+                                <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6" />
+                            </svg>
+                            Delete
                         </button>
                     )}
                     {!editing
