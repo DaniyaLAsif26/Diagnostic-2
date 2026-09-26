@@ -32,9 +32,46 @@ model Test {
     relevance String[]
     preparation String?
 
+    packageItems PackageItem[]
+
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @default(now()) @map("updated_at")
 
 @@index([name])
     @@map("tests")
+}
+
+model Package {
+id Int @id @default(autoincrement())
+name String @db.VarChar(150) @unique
+price Int
+offerPrice Int @default(0) @map("offer_price")
+preparation String?
+isPopular Boolean @default(false) @map("is_popular")
+category Category
+relevance String[]
+
+items PackageItem[]
+
+createdAt DateTime @default(now()) @map("created_at")
+updatedAt DateTime @default(now()) @map("updated_at")
+
+    @@map("packages")
+}
+
+model PackageItem{
+id Int @id @default(autoincrement())
+packageId Int @map("package_id")
+testId Int? @map("test_id")
+
+pkg Package @relation (fields: [packageId] , references: [id], onDelete : Cascade)
+
+test Test? @relation(fields: [testId] , references:[id], onDelete: Restrict)
+
+createdAt DateTime @default(now()) @map("created_at")
+updatedAt DateTime @default(now()) @map("updated_at")
+
+@@unique([packageId,testId])
+@@index([testId])
+    @@map("package_items")
 }
