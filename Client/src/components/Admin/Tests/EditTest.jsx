@@ -13,12 +13,16 @@ const Card = ({ icon, title, hint, children }) => (
     </section>
 )
 
+const Err = ({ e }) => e && <p role="alert" className="mt-1.5 pl-1 text-xs font-medium text-red-600">{e.message}</p>
+
 const label = 'mb-1.5 block text-sm font-medium text-slate-700'
+
+const input = 'w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-light focus:ring-4 focus:ring-brand-light/15'
 
 const field = 'w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-brand-light focus:ring-4 focus:ring-brand-light/15 disabled:border-transparent disabled:bg-slate-50 disabled:text-slate-600'
 
 import { stroke } from "../../Forms/styles/iconStroke"
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from "@hookform/resolvers/zod"
 
 import { useState } from "react"
@@ -27,11 +31,11 @@ import { useNavigate } from "react-router-dom"
 import { useQueryClient } from "@tanstack/react-query"
 import { useMutation } from "@tanstack/react-query"
 
-import { testSchema } from '../../../schemas/testSchema.js'
-
 import { toast } from 'sonner'
 
+import { testSchema } from '../../../schemas/testSchema.js'
 import api from "../../../api/api.js"
+import TagInput from "../../Forms/Admin/TagInput.jsx"
 
 export default function EditTest({ data, testId }) {
 
@@ -186,7 +190,7 @@ export default function EditTest({ data, testId }) {
                     <div>
                         <label className={label}>Test Name</label>
                         <input {...register("name")} type="text" defaultValue={data?.name} disabled={!editing} className={field} />
-                        {errors.name && <p className="mt-1.5 text-xs font-medium text-red-600">{errors.name.message}</p>}
+                        <Err e={errors.name} />
                     </div>
 
                     <div className="grid gap-5 sm:grid-cols-2">
@@ -196,7 +200,7 @@ export default function EditTest({ data, testId }) {
                                 <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-slate-400">Rs.</span>
                                 <input {...register("price", { valueAsNumber: true })} type="number" defaultValue={data?.price} disabled={!editing} className={`${field} pl-12`} />
                             </div>
-                            {errors.price && <p className="mt-1.5 text-xs font-medium text-red-600">{errors.price.message}</p>}
+                            <Err e={errors.price} />
                         </div>
 
                         <div>
@@ -205,7 +209,7 @@ export default function EditTest({ data, testId }) {
                                 <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-slate-400">Rs.</span>
                                 <input {...register("offerPrice", { valueAsNumber: true })} type="number" defaultValue={data?.offerPrice} disabled={!editing} className={`${field} pl-12`} />
                             </div>
-                            {errors.offerPrice && <p className="mt-1.5 text-xs font-medium text-red-600">{errors.offerPrice.message}</p>}
+                            <Err e={errors.offerPrice} />
                         </div>
                     </div>
 
@@ -215,7 +219,7 @@ export default function EditTest({ data, testId }) {
                             <option value="LABORATORY">Laboratory</option>
                             <option value="RADIOLOGY">Radiology</option>
                         </select>
-                        {errors.category && <p className="mt-1.5 text-xs font-medium text-red-600">{errors.category.message}</p>}
+                        <Err e={errors.category} />
                     </div>
 
                     {/* Popular toggle */}
@@ -241,21 +245,28 @@ export default function EditTest({ data, testId }) {
                     <div>
                         <label className={label}>Patient Preparation</label>
                         <textarea {...register("preparation")} rows={4} defaultValue={data?.preparation} disabled={!editing} className={field} />
-                        {errors.preparation && <p className="mt-1.5 text-xs font-medium text-red-600">{errors.preparation.message}</p>}
+                        <Err e={errors.preparation} />
                     </div>
 
                     <div>
                         <label className={label}>Relevance</label>
                         {/* Swap this block for <TagInput /> while editing */}
-                        <div className="flex flex-wrap gap-2 rounded-xl bg-slate-50 p-3">
-                            {data?.relevance.map((tag) => (
-                                <span key={tag} className="inline-flex items-center gap-1.5 rounded-full bg-brand-light/10 px-3 py-1 text-sm font-medium text-brand">
-                                    {tag}
-                                    {editing && <button type="button" aria-label={`Remove ${tag}`} className="text-brand/60 transition hover:text-red-500">×</button>}
-                                </span>
-                            ))}
-                        </div>
-                        {errors.relevance && <p className="mt-1.5 text-xs font-medium text-red-600">{errors.relevance.message}</p>}
+                        <Controller
+                            name="relevance"
+                            control={control}
+                            render={({ field }) => (
+                                <TagInput
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    onBlur={field.onBlur}
+                                    rows={2}
+                                    placeholder={"Type a relevance & press enter"}
+                                    className={input}
+                                    disabled={!editing}
+                                />
+                            )}
+                        />
+                        <Err e={errors.relevance} />
                     </div>
                 </Card>
             </div>

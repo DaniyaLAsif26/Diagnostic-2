@@ -24,7 +24,7 @@ const Card = ({ icon, title, hint, children }) => (
     </section>
 )
 
-import { FieldArray, useForm } from 'react-hook-form'
+import {useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller } from 'react-hook-form'
 

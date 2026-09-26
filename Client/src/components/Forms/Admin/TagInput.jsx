@@ -1,7 +1,7 @@
 import { use } from "react"
 import { useState } from "react"
 
-export default function TagInput({ value = [], onChange, ...props }) {
+export default function TagInput({ value = [], onChange, disabled = false, ...props }) {
 
     const [draft, setDraft] = useState('')
 
@@ -33,6 +33,7 @@ export default function TagInput({ value = [], onChange, ...props }) {
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
                 onKeyDown={handleKeyDown}
+                disabled={disabled}
             >
 
             </textarea>
@@ -43,13 +44,15 @@ export default function TagInput({ value = [], onChange, ...props }) {
                         key={tag}
                         className="inline-flex items-center gap-1.5 rounded-full bg-brand-light/10 px-3 py-1 text-sm font-medium text-brand">
                         {tag}
-                        <button
-                            className="text-brand/60 transition hover:text-red-500"
-                            type="button"
-                            onClick={() => removeTag(index)}
-                            aria-label={`Remove ${tag}`}>
-                            ×
-                        </button>
+                        {!disabled &&
+                            <button
+                                className="text-brand/60 transition hover:text-red-500"
+                                type="button"
+                                onClick={() => removeTag(index)}
+                                aria-label={`Remove ${tag}`}>
+                                ×
+                            </button>
+                        }
                     </span>
                 ))}
             </div>
