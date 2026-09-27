@@ -63,6 +63,7 @@ model PackageItem{
 id Int @id @default(autoincrement())
 packageId Int @map("package_id")
 testId Int? @map("test_id")
+testName String? @db.VarChar(150) @map("test_name")
 
 pkg Package @relation (fields: [packageId] , references: [id], onDelete : Cascade)
 
@@ -72,6 +73,7 @@ createdAt DateTime @default(now()) @map("created_at")
 updatedAt DateTime @default(now()) @map("updated_at")
 
 @@unique([packageId,testId])
+@@unique([packageId,testName])
 @@index([testId])
     @@map("package_items")
 }

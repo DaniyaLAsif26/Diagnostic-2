@@ -22,9 +22,11 @@ app.get('/api/health', (_, res) => {
 
 import loginRoute from './src/routes/login.js'
 import testsRoute from './src/routes/tests.js'
+import packageRoute from './src/routes/packages.js'
 
-app.use('/api' , loginRoute )
-app.use('/api/tests' , testsRoute )
+app.use('/api', loginRoute)
+app.use('/api/tests', testsRoute)
+app.use('/api/packages', packageRoute)
 
 async function start() {
     await prisma.$connect();

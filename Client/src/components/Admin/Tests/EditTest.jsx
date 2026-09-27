@@ -1,25 +1,4 @@
-const Card = ({ icon, title, hint, children }) => (
-    <section className="rounded-2xl bg-white shadow-sm ring-1 ring-slate-900/5">
-        <div className="flex items-center gap-3 border-b border-slate-100 px-6 py-4">
-            <span className="grid size-9 place-items-center rounded-lg bg-brand-light/10 text-brand">
-                <svg viewBox="0 0 24 24" {...stroke} className="size-4.5">{icon}</svg>
-            </span>
-            <div>
-                <h2 className="font-semibold text-brand-dark">{title}</h2>
-                <p className="text-xs text-slate-500">{hint}</p>
-            </div>
-        </div>
-        <div className="space-y-5 p-6">{children}</div>
-    </section>
-)
-
-const Err = ({ e }) => e && <p role="alert" className="mt-1.5 pl-1 text-xs font-medium text-red-600">{e.message}</p>
-
-const label = 'mb-1.5 block text-sm font-medium text-slate-700'
-
-const input = 'w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-light focus:ring-4 focus:ring-brand-light/15'
-
-const field = 'w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-brand-light focus:ring-4 focus:ring-brand-light/15 disabled:border-transparent disabled:bg-slate-50 disabled:text-slate-600'
+import { label,Card,Err,input,field } from "../../Forms/styles/formHelpers.jsx"
 
 import { stroke } from "../../Forms/styles/iconStroke"
 import { Controller, useForm } from 'react-hook-form'
