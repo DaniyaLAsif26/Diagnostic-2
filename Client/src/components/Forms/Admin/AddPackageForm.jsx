@@ -1,6 +1,10 @@
-import { label,input,Card,categories } from '../styles/formHelpers'
+import { label,input,Card,categories,Err } from '../styles/formHelpers'
 import { stroke } from '../styles/iconStroke'
 import { useNavigate } from 'react-router-dom'
+
+import {useForm} from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { packageSchema } from '../../../schemas/packageSchema'
 
 const results = [
     { id: 1, name: 'Complete Blood Count', price: 800 },
@@ -18,8 +22,27 @@ export default function AddPackageForm() {
 
     const navigate = useNavigate()
 
+    const {
+        handleSubmit,
+        register,
+        control,
+        formState:{errors}
+    }=useForm({
+        defaultValues:{
+            relevance : [],
+            offerPrice : 0,
+            // price : 0
+        },
+        resolver : zodResolver(packageSchema),
+        mode : 'onblur'
+    })
+
+    const addPackageFn = async(data)=>{
+console.log(data)
+    }
+
     return (
-        <form noValidate className="p-6 lg:p-8">
+        <form noValidate className="p-6 lg:p-8" onSubmit={handleSubmit(addPackageFn)}>
             {/* Header */}
             <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                 <div>
@@ -48,7 +71,8 @@ export default function AddPackageForm() {
 
                     <div>
                         <label className={label}>Package Name</label>
-                        <input type="text" placeholder="e.g. Full Body Checkup" className={input} />
+                        <input {...register('name')} type="text" placeholder="e.g. Full Body Checkup" className={input} />
+                        <Err e={errors.name} />
                     </div>
 
                     <div className="grid gap-5 sm:grid-cols-2">
@@ -56,16 +80,18 @@ export default function AddPackageForm() {
                             <label className={label}>Price</label>
                             <div className="relative">
                                 <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-slate-400">Rs.</span>
-                                <input type="number" placeholder="0" className={`${input} pl-12`} />
+                                <input {...register('price', { valueAsNumber: true })} type="number" placeholder="0" className={`${input} pl-12`} />
                             </div>
+                            <Err e={errors.price} />
                         </div>
 
                         <div>
                             <label className={label}>Offer Price <span className="font-normal text-slate-400">(optional)</span></label>
                             <div className="relative">
                                 <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-slate-400">Rs.</span>
-                                <input type="number" placeholder="0" className={`${input} pl-12`} />
+                                <input {...register('offerPrice', { valueAsNumber: true })} type="number" placeholder="0" className={`${input} pl-12`} />
                             </div>
+                            <Err e={errors.offerPrice} />
                         </div>
                     </div>
 
@@ -74,7 +100,7 @@ export default function AddPackageForm() {
                         <div className="grid gap-3 sm:grid-cols-2">
                             {categories.map((c) => (
                                 <label key={c.value} className="relative cursor-pointer">
-                                    <input type="radio" name="category" value={c.value} className="peer sr-only" />
+                                    <input {...register('category')} type="radio" value={c.value} className="peer sr-only" />
                                     <div className="flex items-center gap-3 rounded-xl border border-slate-200 p-3.5 transition hover:bg-slate-50 peer-checked:border-brand-light peer-checked:bg-brand-light/5 peer-checked:ring-4 peer-checked:ring-brand-light/15">
                                         <span className="grid size-10 place-items-center rounded-lg bg-brand-light/10 text-brand">
                                             <svg viewBox="0 0 24 24" {...stroke} className="size-5">{c.icon}</svg>
@@ -87,16 +113,19 @@ export default function AddPackageForm() {
                                 </label>
                             ))}
                         </div>
+                        <Err e={errors.category} />
                     </div>
 
                     <div>
                         <label className={label}>Description</label>
-                        <textarea rows={4} placeholder="What this package covers" className={input} />
+                        <textarea {...register('description')} rows={4} placeholder="What this package covers" className={input} />
+                        <Err e={errors.description} />
                     </div>
 
                     <div>
                         <label className={label}>Patient Preparation</label>
-                        <textarea rows={4} placeholder="e.g. Fasting for 10-12 hours" className={input} />
+                        <textarea {...register('preparation')} rows={4} placeholder="e.g. Fasting for 10-12 hours" className={input} />
+                        <Err e={errors.preparation} />
                     </div>
 
                     {/* Popular toggle */}
@@ -110,7 +139,7 @@ export default function AddPackageForm() {
                                 <span className="block text-xs text-slate-500">Highlights this package for patients</span>
                             </span>
                         </span>
-                        <input type="checkbox" className="peer sr-only" />
+                        <input {...register('isPopular')} type="checkbox" className="peer sr-only" />
                         <span className="relative h-6 w-11 shrink-0 rounded-full bg-slate-200 transition after:absolute after:left-0.5 after:top-0.5 after:size-5 after:rounded-full after:bg-white after:shadow after:transition peer-checked:bg-brand-light peer-checked:after:translate-x-5" />
                     </label>
                 </Card>
