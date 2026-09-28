@@ -1,8 +1,7 @@
-import { label,input,Card,categories,Err} from '../styles/formHelpers'
+import { label, input, Card, Err } from '../styles/formHelpers'
 
-import {useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Controller } from 'react-hook-form'
 
 import { stroke } from '../styles/iconStroke'
 
@@ -10,7 +9,11 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import api from '../../../api/api'
-import TagInput from './TagInput'
+import TagInput from './FormHelpers/TagInput'
+import Category from './FormHelpers/Category'
+import Price from './FormHelpers/Price'
+import OfferPrice from './FormHelpers/OfferPrice'
+import IsPopular from './FormHelpers/IsPopular'
 import { testSchema } from '../../../schemas/testSchema'
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -30,7 +33,7 @@ export default function AddTestForm() {
     } = useForm({
         defaultValues: {
             relevance: [],
-            offerPrice : 0
+            offerPrice: 0
         },
         resolver: zodResolver(testSchema),
         mode: 'onBlur'
@@ -90,57 +93,26 @@ export default function AddTestForm() {
                     <div className="grid gap-5 sm:grid-cols-2">
                         <div>
                             <label className={label}>Price</label>
-                            <div className="relative">
-                                <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-slate-400">Rs.</span>
-                                <input {...register('price', { valueAsNumber: true })} type="number" placeholder="0" className={`${input} pl-12`} />
-                            </div>
+                            <Price register={register} />
                             <Err e={errors.price} />
                         </div>
 
                         <div>
                             <label className={label}>Offer Price <span className="font-normal text-slate-400">(optional)</span></label>
-                            <div className="relative">
-                                <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-slate-400">Rs.</span>
-                                <input {...register('offerPrice', { valueAsNumber: true })} type="number" placeholder="0" className={`${input} pl-12`} />
-                            </div>
+                            <OfferPrice register={register} />
                             <Err e={errors.offerPrice} />
                         </div>
                     </div>
 
                     <div>
                         <label className={label}>Category</label>
-                        <div className="grid gap-3 sm:grid-cols-2">
-                            {categories.map((c) => (
-                                <label key={c.value} className="relative cursor-pointer">
-                                    <input {...register('category')} type="radio" value={c.value} className="peer sr-only" />
-                                    <div className="flex items-center gap-3 rounded-xl border border-slate-200 p-3.5 transition hover:bg-slate-50 peer-checked:border-brand-light peer-checked:bg-brand-light/5 peer-checked:ring-4 peer-checked:ring-brand-light/15">
-                                        <span className="grid size-10 place-items-center rounded-lg bg-brand-light/10 text-brand">
-                                            <svg viewBox="0 0 24 24" {...stroke} className="size-5">{c.icon}</svg>
-                                        </span>
-                                        <span>
-                                            <span className="block text-sm font-semibold text-slate-900">{c.title}</span>
-                                            <span className="block text-xs text-slate-500">{c.hint}</span>
-                                        </span>
-                                    </div>
-                                </label>
-                            ))}
-                        </div>
+                        <Category register={register} />
                         <Err e={errors.category} />
                     </div>
 
                     {/* Popular toggle */}
                     <label className="relative flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-slate-200 p-3.5 transition hover:bg-slate-50">
-                        <span className="flex items-center gap-3">
-                            <span className="grid size-10 place-items-center rounded-lg bg-amber-50 text-amber-500">
-                                <svg viewBox="0 0 24 24" {...stroke} className="size-5"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2-5.5-2.9-5.5 2.9 1-6.2L3 9.6l6.2-.9z" /></svg>
-                            </span>
-                            <span>
-                                <span className="block text-sm font-semibold text-slate-900">Mark as popular</span>
-                                <span className="block text-xs text-slate-500">Highlights this test for patients</span>
-                            </span>
-                        </span>
-                        <input {...register('isPopular')} type="checkbox" className="peer sr-only" />
-                        <span className="relative h-6 w-11 shrink-0 rounded-full bg-slate-200 transition after:absolute after:left-0.5 after:top-0.5 after:size-5 after:rounded-full after:bg-white after:shadow after:transition peer-checked:bg-brand-light peer-checked:after:translate-x-5" />
+                        <IsPopular register={register} />
                     </label>
 
                 </Card>
