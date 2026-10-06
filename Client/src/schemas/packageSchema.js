@@ -14,7 +14,7 @@ export const packageSchema = z.object({
             .optional(),
 
     category:
-        z.enum(["LABORATOEY", "RADIOLOGY"], { error: "Select a category" }),
+        z.enum(["LABORATORY", "RADIOLOGY"], { error: "Select a category" }),
 
     description:
         z.string()
@@ -28,7 +28,15 @@ export const packageSchema = z.object({
         z.boolean()
             .optional(),
 
-            tests:
-            z.array(z.string())
-            .min(2,"Add at least 2 tests")
+    tests:
+        z.array(z.string())
+            .min(2, "Add at least 2 tests"),
+
+    tests:
+        z.array(
+            z.object({
+                testId: z.number().nullable(),
+                name: z.string().min(1)
+            })
+        ).min(2, "Add at least 2 tests")
 })

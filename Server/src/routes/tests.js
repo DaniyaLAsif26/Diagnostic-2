@@ -69,6 +69,39 @@ router.route('/all').get(asyncHandler(async (req, res) => {
         )
 }))
 
+router.route('/search').get(asyncHandler(async (req, res) => {
+    const search = String(req.query.q || '').trim()
+
+    if (search.length < 2) {
+        return res
+            .status(200)
+            .json(
+                new ApiResponse(
+                    200,
+                    { tests: [] },
+                    "Search Results"
+                )
+            )
+    }
+
+    const tests = await prisma.test.findMany({
+        where : { name: { contains : search, mode: 'insensitive' } },
+        select : { id : true , name : true , price : true},
+        orderBy : {name : 'asc'},
+        take : 8
+    })
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            {tests},
+            "Search Results"
+        )
+    )
+}))
+
 router.route('/:id').get(asyncHandler(async (req, res) => {
 
     const id = Number(req.params.id)
@@ -165,5 +198,7 @@ router.route("/delete/:id").delete(asyncHandler(async (req, res) => {
             )
         )
 }))
+
+
 
 export default router;

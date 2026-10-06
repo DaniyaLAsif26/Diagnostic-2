@@ -8,7 +8,7 @@ import { prisma } from "../database/db-connection.js";
 const router = Router()
 
 router.route('/all').get(asyncHandler(async (req, res) => {
-    console.log('hello')
+    // console.log('hello')
 }))
 
 router.route('/add').post(asyncHandler(async (req, res) => {

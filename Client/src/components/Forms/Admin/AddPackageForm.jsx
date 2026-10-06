@@ -1,16 +1,16 @@
-import { label,input,Card,categories,Err } from '../styles/formHelpers'
+import { label, input, Card, categories, Err } from '../styles/formHelpers'
 import { stroke } from '../styles/iconStroke'
 import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 
-import {useForm} from 'react-hook-form'
+import api from '../../../api/api'
+
+import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { packageSchema } from '../../../schemas/packageSchema'
 
-const results = [
-    { id: 1, name: 'Complete Blood Count', price: 800 },
-    { id: 2, name: 'Lipid Profile', price: 1500 },
-    { id: 3, name: 'Liver Function Test', price: 1200 },
-]
+import useTestSearch from '../../../hooks/useTestSearch'
+import { name } from 'ejs'
 
 const picked = [
     { id: 1, name: 'Complete Blood Count', isNew: false },
@@ -22,23 +22,53 @@ export default function AddPackageForm() {
 
     const navigate = useNavigate()
 
+    const [search, setSearch] = useState('')
+    const term = search.trim()
+
     const {
         handleSubmit,
         register,
         control,
-        formState:{errors}
-    }=useForm({
-        defaultValues:{
-            relevance : [],
-            offerPrice : 0,
-            // price : 0
+        formState: { errors }
+    } = useForm({
+        defaultValues: {
+            relevance: [],
+            offerPrice: 0,
+            tests: []
         },
-        resolver : zodResolver(packageSchema),
-        mode : 'onblur'
+        resolver: zodResolver(packageSchema),
+        mode: 'onblur'
     })
 
-    const addPackageFn = async(data)=>{
-console.log(data)
+    const addPackageFn = async (data) => {
+        console.log(data)
+    }
+
+    const { results, showResults, isSearching } = useTestSearch(search)
+
+    const { fields, append, remove } = useFieldArray({ control, name: "tests" })
+
+    const addTest = (test) => {
+        const alreadyAdded = fields.some((f) => f.name.toLowerCase() === test.name.toLowerCase())
+
+        if (!alreadyAdded) append(test)
+        setSearch("")
+    }
+
+    const handleAdd = () => {
+        if (term.length < 2 || isSearching) return
+
+
+        const exactSearchResult = results.find((t) => t.name.toLowerCase() === term.toLowerCase())
+
+        const match = exactSearchResult ?? (results.length === 1 ? results[0] : null)
+
+        if (match) {
+            addTest({ testId: match.id, name: match.name })
+        }
+        else if (results.length === 0) {
+            addTest({ testId: null, name: term })
+        }
     }
 
     return (
@@ -153,26 +183,46 @@ console.log(data)
                         <label className={label}>Add Test</label>
                         <div className="flex gap-3">
                             <div className="relative flex-1">
-                                <input type="text" placeholder="Search or type a test name" className={`${input} pl-10`} />
+                                <input
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            e.preventDefault()   // stop Enter submitting the form
+                                            handleAdd()
+                                        }
+                                    }}
+                                    type="text" placeholder="Search or type a test name" className={`${input} pl-10`} />
                                 <svg viewBox="0 0 24 24" {...stroke} className="pointer-events-none absolute left-3.5 top-1/2 size-4.5 -translate-y-1/2 text-slate-400">
                                     <circle cx="11" cy="11" r="7" />
                                     <path d="m20 20-3.5-3.5" />
                                 </svg>
 
-                                {/* Search results - render only while typing */}
-                                <ul className="absolute inset-x-0 top-full z-10 mt-2 max-h-56 overflow-y-auto rounded-xl border border-slate-200 bg-white py-1 shadow-lg">
-                                    {results.map((t) => (
-                                        <li key={t.id}>
-                                            <button type="button" className="flex w-full items-center justify-between gap-3 px-4 py-2.5 text-left text-sm text-slate-700 transition hover:bg-brand-light/5">
-                                                {t.name}
-                                                <span className="text-xs text-slate-400">Rs. {t.price}</span>
-                                            </button>
-                                        </li>
-                                    ))}
-                                </ul>
+                                {showResults && (
+                                    <ul className="absolute inset-x-0 top-full z-10 mt-2 max-h-56 overflow-y-auto rounded-xl border border-slate-200 bg-white py-1 shadow-lg">
+                                        {results.length === 0 ? (
+                                            <li className="px-4 py-2.5 text-sm text-slate-400">
+                                                {isSearching ? 'Searching...' : 'No tests found, press Add to create it'}
+                                            </li>
+                                        ) : (
+                                            results.map((t) => (
+                                                <li key={t.id}>
+                                                    <button type="button" onClick={() => addTest({ testId: t.id, name: t.name })} className="flex w-full items-center justify-between gap-3 px-4 py-2.5 text-left text-sm text-slate-700 transition hover:bg-brand-light/5">
+                                                        {t.name}
+                                                        <span className="text-xs text-slate-400">Rs. {t.price}</span>
+                                                    </button>
+                                                </li>
+                                            ))
+                                        )}
+                                    </ul>
+                                )}
                             </div>
 
-                            <button type="button" className="shrink-0 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-100">
+                            <button
+                                type="button"
+                                onClick={handleAdd}
+                                disabled={term.length < 2 || isSearching}
+                                className="shrink-0 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-100 disabled:opacity-50">
                                 Add
                             </button>
                         </div>
@@ -180,18 +230,19 @@ console.log(data)
 
                     {/* Picked tests */}
                     <div>
-                        <label className={label}>Tests in this package <span className="font-normal text-slate-400">({picked.length})</span></label>
+                        <label className={label}>Tests in this package <span className="font-normal text-slate-400">({fields.length})</span></label>
                         <ul className="min-h-32 space-y-2 rounded-xl bg-slate-50 p-3">
-                            {picked.map((t) => (
+                            {fields.map((t, i) => (
                                 <li key={t.id} className="flex items-center justify-between gap-3 rounded-lg bg-white px-3.5 py-2.5 shadow-sm ring-1 ring-slate-900/5">
-                                    <span className={`text-sm font-medium ${t.isNew ? 'text-slate-900' : 'text-brand-light'}`}>{t.name}</span>
+                                    <span className={`text-sm font-medium ${t.testId ? 'text-brand-light' : 'text-slate-900'}`}>{t.name}</span>
                                     <span className="flex items-center gap-2">
-                                        {t.isNew && <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">New</span>}
-                                        <button type="button" aria-label={`Remove ${t.name}`} className="text-slate-400 transition hover:text-red-500">×</button>
+                                        {!t.testId && <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">New</span>}
+                                        <button type="button" onClick={() => remove(i)} aria-label={`Remove ${t.name}`} className="text-slate-400 transition hover:text-red-500">×</button>
                                     </span>
                                 </li>
                             ))}
                         </ul>
+                        <Err e={errors.test} />
                         <p className="mt-1.5 pl-1 text-xs text-slate-400">Blue tests are already saved, black ones will be created with the package.</p>
                     </div>
                 </Card>
