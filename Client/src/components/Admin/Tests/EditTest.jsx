@@ -1,4 +1,4 @@
-import { label,Card,Err,input,field } from "../../Forms/styles/formHelpers.jsx"
+import { label, Card, Err, input, field } from "../../Forms/styles/formHelpers.jsx"
 
 import { stroke } from "../../Forms/styles/iconStroke"
 import { Controller, useForm } from 'react-hook-form'
@@ -14,7 +14,11 @@ import { toast } from 'sonner'
 
 import { testSchema } from '../../../schemas/testSchema.js'
 import api from "../../../api/api.js"
-import TagInput from "../../Forms/Admin/TagInput.jsx"
+import TagInput from "../../Forms/Admin/FormHelpers/TagInput.jsx"
+import Category from '../../Forms/Admin/FormHelpers/Category.jsx'
+import Price from "../../Forms/Admin/FormHelpers/Price.jsx"
+import OfferPrice from "../../Forms/Admin/FormHelpers/OfferPrice.jsx"
+import IsPopular from "../../Forms/Admin/FormHelpers/IsPopular.jsx"
 
 export default function EditTest({ data, testId }) {
 
@@ -175,45 +179,41 @@ export default function EditTest({ data, testId }) {
                     <div className="grid gap-5 sm:grid-cols-2">
                         <div>
                             <label className={label}>Price</label>
-                            <div className="relative">
-                                <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-slate-400">Rs.</span>
-                                <input {...register("price", { valueAsNumber: true })} type="number" defaultValue={data?.price} disabled={!editing} className={`${field} pl-12`} />
-                            </div>
+                            <Price
+                                register={register}
+                                data={data}
+                                disabled={!editing}
+                            />
                             <Err e={errors.price} />
                         </div>
 
                         <div>
                             <label className={label}>Offer Price <span className="font-normal text-slate-400">(optional)</span></label>
-                            <div className="relative">
-                                <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-slate-400">Rs.</span>
-                                <input {...register("offerPrice", { valueAsNumber: true })} type="number" defaultValue={data?.offerPrice} disabled={!editing} className={`${field} pl-12`} />
-                            </div>
+                            <OfferPrice
+                                register={register}
+                                data={data}
+                                disabled={!editing}
+                            />
                             <Err e={errors.offerPrice} />
                         </div>
                     </div>
 
                     <div>
                         <label className={label}>Category</label>
-                        <select {...register("category")} defaultValue={data?.category} disabled={!editing} className={field}>
-                            <option value="LABORATORY">Laboratory</option>
-                            <option value="RADIOLOGY">Radiology</option>
-                        </select>
+                        <Category
+                            register={register}
+                            disabled={!editing}
+                        />
                         <Err e={errors.category} />
                     </div>
 
                     {/* Popular toggle */}
                     <label className="relative flex items-center justify-between gap-3 rounded-xl border border-slate-200 p-3.5 transition has-[:enabled]:cursor-pointer has-[:enabled]:hover:bg-slate-50">
-                        <span className="flex items-center gap-3">
-                            <span className="grid size-10 place-items-center rounded-lg bg-amber-50 text-amber-500">
-                                <svg viewBox="0 0 24 24" {...stroke} className="size-5"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2-5.5-2.9-5.5 2.9 1-6.2L3 9.6l6.2-.9z" /></svg>
-                            </span>
-                            <span>
-                                <span className="block text-sm font-semibold text-slate-900">Marked as popular</span>
-                                <span className="block text-xs text-slate-500">Highlights this test for patients</span>
-                            </span>
-                        </span>
-                        <input {...register("isPopular")} type="checkbox" defaultChecked={data.isPopular} disabled={!editing} className="peer sr-only" />
-                        <span className="relative h-6 w-11 shrink-0 rounded-full bg-slate-200 transition after:absolute after:left-0.5 after:top-0.5 after:size-5 after:rounded-full after:bg-white after:shadow after:transition peer-checked:bg-brand-light peer-checked:after:translate-x-5 peer-disabled:opacity-70" />
+                        <IsPopular
+                            register={register}
+                            data={data}
+                            disabled={!editing}
+                        />
                     </label>
                 </Card>
 
