@@ -3,7 +3,8 @@ import { stroke } from '../styles/iconStroke'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
-import { useForm, useFieldArray,Controller } from 'react-hook-form'
+import { useForm, useFieldArray, Controller } from 'react-hook-form'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { packageSchema } from '../../../schemas/packageSchema'
 import TagInput from './FormHelpers/TagInput'
@@ -13,16 +14,12 @@ import OfferPrice from './FormHelpers/OfferPrice'
 import IsPopular from './FormHelpers/IsPopular'
 
 import useTestSearch from '../../../hooks/useTestSearch'
-
-const picked = [
-    { id: 1, name: 'Complete Blood Count', isNew: false },
-    { id: 2, name: 'Lipid Profile', isNew: false },
-    { id: 3, name: 'Vitamin D3', isNew: true },
-]
+import api from '../../../api/api'
 
 export default function AddPackageForm() {
 
     const navigate = useNavigate()
+    const queryClient = useQueryClient()
 
     const [search, setSearch] = useState('')
     const term = search.trim()
@@ -39,12 +36,17 @@ export default function AddPackageForm() {
             tests: []
         },
         resolver: zodResolver(packageSchema),
-        mode: 'onblur'
+        mode: 'onBlur'
     })
 
-    const addPackageFn = async (data) => {
-        console.log(data)
-    }
+    const addPackage = useMutation({
+        mutationFn: (data) => api.post('/packages/add', data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['packages'] })
+            navigate('/admin/packages')
+        },
+        onError : (err)=> console.log(err.message)
+    })
 
     const { results, showResults, isSearching } = useTestSearch(search)
 
@@ -60,21 +62,18 @@ export default function AddPackageForm() {
     const handleAdd = () => {
         if (term.length < 2 || isSearching) return
 
-
         const exactSearchResult = results.find((t) => t.name.toLowerCase() === term.toLowerCase())
 
-        const match = exactSearchResult ?? (results.length === 1 ? results[0] : null)
-
-        if (match) {
-            addTest({ testId: match.id, name: match.name })
+        if (exactSearchResult) {
+            addTest({ testId: exactSearchResult.id, name: exactSearchResult.name })
         }
-        else if (results.length === 0) {
+        else {
             addTest({ testId: null, name: term })
         }
     }
 
     return (
-        <form noValidate className="p-6 lg:p-8" onSubmit={handleSubmit(addPackageFn)}>
+        <form noValidate className="p-6 lg:p-8" onSubmit={handleSubmit(addPackage.mutate)}>
             {/* Header */}
             <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                 <div>
@@ -238,7 +237,7 @@ export default function AddPackageForm() {
                                 </li>
                             ))}
                         </ul>
-                        <Err e={errors.test} />
+                        <Err e={errors.tests} />
                         <p className="mt-1.5 pl-1 text-xs text-slate-400">Blue tests are already saved, black ones will be created with the package.</p>
                     </div>
                 </Card>

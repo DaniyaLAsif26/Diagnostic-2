@@ -21,6 +21,11 @@ export const packageSchema = z.object({
             .nullable()
             .optional(),
 
+    relevance:
+        z.array(z.string())
+            .min(1, "Add at least one relevance"),
+
+
     preparation:
         z.string(),
 
