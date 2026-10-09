@@ -8,7 +8,15 @@ import { prisma } from "../database/db-connection.js";
 const router = Router()
 
 router.route('/all').get(asyncHandler(async (req, res) => {
-    // console.log('hello')
+    const allPackages = await prisma.package.findMany({ include: { _count: { select: { items: true } } } })
+
+    return res.
+        status(200)
+        .json(new ApiResponse(
+            200,
+            { allPackages },
+            "All Packages"
+        ))
 }))
 
 router.route('/add').post(asyncHandler(async (req, res) => {
@@ -61,8 +69,8 @@ router.route('/add').post(asyncHandler(async (req, res) => {
     }
 
     if (tests.some(t => t.testId == null && !t.name?.trim())) {
-    throw new ApiError(400, "Custom tests must have a name")
-}
+        throw new ApiError(400, "Custom tests must have a name")
+    }
 
     const savedPackage = await prisma.package.create({
         data: {

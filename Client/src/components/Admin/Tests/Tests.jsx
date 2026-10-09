@@ -60,6 +60,7 @@ export default function Tests() {
         data={data}
         columns={columns}
         features={features}
+        route={'/tests'}
       />
     </div>
   )

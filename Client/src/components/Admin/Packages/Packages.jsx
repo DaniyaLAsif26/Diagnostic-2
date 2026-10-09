@@ -1,9 +1,31 @@
 import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
-import { createColumnHelper, tableFeatures, useTable } from "@tanstack/react-table"
+import { createColumnHelper, tableFeatures } from "@tanstack/react-table"
 import PageHeader from "../PageHeader/PageHeader"
 
+import DataTable from '../Table/DataTable.jsx'
+
 import api from "../../../api/api"
+
+const features = tableFeatures({})
+const columnHelper = createColumnHelper()
+
+const columns = columnHelper.columns([
+    columnHelper.accessor('name', { header: 'Test Name' }),
+    columnHelper.accessor('price', { header: 'Price' }),
+    columnHelper.accessor('offerPrice', { header: 'Offer-price' }),
+    columnHelper.accessor('category', { header: 'Category' }),
+    columnHelper.accessor('relevance', { header: 'Relevance' }),
+    columnHelper.accessor('isPopular', { header: 'Popular' }),
+    columnHelper.accessor(
+        row => row.preparation?.trim() || "-",
+        { id: 'preparation', header:  'Preparation'  }
+    ),
+    columnHelper.accessor(
+        row => row._count.items,
+        { id: 'items', header: 'Tests' }
+    )
+])
 
 export default function Packages() {
 
@@ -20,6 +42,9 @@ export default function Packages() {
         queryFn: allPackages
     })
 
+    if (isPending) return <p>Loading...</p>;
+    if (isError) return <p>Error: {error.message}</p>;
+
     return (
         <div className="p-6 lg:p-8">
             <PageHeader
@@ -32,6 +57,13 @@ export default function Packages() {
                 setCategory={setCategory}
                 addLink={'/admin/package/add'}
                 addBtn={'Add Package'}
+            />
+
+            <DataTable
+                data={data}
+                columns={columns}
+                features={features}
+                route={'/packages'}
             />
 
         </div>
