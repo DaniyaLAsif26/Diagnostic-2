@@ -97,4 +97,77 @@ router.route('/add').post(asyncHandler(async (req, res) => {
         ))
 }))
 
+router.route('/:id').get(asyncHandler(async (req, res) => {
+    const id = Number(req.params.id)
+
+
+    if (!id) {
+        return new ApiError(
+            404,
+            'Package id is required'
+        )
+    }
+
+    const getPackage = await prisma.package.findUnique({
+        where: { id: id },
+        include: {
+            items: {
+                select: {
+                    testId: true,
+                    testName: true,
+                    test : {select : {name : true}}
+                }
+            }
+        }
+    })
+
+    if (!getPackage) {
+        return new ApiError(
+            404,
+            'No Package found'
+        )
+    }
+
+    return res.status(200)
+        .json(
+            new ApiResponse(
+                200,
+                { getPackage },
+                "Package data found"
+            )
+        )
+}))
+
+router.route('/delete/:id', asyncHandler(async (req, res) => {
+    const id = Number(req.params.id)
+
+    if (!id) {
+        return new ApiError(
+            404,
+            "Package id is required"
+        )
+    }
+
+    const deletePackage = await prisma.package.delete({
+        where: { id }
+    })
+
+    if (!deletePackage) {
+        return new ApiError(
+            404,
+            "Package not found"
+        )
+    }
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                {},
+                "Package deleted successfully"
+            )
+        )
+}))
+
 export default router;
