@@ -138,7 +138,7 @@ router.route('/:id').get(asyncHandler(async (req, res) => {
         )
 }))
 
-router.route('/delete/:id', asyncHandler(async (req, res) => {
+router.route('/delete/:id').delete(asyncHandler(async (req, res) => {
     const id = Number(req.params.id)
 
     if (!id) {

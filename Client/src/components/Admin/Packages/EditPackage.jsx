@@ -1,9 +1,45 @@
 import { label, Card, categories, field, input } from "../../Forms/styles/formHelpers.jsx"
 import { stroke } from "../../Forms/styles/iconStroke"
 
-const editing = false
+import { toast } from "sonner"
+import { useQueryClient } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
-export default function EditPackage({data , PackageId}) {
+import api from "../../../api/api.js"
+
+export default function EditPackage({ data, PackageId }) {
+
+    const queryClient = useQueryClient()
+    const navigate = useNavigate()
+
+    const [editing, setEditing] = useState(false)
+
+    const deletePackage = useMutation({
+        mutationFn: (id) => api.delete(`/packages/delete/${id}`),
+
+        onSuccess: () => {
+            queryClient.removeQueries({ queryKey: ["packages", PackageId] })
+            queryClient.invalidateQueries({ queryKey: ['packages'], exact: true })
+
+
+            navigate('/admin/packages')
+            toast.success("Package deleted successfully")
+        },
+
+        onError: (err) => {
+            toast.error(err.response?.data?.message || err.message || "Something went wrong")
+        }
+
+    })
+
+    const handleDeletePackage = (data) => {
+        if (window.confirm(`Delete Package ${data.name} ? This can't be undone.`)) {
+            deletePackage.mutate(data.id)
+        }
+    }
+
     return (
         <form className="p-6 lg:p-8">
             {/* Header */}
@@ -34,7 +70,10 @@ export default function EditPackage({data , PackageId}) {
                         </>
                     ) : (
                         <>
-                            <button type="button" className="flex items-center gap-2 rounded-xl border border-red-200 bg-white px-5 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-50 active:scale-[0.99]">
+                            <button
+                                onClick={() => handleDeletePackage(data)}
+                                type="button"
+                                className="flex items-center gap-2 rounded-xl border border-red-200 bg-white px-5 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-50 active:scale-[0.99]">
                                 <svg viewBox="0 0 24 24" {...stroke} className="size-4"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6" /></svg>
                                 Delete
                             </button>
