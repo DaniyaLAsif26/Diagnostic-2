@@ -25,5 +25,10 @@ export const testSchema = z.object({
                 .min(1, "Add at least one relevance"),
 
         preparation:
+            z.string(),
+
+        description:
             z.string()
+                .nullable()
+                .optional()
     })

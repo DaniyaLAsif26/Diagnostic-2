@@ -19,6 +19,7 @@ import Category from '../../Forms/Admin/FormHelpers/Category.jsx'
 import Price from "../../Forms/Admin/FormHelpers/Price.jsx"
 import OfferPrice from "../../Forms/Admin/FormHelpers/OfferPrice.jsx"
 import IsPopular from "../../Forms/Admin/FormHelpers/IsPopular.jsx"
+import Description from "../../Forms/Admin/FormHelpers/Description.jsx"
 
 export default function EditTest({ data, testId }) {
 
@@ -225,6 +226,12 @@ export default function EditTest({ data, testId }) {
                         <label className={label}>Patient Preparation</label>
                         <textarea {...register("preparation")} rows={4} defaultValue={data?.preparation} disabled={!editing} className={field} />
                         <Err e={errors.preparation} />
+                    </div>
+
+                    <div>
+                        <label className={label}>Description <span className="font-normal text-slate-400">(optional)</span></label>
+                        <Description register={register} data={data} disabled={!editing} />
+                        <Err e={errors.description} />
                     </div>
 
                     <div>

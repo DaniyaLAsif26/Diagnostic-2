@@ -9,7 +9,7 @@ const router = Router()
 
 router.route('/add').post(asyncHandler(async (req, res) => {
 
-    const { name, price, category, preparation, relevance, offerPrice, isPopular } = req.body
+    const { name, price, category, preparation, description, relevance, offerPrice, isPopular } = req.body
 
     if (!name.trim()) {
         throw new ApiError(400, "Test name is required")
@@ -37,6 +37,7 @@ router.route('/add').post(asyncHandler(async (req, res) => {
             price,
             category,
             preparation,
+            description,
             relevance,
             offerPrice,
             isPopular
@@ -107,7 +108,7 @@ router.route('/:id').get(asyncHandler(async (req, res) => {
     const id = Number(req.params.id)
 
     if (!id) {
-        return new ApiError(
+        throw new ApiError(
             404,
             'Test id is required'
         )
@@ -116,7 +117,7 @@ router.route('/:id').get(asyncHandler(async (req, res) => {
     const test = await prisma.test.findUnique({ where: { id: id } })
 
     if (!test) {
-        return new ApiError(
+        throw new ApiError(
             404,
             'No test found'
         )
@@ -136,7 +137,7 @@ router.route('/edit/:id').patch(asyncHandler(async (req, res) => {
     const id = Number(req.params.id)
 
     if (!id) {
-        return new ApiError(
+        throw new ApiError(
             404,
             'Test Id id required'
         )
@@ -150,7 +151,7 @@ router.route('/edit/:id').patch(asyncHandler(async (req, res) => {
     })
 
     if (!editedTest) {
-        return new ApiError(
+        throw new ApiError(
             404,
             'Test not found'
         )
@@ -171,7 +172,7 @@ router.route("/delete/:id").delete(asyncHandler(async (req, res) => {
     const id = Number(req.params.id)
 
     if (!id) {
-        return new ApiError(
+        throw new ApiError(
             404,
             "Test id is required"
         )
@@ -182,7 +183,7 @@ router.route("/delete/:id").delete(asyncHandler(async (req, res) => {
     })
 
     if (!test) {
-        return new ApiError(
+        throw new ApiError(
             404,
             "Test not found"
         )

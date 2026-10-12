@@ -14,6 +14,7 @@ import Category from './FormHelpers/Category'
 import Price from './FormHelpers/Price'
 import OfferPrice from './FormHelpers/OfferPrice'
 import IsPopular from './FormHelpers/IsPopular'
+import Description from './FormHelpers/Description'
 import { testSchema } from '../../../schemas/testSchema'
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -125,6 +126,12 @@ export default function AddTestForm() {
                         <label className={label}>Patient Preparation</label>
                         <textarea {...register('preparation')} rows={4} placeholder="e.g. Fasting for 10-12 hours" className={input} />
                         <Err e={errors.preparation} />
+                    </div>
+
+                    <div>
+                        <label className={label}>Description <span className="font-normal text-slate-400">(optional)</span></label>
+                        <Description register={register} placeholder="What this test is for" />
+                        <Err e={errors.description} />
                     </div>
 
                     <div>

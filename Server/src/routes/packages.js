@@ -7,6 +7,35 @@ import { prisma } from "../database/db-connection.js";
 
 const router = Router()
 
+const validateTests = async (tests) => {
+    if (!Array.isArray(tests) || tests.length < 2) {
+        throw new ApiError(400, "Tests are required")
+    }
+
+    const keys = tests.map(t => t.testId ?? t.name?.trim().toLowerCase())
+    if (new Set(keys).size !== keys.length) {
+        throw new ApiError(400, "Duplicate tests in package")
+    }
+
+    const testIds = [...new Set(tests.filter(t => t.testId != null).map(t => t.testId))]
+
+    if (testIds.length) {
+        const found = await prisma.test.findMany({
+            where: { id: { in: testIds } }
+        })
+
+        if (found.length !== testIds.length) {
+            throw new ApiError(404, "One or more tests not found")
+        }
+    }
+
+    if (tests.some(t => t.testId == null && !t.name?.trim())) {
+        throw new ApiError(400, "Custom tests must have a name")
+    }
+}
+
+const toItems = (tests) => tests.map(t => t.testId != null ? { testId: t.testId } : { testName: t.name?.trim() })
+
 router.route('/all').get(asyncHandler(async (req, res) => {
     const allPackages = await prisma.package.findMany({ include: { _count: { select: { items: true } } } })
 
@@ -20,7 +49,7 @@ router.route('/all').get(asyncHandler(async (req, res) => {
 }))
 
 router.route('/add').post(asyncHandler(async (req, res) => {
-    const { name, price, category, preparation, relevance, offerPrice, isPopular, tests } = req.body
+    const { name, price, category, preparation, description, relevance, offerPrice, isPopular, tests } = req.body
 
     if (!name?.trim()) {
         throw new ApiError(400, "Package name is required")
@@ -42,35 +71,12 @@ router.route('/add').post(asyncHandler(async (req, res) => {
         throw new ApiError(400, "At least one relevance is required")
     }
 
-    if (!Array.isArray(tests) || tests.length < 2) {
-        throw new ApiError(400, "Tests are required")
-    }
-
-    const keys = tests.map(t => t.testId ?? t.name?.trim().toLowerCase())
-    if (new Set(keys).size !== keys.length) {
-        throw new ApiError(400, "Duplicate tests in package")
-    }
+    await validateTests(tests)
 
     const exists = await prisma.package.findUnique({
         where: { name: name.trim() }
     })
     if (exists) throw new ApiError(409, "Package with this name already exists")
-
-    const testIds = [...new Set(tests.filter(t => t.testId != null).map(t => t.testId))]
-
-    if (testIds.length) {
-        const found = await prisma.test.findMany({
-            where: { id: { in: testIds } }
-        })
-
-        if (found.length !== testIds.length) {
-            throw new ApiError(404, "One or more tests not found")
-        }
-    }
-
-    if (tests.some(t => t.testId == null && !t.name?.trim())) {
-        throw new ApiError(400, "Custom tests must have a name")
-    }
 
     const savedPackage = await prisma.package.create({
         data: {
@@ -78,11 +84,12 @@ router.route('/add').post(asyncHandler(async (req, res) => {
             price,
             category,
             preparation,
+            description,
             relevance,
             offerPrice,
             isPopular,
             items: {
-                create: tests.map(t => t.testId != null ? { testId: t.testId } : { testName: t.name?.trim() })
+                create: toItems(tests)
             }
         },
         include: { items: true }
@@ -102,7 +109,7 @@ router.route('/:id').get(asyncHandler(async (req, res) => {
 
 
     if (!id) {
-        return new ApiError(
+        throw new ApiError(
             404,
             'Package id is required'
         )
@@ -122,7 +129,7 @@ router.route('/:id').get(asyncHandler(async (req, res) => {
     })
 
     if (!getPackage) {
-        return new ApiError(
+        throw new ApiError(
             404,
             'No Package found'
         )
@@ -138,11 +145,55 @@ router.route('/:id').get(asyncHandler(async (req, res) => {
         )
 }))
 
+router.route('/edit/:id').patch(asyncHandler(async (req, res) => {
+    const id = Number(req.params.id)
+
+    if (!id) {
+        throw new ApiError(
+            404,
+            'Package Id is required'
+        )
+    }
+
+    const { tests, ...fields } = req.body
+
+    if (tests !== undefined) {
+        await validateTests(tests)
+    }
+
+    const editedPackage = await prisma.$transaction(async (tx) => {
+        if (tests !== undefined) {
+            await tx.packageItem.deleteMany({ where: { packageId: id } })
+        }
+
+        return tx.package.update({
+            where: {
+                id: id
+            },
+            data: {
+                ...fields,
+                ...(tests !== undefined && { items: { create: toItems(tests) } })
+            },
+            include: { items: true }
+        })
+    })
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                { editedPackage },
+                "Package updated successfully"
+            )
+        )
+}))
+
 router.route('/delete/:id').delete(asyncHandler(async (req, res) => {
     const id = Number(req.params.id)
 
     if (!id) {
-        return new ApiError(
+        throw new ApiError(
             404,
             "Package id is required"
         )
@@ -153,7 +204,7 @@ router.route('/delete/:id').delete(asyncHandler(async (req, res) => {
     })
 
     if (!deletePackage) {
-        return new ApiError(
+        throw new ApiError(
             404,
             "Package not found"
         )
