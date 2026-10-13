@@ -1,6 +1,7 @@
 import { createBrowserRouter, createRoutesFromElements, Route, redirect } from 'react-router-dom'
 
 import Adminlayout from '../layouts/AdminLayout.jsx'
+import UserLayout from '../layouts/UserLayout.jsx'
 import LoginForm from '../components/Forms/LoginForm.jsx'
 import Dashboard from '../components/Admin/Dashboard/Dashbaord.jsx'
 import Tests from '../components/Admin/Tests/Tests.jsx'
@@ -9,11 +10,19 @@ import Packages from '../components/Admin/Packages/Packages.jsx'
 import TestProfile from '../components/Admin/Tests/TestProfile.jsx'
 import PacakgeProfile from '../components/Admin/Packages/PackageProfile.jsx'
 import AddPackageForm from '../components/Forms/Admin/AddPackageForm.jsx'
+import Home from '../components/Home/Home.jsx'
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
         <>
-            <Route path="/" element={<LoginForm />} />
+            <Route
+                path='/'
+                element={<UserLayout />}
+            >
+                <Route index element={<Home />} />
+            </Route>
+
+            <Route path='/login' element={<LoginForm />} />
 
             <Route
                 path='/admin'
