@@ -2,6 +2,7 @@ import { Form, Link } from 'react-router-dom'
 
 import LOGO from '../../assets/logo.png'
 import Icon from '../Icon/Icon'
+import { Eyebrow, EcgAccent, tint } from '../Common/SectionAccents'
 import { CONTACT, tel, whatsapp } from '../../constants/contact'
 
 /* ------------------------------------------------------------------
@@ -156,16 +157,19 @@ function offerDeadline(validTill) {
 
 const wrap = 'mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'
 
+const band = `${tint} py-16 sm:py-20`
+
 /* ------------------------------------------------------------------
    Shared bits
 ------------------------------------------------------------------- */
 
-function SectionHeading({ eyebrow, title, text, action, center = false }) {
+function SectionHeading({ eyebrow, icon, title, text, action, center = false }) {
     return (
         <div className={`flex flex-col gap-4 ${center ? 'items-center text-center' : 'sm:flex-row sm:items-end sm:justify-between'}`}>
             <div className="max-w-2xl">
-                <p className="text-sm font-semibold uppercase tracking-wider text-brand-light">{eyebrow}</p>
-                <h2 className="mt-2 text-2xl font-bold tracking-tight text-brand-dark sm:text-3xl">{title}</h2>
+                <Eyebrow icon={icon}>{eyebrow}</Eyebrow>
+                <h2 className="mt-3 text-2xl font-bold tracking-tight text-brand-dark sm:text-3xl">{title}</h2>
+                <EcgAccent center={center} />
                 {text && <p className="mt-3 text-slate-600">{text}</p>}
             </div>
             {action}
@@ -282,7 +286,7 @@ function HeroOrbit() {
             </div>
 
             <StatusChip className="-left-[4%] top-[12%]" icon="home" tone="bg-sky-50 text-sky-600" title="Sample collected" text="At home · 8:30 AM" />
-            <StatusChip className="-right-[4%] bottom-[14%]" delay="-3s" icon="check" tone="bg-emerald-50 text-emerald-600" title="Report ready" text="Sent on WhatsApp" />
+            <StatusChip className="-right-[4%] bottom-[14%]" delay="-3s" icon="check" tone="bg-emerald-50 text-emerald-600" title="Report ready" text="Within 24 hrs" />
         </div>
     )
 }
@@ -448,7 +452,7 @@ function OccasionOffers() {
     if (!active.length) return null
 
     return (
-        <section aria-labelledby="offers-heading" className={`${wrap} mt-14`}>
+        <section aria-labelledby="offers-heading" className={`${wrap} mt-14 pb-16 sm:pb-20`}>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                 <div>
                     <p className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-rose-600">
@@ -531,16 +535,19 @@ function PackageCard({ pkg }) {
 
 function Packages() {
     return (
-        <section id="packages" className={`${wrap} scroll-mt-24 py-16 sm:py-20`}>
-            <SectionHeading
-                eyebrow="Health checkups"
-                title="Popular health packages"
-                text="Comprehensive checkups at a fraction of the price of individual tests."
-                action={<ViewAll to="/packages">View all packages</ViewAll>}
-            />
-            {/* Scrolls sideways on phones, grid from sm up */}
-            <div className="-mx-4 mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-4">
-                {packages.map((pkg) => <PackageCard key={pkg.name} pkg={pkg} />)}
+        <section id="packages" className={`${band} scroll-mt-24`}>
+            <div className={wrap}>
+                <SectionHeading
+                    eyebrow="Health checkups"
+                    icon="package"
+                    title="Popular health packages"
+                    text="Comprehensive checkups at a fraction of the price of individual tests."
+                    action={<ViewAll to="/packages">View all packages</ViewAll>}
+                />
+                {/* Scrolls sideways on phones, grid from sm up */}
+                <div className="-mx-4 mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-4">
+                    {packages.map((pkg) => <PackageCard key={pkg.name} pkg={pkg} />)}
+                </div>
             </div>
         </section>
     )
@@ -548,21 +555,25 @@ function Packages() {
 
 function Concerns() {
     return (
-        <section className="bg-slate-50 py-16 sm:py-20">
+        <section className="py-16 sm:py-20">
             <div className={wrap}>
                 <SectionHeading
                     center
                     eyebrow="Find the right test"
+                    icon="search"
                     title="Tests by health concern"
                     text="Not sure what to book? Start with what you want to check."
                 />
-                <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5">
+                {/* Wraps and centres any leftover circles on smaller screens, one row on desktop */}
+                <div className="mt-10 flex flex-wrap justify-center gap-x-3 gap-y-6 lg:justify-between">
                     {concerns.map(({ label, tag, icon, tone }) => (
-                        <Link key={label} to={`/tests?concern=${tag}`} className="group flex flex-col items-center gap-3 rounded-2xl bg-white p-5 text-center ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand/5 hover:ring-brand-light/30">
-                            <span className={`grid size-14 place-items-center rounded-full transition group-hover:scale-105 ${tone}`}>
-                                <Icon name={icon} className="size-7" />
+                        <Link key={label} to={`/tests?concern=${tag}`} className="group flex w-24 flex-col items-center gap-2.5 text-center">
+                            <span className="grid size-20 place-items-center rounded-full bg-white ring-1 ring-slate-200 transition group-hover:-translate-y-0.5 group-hover:shadow-lg group-hover:shadow-brand/5 group-hover:ring-brand-light/30">
+                                <span className={`grid size-14 place-items-center rounded-full transition group-hover:scale-105 ${tone}`}>
+                                    <Icon name={icon} className="size-7" />
+                                </span>
                             </span>
-                            <span className="text-sm font-semibold text-slate-800">{label}</span>
+                            <span className="text-sm font-semibold leading-tight text-slate-800">{label}</span>
                         </Link>
                     ))}
                 </div>
@@ -573,44 +584,47 @@ function Concerns() {
 
 function Tests() {
     return (
-        <section id="tests" className={`${wrap} scroll-mt-24 py-16 sm:py-20`}>
-            <SectionHeading
-                eyebrow="Lab tests"
-                title="Most booked tests"
-                text="Individual tests with transparent pricing and quick turnaround."
-                action={<ViewAll to="/tests">View all tests</ViewAll>}
-            />
-            <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {tests.map((t) => (
-                    <article key={t.name} className="flex flex-col rounded-2xl bg-white p-5 ring-1 ring-slate-200 transition hover:shadow-lg hover:shadow-brand/5 hover:ring-brand-light/30">
-                        <div className="flex items-start gap-3">
-                            <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-sky-50 text-sky-600">
-                                <Icon name="tube" className="size-5" />
-                            </span>
-                            <h3 className="pt-0.5 text-sm font-semibold leading-snug text-slate-900">{t.name}</h3>
-                        </div>
-
-                        <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500">
-                            <span className="flex items-center gap-1">
-                                <Icon name="clock" className="size-3.5" />Report in {t.tat}
-                            </span>
-                        </div>
-                        <span className={`mt-3 w-fit rounded-md px-2 py-0.5 text-[11px] font-medium ${t.fasting ? 'bg-amber-50 text-amber-700' : 'bg-emerald-50 text-emerald-700'}`}>
-                            {t.fasting ? '10–12 hrs fasting' : 'No fasting needed'}
-                        </span>
-
-                        <div className="mt-auto flex items-end justify-between gap-2 pt-5">
-                            <div>
-                                <span className="text-lg font-bold text-brand-dark">{inr(t.offerPrice)}</span>
-                                <span className="ml-2 text-xs text-slate-400 line-through">{inr(t.price)}</span>
-                                <p className="text-xs font-semibold text-emerald-600">{discount(t.price, t.offerPrice)}% off</p>
+        <section id="tests" className={`${band} scroll-mt-24`}>
+            <div className={wrap}>
+                <SectionHeading
+                    eyebrow="Lab tests"
+                    icon="tube"
+                    title="Most booked tests"
+                    text="Individual tests with transparent pricing and quick turnaround."
+                    action={<ViewAll to="/tests">View all tests</ViewAll>}
+                />
+                <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    {tests.map((t) => (
+                        <article key={t.name} className="flex flex-col rounded-2xl bg-white p-5 ring-1 ring-slate-200 transition hover:shadow-lg hover:shadow-brand/5 hover:ring-brand-light/30">
+                            <div className="flex items-start gap-3">
+                                <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-sky-50 text-sky-600">
+                                    <Icon name="tube" className="size-5" />
+                                </span>
+                                <h3 className="pt-0.5 text-sm font-semibold leading-snug text-slate-900">{t.name}</h3>
                             </div>
-                            <button type="button" className="rounded-xl border border-brand/20 px-4 py-2 text-sm font-semibold text-brand transition hover:bg-brand hover:text-white">
-                                Book
-                            </button>
-                        </div>
-                    </article>
-                ))}
+
+                            <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500">
+                                <span className="flex items-center gap-1">
+                                    <Icon name="clock" className="size-3.5" />Report in {t.tat}
+                                </span>
+                            </div>
+                            <span className={`mt-3 w-fit rounded-md px-2 py-0.5 text-[11px] font-medium ${t.fasting ? 'bg-amber-50 text-amber-700' : 'bg-emerald-50 text-emerald-700'}`}>
+                                {t.fasting ? '10–12 hrs fasting' : 'No fasting needed'}
+                            </span>
+
+                            <div className="mt-auto flex items-end justify-between gap-2 pt-5">
+                                <div>
+                                    <span className="text-lg font-bold text-brand-dark">{inr(t.offerPrice)}</span>
+                                    <span className="ml-2 text-xs text-slate-400 line-through">{inr(t.price)}</span>
+                                    <p className="text-xs font-semibold text-emerald-600">{discount(t.price, t.offerPrice)}% off</p>
+                                </div>
+                                <button type="button" className="rounded-xl border border-brand/20 px-4 py-2 text-sm font-semibold text-brand transition hover:bg-brand hover:text-white">
+                                    Book
+                                </button>
+                            </div>
+                        </article>
+                    ))}
+                </div>
             </div>
         </section>
     )
@@ -618,11 +632,12 @@ function Tests() {
 
 function Radiology() {
     return (
-        <section id="radiology" className={`${wrap} scroll-mt-24 pb-16 sm:pb-20`}>
+        <section id="radiology" className={`${wrap} scroll-mt-24 py-16 sm:py-20`}>
             <div className="grid items-center gap-10 rounded-3xl bg-linear-to-br from-sky-50 to-indigo-50 p-6 ring-1 ring-slate-200/60 sm:p-10 lg:grid-cols-2 lg:p-14">
                 <div>
-                    <p className="text-sm font-semibold uppercase tracking-wider text-brand-light">Radiology & imaging</p>
-                    <h2 className="mt-2 text-2xl font-bold tracking-tight text-brand-dark sm:text-3xl">Scans and imaging under one roof</h2>
+                    <Eyebrow icon="scan">Radiology & imaging</Eyebrow>
+                    <h2 className="mt-3 text-2xl font-bold tracking-tight text-brand-dark sm:text-3xl">Scans and imaging under one roof</h2>
+                    <EcgAccent />
                     <p className="mt-3 text-slate-600">
                         From X-rays to ultrasound, get your imaging done at our centre with reports reviewed by experienced radiologists.
                     </p>
@@ -661,9 +676,9 @@ function Radiology() {
 
 function HowItWorks() {
     return (
-        <section id="how-it-works" className="scroll-mt-24 bg-slate-50 py-16 sm:py-20">
+        <section id="how-it-works" className={`${band} scroll-mt-24`}>
             <div className={wrap}>
-                <SectionHeading center eyebrow="How it works" title="Your test in 4 simple steps" />
+                <SectionHeading center eyebrow="How it works" icon="calendar" title="Your test in 4 simple steps" />
                 <div className="relative mt-12">
                     {/* dashed connector behind the step icons */}
                     <div aria-hidden="true" className="absolute inset-x-[12.5%] top-8 hidden border-t-2 border-dashed border-brand/15 lg:block" />
@@ -705,8 +720,9 @@ function WhyUs() {
 
             <div className={`${wrap} relative grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:items-center`}>
                 <div>
-                    <p className="text-sm font-semibold uppercase tracking-wider text-sky-300">Why Vision Diagnostic</p>
-                    <h2 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">Care and accuracy at every step</h2>
+                    <Eyebrow icon="shield" dark>Why Vision Diagnostic</Eyebrow>
+                    <h2 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">Care and accuracy at every step</h2>
+                    <EcgAccent dark />
                     <p className="mt-4 max-w-lg text-white/70">
                         From the moment you book to the moment you read your report, our team makes sure every result is accurate,
                         on time and easy to understand.
@@ -740,7 +756,7 @@ function WhyUs() {
 function Testimonials() {
     return (
         <section className={`${wrap} py-16 sm:py-20`}>
-            <SectionHeading center eyebrow="Testimonials" title="What our patients say" />
+            <SectionHeading center eyebrow="Testimonials" icon="chat" title="What our patients say" />
             <div className="mt-10 grid gap-4 md:grid-cols-3">
                 {testimonials.map(({ name, meta, text }) => (
                     <figure key={name} className="flex flex-col rounded-3xl bg-white p-6 ring-1 ring-slate-200">
@@ -764,11 +780,12 @@ function Testimonials() {
 
 function Faqs() {
     return (
-        <section id="faqs" className="scroll-mt-24 bg-slate-50 py-16 sm:py-20">
+        <section id="faqs" className={`${band} scroll-mt-24`}>
             <div className={`${wrap} grid gap-10 lg:grid-cols-[1fr_1.5fr]`}>
                 <div>
                     <SectionHeading
                         eyebrow="FAQs"
+                        icon="list"
                         title="Frequently asked questions"
                         text="Can’t find what you’re looking for? Our team is happy to help."
                     />

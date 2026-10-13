@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 
 import Icon from '../Icon/Icon'
+import { EcgAccent } from '../Common/SectionAccents'
 import { CONTACT, tel, whatsapp } from '../../constants/contact'
 
 /* ------------------------------------------------------------------
@@ -75,7 +76,7 @@ const finalPrice = (t) => (onOffer(t) ? t.offerPrice : t.price)
 
 function ConcernFilter({ active, onChange }) {
     return (
-        <section aria-labelledby="concern-heading">
+        <section aria-labelledby="concern-heading" className="mt-8">
             <div className="flex items-end justify-between gap-4">
                 <div>
                     <h2 id="concern-heading" className="text-lg font-semibold text-brand-dark">Filter by health concern</h2>
@@ -88,8 +89,8 @@ function ConcernFilter({ active, onChange }) {
                 )}
             </div>
 
-            {/* Scrolls sideways on phones, grid from sm up */}
-            <div className="-mx-4 mt-3 flex gap-3 overflow-x-auto px-4 pb-2 pt-1 scrollbar-none sm:mx-0 sm:pt-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:overflow-visible sm:px-0 sm:pb-0 md:grid-cols-5">
+            {/* One row of circles - scrolls sideways on phones */}
+            <div className="-mx-4 mt-4 flex gap-3 overflow-x-auto px-4 pb-2 pt-1 [scrollbar-width:none] sm:mx-0 sm:px-0 lg:justify-between">
                 {concerns.map(({ tag, label, icon, tone }) => {
                     const selected = active === tag
                     const count = tests.filter((t) => t.relevance.includes(tag)).length
@@ -100,18 +101,20 @@ function ConcernFilter({ active, onChange }) {
                             type="button"
                             aria-pressed={selected}
                             onClick={() => onChange(selected ? '' : tag)}
-                            className={`group relative flex w-32 shrink-0 flex-col items-center gap-3 rounded-2xl bg-white p-5 text-center transition sm:w-auto ${selected ? 'shadow-lg shadow-brand/10 ring-2 ring-brand-light' : 'ring-1 ring-slate-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand/5 hover:ring-brand-light/30'}`}
+                            className="group flex w-24 shrink-0 flex-col items-center gap-2.5 text-center"
                         >
-                            {selected && (
-                                <span className="absolute right-3 top-3 grid size-5 place-items-center rounded-full bg-brand-light text-white">
-                                    <Icon name="check" className="size-3" />
+                            <span className={`relative grid size-20 place-items-center rounded-full bg-white transition ${selected ? 'shadow-lg shadow-brand/10 ring-2 ring-brand-light' : 'ring-1 ring-slate-200 group-hover:-translate-y-0.5 group-hover:shadow-lg group-hover:shadow-brand/5 group-hover:ring-brand-light/30'}`}>
+                                <span className={`grid size-14 place-items-center rounded-full transition group-hover:scale-105 ${tone}`}>
+                                    <Icon name={icon} className="size-7" />
                                 </span>
-                            )}
-                            <span className={`grid size-14 place-items-center rounded-full transition group-hover:scale-105 ${tone}`}>
-                                <Icon name={icon} className="size-7" />
+                                {selected && (
+                                    <span className="absolute right-0 top-0 grid size-5 place-items-center rounded-full bg-brand-light text-white ring-2 ring-white">
+                                        <Icon name="check" className="size-3" />
+                                    </span>
+                                )}
                             </span>
                             <span>
-                                <span className="block text-sm font-semibold text-slate-800">{label}</span>
+                                <span className="block text-sm font-semibold leading-tight text-slate-800">{label}</span>
                                 <span className="text-xs text-slate-400">{count} test{count === 1 ? '' : 's'}</span>
                             </span>
                         </button>
@@ -243,6 +246,8 @@ export default function AllTests() {
                         </nav>
 
                         <h1 className="mt-4 text-3xl font-bold tracking-tight text-brand-dark sm:text-4xl">Lab tests & scans</h1>
+
+                        <EcgAccent />
                         <p className="mt-3 max-w-2xl text-slate-600">
                             Book blood tests and imaging at Vision Diagnostic Centre, with free home sample collection and reports shared online.
                         </p>
@@ -263,15 +268,15 @@ export default function AllTests() {
                                 </button>
                             )}
                         </div>
+
+                        <ConcernFilter active={concern} onChange={(tag) => setParam('concern', tag)} />
                     </div>
                 </div>
             </section>
 
-            <div className={`${wrap} pb-16 pt-10 sm:pb-20`}>
-                <ConcernFilter active={concern} onChange={(tag) => setParam('concern', tag)} />
-
+            <div className={`${wrap} pb-16 pt-4 sm:pb-20`}>
                 {/* Toolbar */}
-                <div className="mt-10 flex flex-col gap-4 border-b border-slate-200 pb-4 lg:flex-row lg:items-center lg:justify-between">
+                <div className="z-30 sm:sticky sm:top-[73px] -mx-4 flex flex-col gap-4 border-b border-slate-200 bg-white/90 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 lg:flex-row lg:items-center lg:justify-between">
                     <p className="text-sm text-slate-500">
                         Showing <span className="font-semibold text-slate-900">{visible.length}</span> of {tests.length} tests
                         {hasFilters && (
