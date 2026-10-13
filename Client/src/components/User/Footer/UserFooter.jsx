@@ -5,7 +5,7 @@ import Icon from '../../Icon/Icon'
 import { CONTACT, tel, landlineTel, directions } from '../../../constants/contact'
 
 const footerLinks = [
-    { title: 'Services', links: [['Lab tests', '/#tests'], ['Health packages', '/#packages'], ['Radiology', '/#radiology'], ['Home collection', '/#book']] },
+    { title: 'Services', links: [['Lab tests', '/tests'], ['Health packages', '/packages'], ['Radiology', '/tests?type=radiology'], ['Home collection', '/#book']] },
     { title: 'Company', links: [['How it works', '/#how-it-works'], ['FAQs', '/#faqs'], ['Book a test', '/#book'], ['Login', '/login']] },
 ]
 

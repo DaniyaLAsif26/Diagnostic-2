@@ -11,6 +11,8 @@ import TestProfile from '../components/Admin/Tests/TestProfile.jsx'
 import PacakgeProfile from '../components/Admin/Packages/PackageProfile.jsx'
 import AddPackageForm from '../components/Forms/Admin/AddPackageForm.jsx'
 import Home from '../components/Home/Home.jsx'
+import AllTests from '../components/AllTest/AllTests.jsx'
+import AllPackages from '../components/AllPackages/AllPackages.jsx'
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -20,6 +22,8 @@ export const router = createBrowserRouter(
                 element={<UserLayout />}
             >
                 <Route index element={<Home />} />
+                <Route path='tests' element={<AllTests />} />
+                <Route path='packages' element={<AllPackages />} />
             </Route>
 
             <Route path='/login' element={<LoginForm />} />

@@ -1,13 +1,13 @@
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 
 import LOGO from '../../../assets/logo.png'
 import Icon from '../../Icon/Icon'
 import { CONTACT, tel, landlineTel, directions } from '../../../constants/contact'
 
-// Sections live on the home page, so these work from any public route
+// Tests and Packages are pages; the rest are sections on the home page
 const navLinks = [
-    { label: 'Tests', to: '/#tests' },
-    { label: 'Packages', to: '/#packages' },
+    { label: 'Tests', to: '/tests' },
+    { label: 'Packages', to: '/packages' },
     { label: 'Radiology', to: '/#radiology' },
     { label: 'How it works', to: '/#how-it-works' },
     { label: 'FAQs', to: '/#faqs' },
@@ -15,6 +15,9 @@ const navLinks = [
 ]
 
 const wrap = 'mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'
+
+// Highlight only real pages - every /#section link would otherwise match "/"
+const isCurrent = (to, isActive) => isActive && !to.includes('#')
 
 // Close the mobile <details> menu once a link is picked
 const closeMenu = (e) => e.currentTarget.closest('details')?.removeAttribute('open')
@@ -60,9 +63,13 @@ export default function UserNavbar() {
 
                     <nav className="hidden items-center gap-1 lg:flex">
                         {navLinks.map(({ label, to }) => (
-                            <Link key={to} to={to} className="rounded-lg px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-brand">
+                            <NavLink
+                                key={to}
+                                to={to}
+                                className={({ isActive }) => `whitespace-nowrap rounded-lg px-2.5 py-2 text-sm font-medium transition xl:px-3.5 ${isCurrent(to, isActive) ? 'bg-brand/5 text-brand' : 'text-slate-600 hover:bg-slate-100 hover:text-brand'}`}
+                            >
                                 {label}
-                            </Link>
+                            </NavLink>
                         ))}
                     </nav>
 
@@ -73,7 +80,7 @@ export default function UserNavbar() {
                         <Link to="/login" className="hidden items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-brand ring-1 ring-slate-200 transition hover:bg-slate-50 hover:ring-brand-light/40 sm:flex">
                             <Icon name="user" className="size-4" />Login
                         </Link>
-                        <Link to="/#book" className="whitespace-nowrap rounded-xl bg-brand-dark px-3.5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid sm:px-5">
+                        <Link to="/tests" className="whitespace-nowrap rounded-xl bg-brand-dark px-3.5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid sm:px-5">
                             Book a Test
                         </Link>
 
@@ -85,9 +92,14 @@ export default function UserNavbar() {
                             </summary>
                             <nav className="absolute right-0 top-12 w-60 rounded-2xl bg-white p-2 shadow-xl shadow-brand/10 ring-1 ring-slate-900/5">
                                 {navLinks.map(({ label, to }) => (
-                                    <Link key={to} to={to} onClick={closeMenu} className="block rounded-xl px-3.5 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-brand">
+                                    <NavLink
+                                        key={to}
+                                        to={to}
+                                        onClick={closeMenu}
+                                        className={({ isActive }) => `block rounded-xl px-3.5 py-2.5 text-sm font-medium transition hover:bg-slate-100 hover:text-brand ${isCurrent(to, isActive) ? 'text-brand' : 'text-slate-700'}`}
+                                    >
                                         {label}
-                                    </Link>
+                                    </NavLink>
                                 ))}
                                 <div className="mt-1 border-t border-slate-100 pt-1">
                                     <Link to="/login" onClick={closeMenu} className="flex items-center gap-2 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-brand transition hover:bg-slate-100">

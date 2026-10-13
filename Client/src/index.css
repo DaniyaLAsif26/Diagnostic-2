@@ -8,6 +8,10 @@
   --color-brand-mid: #22356e;
   --color-brand-dark: #0f1b3d;
 
+  /* One typeface across the whole app (loaded in main.jsx).
+     Tailwind's font-sans and every element default to it. */
+  --font-sans: 'Figtree Variable', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+
   /* Home hero motion */
   --animate-orbit-inner: orbit 40s linear infinite;
   --animate-orbit-inner-counter: orbit 40s linear infinite reverse;
@@ -39,5 +43,13 @@
   @keyframes ecg {
     from { stroke-dashoffset: 1000; }
     to { stroke-dashoffset: 0; }
+  }
+}
+
+/* Smoother text rendering everywhere - admin, login and the public site */
+@layer base {
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }

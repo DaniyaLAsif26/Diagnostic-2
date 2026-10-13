@@ -1,3 +1,5 @@
+import { Form, Link } from 'react-router-dom'
+
 import LOGO from '../../assets/logo.png'
 import Icon from '../Icon/Icon'
 import { CONTACT, tel, whatsapp } from '../../constants/contact'
@@ -5,8 +7,6 @@ import { CONTACT, tel, whatsapp } from '../../constants/contact'
 /* ------------------------------------------------------------------
    Placeholder content - swap for API data (tests / packages).
 ------------------------------------------------------------------- */
-
-const popularSearches = ['CBC', 'Thyroid Profile', 'Vitamin D', 'HbA1c', 'Lipid Profile']
 
 // Rotating words in the hero headline
 const tickerWords = ['heart health', 'thyroid levels', 'blood sugar', 'vitamin levels']
@@ -24,11 +24,41 @@ const orbitIcons = [
 const ECG = 'M0 60h50l12-34 14 70 14-52 10 16h70l8-20 10 40 10-30 6 10h192l8-20 10 40 10-30 6 10h70l12-34 14 70 14-52 10 16h50'
 
 const quickActions = [
-    { icon: 'tube', title: 'Book Lab Tests', text: '500+ tests available', href: '#tests', tone: 'bg-sky-50 text-sky-600' },
-    { icon: 'package', title: 'Health Packages', text: 'Full body & more', href: '#packages', tone: 'bg-indigo-50 text-indigo-600' },
-    { icon: 'scan', title: 'Radiology & Scans', text: 'X-Ray, USG, ECG', href: '#radiology', tone: 'bg-teal-50 text-teal-600' },
-    { icon: 'upload', title: 'Upload Prescription', text: 'We’ll book it for you', href: '#book', tone: 'bg-amber-50 text-amber-600' },
+    { icon: 'tube', title: 'Book Lab Tests', text: '500+ tests available', href: '/tests', tone: 'bg-sky-50 text-sky-600' },
+    { icon: 'package', title: 'Health Packages', text: 'Full body & more', href: '/packages', tone: 'bg-indigo-50 text-indigo-600' },
+    { icon: 'scan', title: 'Radiology & Scans', text: 'X-Ray, USG, ECG', href: '/tests?type=radiology', tone: 'bg-teal-50 text-teal-600' },
+    { icon: 'upload', title: 'Upload Prescription', text: 'We’ll book it for you', href: '/#book', tone: 'bg-amber-50 text-amber-600' },
 ]
+
+// Offers for health awareness days. Each one shows from 'startsOn' (optional)
+// until the end of 'validTill', then hides itself - just add or edit entries here.
+const occasionOffers = [
+    {
+        occasion: 'World Heart Day', date: '2026-09-29', validTill: '2026-10-15', theme: 'rose', icon: 'heart',
+        title: 'Heart Care Package', text: 'Lipid profile, hs-CRP, ECG and more to check how your heart is doing.',
+        price: 2499, offerPrice: 1499, to: '/packages?concern=heart',
+    },
+    {
+        occasion: 'World Arthritis Day', date: '2026-10-12', validTill: '2026-10-25', theme: 'amber', icon: 'bone',
+        title: 'Bone & Joint Care', text: 'Vitamin D, calcium, uric acid and RA factor for stronger bones and joints.',
+        price: 1799, offerPrice: 1169, to: '/packages?concern=bone',
+    },
+    {
+        occasion: 'World Diabetes Day', date: '2026-11-14', startsOn: '2026-10-10', validTill: '2026-11-20', theme: 'blue', icon: 'droplet',
+        title: 'Diabetes Care Package', text: 'HbA1c, fasting and post-meal sugar, plus kidney checks, in one visit.',
+        price: 1899, offerPrice: 949, to: '/packages?concern=diabetes',
+    },
+]
+
+// Colour of each offer's band - pick one per occasion
+const offerThemes = {
+    rose: 'from-rose-500 to-red-600',
+    blue: 'from-sky-500 to-blue-700',
+    amber: 'from-amber-500 to-orange-600',
+    pink: 'from-pink-500 to-fuchsia-600',
+    violet: 'from-violet-500 to-purple-700',
+    teal: 'from-teal-500 to-emerald-600',
+}
 
 const packages = [
     { name: 'Full Body Checkup', tests: 72, price: 2999, offerPrice: 1499, isPopular: true, relevance: ['Heart', 'Liver', 'Kidney', 'Thyroid'], highlights: ['Complete Blood Count', 'Lipid Profile', 'Liver & Kidney Function', 'Thyroid Profile'] },
@@ -38,27 +68,27 @@ const packages = [
 ]
 
 const concerns = [
-    { label: 'Diabetes', icon: 'droplet', tone: 'bg-rose-50 text-rose-600' },
-    { label: 'Heart', icon: 'heart', tone: 'bg-red-50 text-red-600' },
-    { label: 'Thyroid', icon: 'thyroid', tone: 'bg-violet-50 text-violet-600' },
-    { label: 'Liver', icon: 'liver', tone: 'bg-amber-50 text-amber-600' },
-    { label: 'Kidney', icon: 'kidney', tone: 'bg-orange-50 text-orange-600' },
-    { label: 'Vitamins', icon: 'sun', tone: 'bg-yellow-50 text-yellow-600' },
-    { label: 'Fever & Infection', icon: 'thermometer', tone: 'bg-sky-50 text-sky-600' },
-    { label: 'Bone & Joints', icon: 'bone', tone: 'bg-stone-100 text-stone-600' },
-    { label: 'Women’s Health', icon: 'female', tone: 'bg-pink-50 text-pink-600' },
-    { label: 'Lungs & Allergy', icon: 'lungs', tone: 'bg-teal-50 text-teal-600' },
+    { label: 'Diabetes', tag: 'diabetes', icon: 'droplet', tone: 'bg-rose-50 text-rose-600' },
+    { label: 'Heart', tag: 'heart', icon: 'heart', tone: 'bg-red-50 text-red-600' },
+    { label: 'Thyroid', tag: 'thyroid', icon: 'thyroid', tone: 'bg-violet-50 text-violet-600' },
+    { label: 'Liver', tag: 'liver', icon: 'liver', tone: 'bg-amber-50 text-amber-600' },
+    { label: 'Kidney', tag: 'kidney', icon: 'kidney', tone: 'bg-orange-50 text-orange-600' },
+    { label: 'Vitamins', tag: 'vitamin', icon: 'sun', tone: 'bg-yellow-50 text-yellow-600' },
+    { label: 'Fever & Infection', tag: 'fever', icon: 'thermometer', tone: 'bg-sky-50 text-sky-600' },
+    { label: 'Bone & Joints', tag: 'bone', icon: 'bone', tone: 'bg-stone-100 text-stone-600' },
+    { label: 'Women’s Health', tag: 'women', icon: 'female', tone: 'bg-pink-50 text-pink-600' },
+    { label: 'Lungs & Allergy', tag: 'lung', icon: 'lungs', tone: 'bg-teal-50 text-teal-600' },
 ]
 
 const tests = [
-    { name: 'Complete Blood Count (CBC)', parameters: 24, price: 450, offerPrice: 299, tat: '12 hrs', fasting: false },
-    { name: 'Thyroid Profile (T3, T4, TSH)', parameters: 3, price: 700, offerPrice: 449, tat: '24 hrs', fasting: false },
-    { name: 'Lipid Profile', parameters: 8, price: 800, offerPrice: 499, tat: '24 hrs', fasting: true },
-    { name: 'HbA1c', parameters: 3, price: 600, offerPrice: 399, tat: '12 hrs', fasting: false },
-    { name: 'Vitamin D (25-OH)', parameters: 1, price: 1500, offerPrice: 899, tat: '24 hrs', fasting: false },
-    { name: 'Liver Function Test (LFT)', parameters: 11, price: 900, offerPrice: 549, tat: '24 hrs', fasting: true },
-    { name: 'Kidney Function Test (KFT)', parameters: 9, price: 900, offerPrice: 549, tat: '24 hrs', fasting: false },
-    { name: 'Vitamin B12', parameters: 1, price: 1100, offerPrice: 649, tat: '24 hrs', fasting: false },
+    { name: 'Complete Blood Count (CBC)', price: 450, offerPrice: 299, tat: '12 hrs', fasting: false },
+    { name: 'Thyroid Profile (T3, T4, TSH)', price: 700, offerPrice: 449, tat: '24 hrs', fasting: false },
+    { name: 'Lipid Profile', price: 800, offerPrice: 499, tat: '24 hrs', fasting: true },
+    { name: 'HbA1c', price: 600, offerPrice: 399, tat: '12 hrs', fasting: false },
+    { name: 'Vitamin D (25-OH)', price: 1500, offerPrice: 899, tat: '24 hrs', fasting: false },
+    { name: 'Liver Function Test (LFT)', price: 900, offerPrice: 549, tat: '24 hrs', fasting: true },
+    { name: 'Kidney Function Test (KFT)', price: 900, offerPrice: 549, tat: '24 hrs', fasting: false },
+    { name: 'Vitamin B12', price: 1100, offerPrice: 649, tat: '24 hrs', fasting: false },
 ]
 
 const scans = [
@@ -106,6 +136,24 @@ const faqs = [
 const inr = (n) => `₹${n.toLocaleString('en-IN')}`
 const discount = (price, offerPrice) => Math.round((1 - offerPrice / price) * 100)
 
+const DAY = 24 * 60 * 60 * 1000
+const toDate = (iso) => new Date(`${iso}T00:00:00`) // local midnight
+// Fixed 3-letter months - browsers vary ("Sep" vs "Sept")
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const shortDate = (iso) => `${toDate(iso).getDate()} ${MONTHS[toDate(iso).getMonth()]}`
+
+/** Days left on an offer, worded for the card; urgent in the last 3 days. */
+function offerDeadline(validTill) {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const days = Math.round((toDate(validTill) - today) / DAY)
+
+    if (days === 0) return { label: 'Ends today', urgent: true }
+    if (days === 1) return { label: 'Ends tomorrow', urgent: true }
+    if (days <= 3) return { label: `Ends in ${days} days`, urgent: true }
+    return { label: `Valid till ${shortDate(validTill)}`, urgent: false }
+}
+
 const wrap = 'mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'
 
 /* ------------------------------------------------------------------
@@ -125,12 +173,12 @@ function SectionHeading({ eyebrow, title, text, action, center = false }) {
     )
 }
 
-function ViewAll({ href, children }) {
+function ViewAll({ to, children }) {
     return (
-        <a href={href} className="group inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-brand-light transition hover:text-brand">
+        <Link to={to} className="group inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-brand-light transition hover:text-brand">
             {children}
             <Icon name="arrow" className="size-4 transition group-hover:translate-x-0.5" />
-        </a>
+        </Link>
     )
 }
 
@@ -277,30 +325,22 @@ function Hero() {
                             usually within 24 hours.
                         </p>
 
-                        {/* Search */}
-                        <div className="mt-8 flex max-w-xl items-center gap-2 rounded-2xl bg-white p-2 shadow-xl shadow-brand/10 ring-1 ring-slate-900/5 transition focus-within:ring-4 focus-within:ring-brand-light/15">
+                        {/* Search - submits to /tests?q=... */}
+                        <Form action="/tests" role="search" className="mt-8 flex max-w-xl items-center gap-2 rounded-2xl bg-white p-2 shadow-xl shadow-brand/10 ring-1 ring-slate-900/5 transition focus-within:ring-4 focus-within:ring-brand-light/15">
                             <Icon name="search" className="ml-2.5 size-5 shrink-0 text-slate-400" />
                             <input
                                 type="search"
-                                aria-label="Search tests, packages and scans"
-                                placeholder="Search tests, packages or scans"
+                                name="q"
+                                aria-label="Search tests and scans"
+                                placeholder="Search tests and scans, e.g. CBC"
                                 className="min-w-0 flex-1 bg-transparent py-2.5 text-sm text-slate-900 outline-none placeholder:text-slate-400 sm:text-base"
                             />
-                            <button type="button" className="shrink-0 rounded-xl bg-brand-dark px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid sm:px-6">
+                            <button type="submit" className="shrink-0 rounded-xl bg-brand-dark px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid sm:px-6">
                                 Search
                             </button>
-                        </div>
+                        </Form>
 
-                        <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
-                            <span className="text-slate-500">Popular:</span>
-                            {popularSearches.slice(0, 4).map((s) => (
-                                <a key={s} href="#tests" className="rounded-full border border-slate-200 bg-white px-3 py-1 text-slate-600 transition hover:border-brand-light hover:text-brand">
-                                    {s}
-                                </a>
-                            ))}
-                        </div>
-
-                        <ul className="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-sm font-medium text-slate-700">
+                        <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm font-medium text-slate-700">
                             {heroPerks.map((p) => (
                                 <li key={p} className="flex items-center gap-2">
                                     <span className="grid size-5 place-items-center rounded-full bg-brand/10 text-brand">
@@ -324,7 +364,7 @@ function QuickActions() {
         <section aria-label="Quick actions" className={`${wrap} relative -mt-12`}>
             <div className="grid grid-cols-2 gap-2 rounded-3xl bg-white p-2 shadow-xl shadow-brand/10 ring-1 ring-slate-900/5 sm:gap-3 sm:p-3 lg:grid-cols-4">
                 {quickActions.map(({ icon, title, text, href, tone }) => (
-                    <a key={title} href={href} className="group flex flex-col gap-3 rounded-2xl p-3 transition hover:bg-slate-50 sm:flex-row sm:items-center sm:p-4">
+                    <Link key={title} to={href} className="group flex flex-col gap-3 rounded-2xl p-3 transition hover:bg-slate-50 sm:flex-row sm:items-center sm:p-4">
                         <span className={`grid size-12 shrink-0 place-items-center rounded-2xl ${tone}`}>
                             <Icon name={icon} className="size-6" />
                         </span>
@@ -333,35 +373,102 @@ function QuickActions() {
                             <span className="block text-xs text-slate-500 sm:text-sm">{text}</span>
                         </span>
                         <Icon name="arrow" className="hidden size-4 shrink-0 text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-brand sm:block" />
-                    </a>
+                    </Link>
                 ))}
             </div>
         </section>
     )
 }
 
-function Offers() {
+function OfferCard({ offer, featured }) {
+    const { label, urgent } = offerDeadline(offer.validTill)
+    const date = toDate(offer.date)
+
     return (
-        <section aria-label="Offers" className={`${wrap} mt-14 grid gap-4 md:grid-cols-2`}>
-            <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-brand-dark via-brand-mid to-brand-light p-6 text-white sm:p-8">
-                <Icon name="heart" className="pointer-events-none absolute -bottom-8 -right-8 size-48 text-white/10" />
-                <span className="inline-flex rounded-full bg-white/15 px-3 py-1 text-xs font-semibold">Limited offer</span>
-                <h3 className="mt-4 text-2xl font-bold sm:text-3xl">Up to 50% off on<br />health checkups</h3>
-                <p className="mt-2 max-w-xs text-sm text-white/75">Preventive packages for the whole family, with free home collection.</p>
-                <a href="#packages" className="mt-6 inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-brand-dark transition hover:bg-slate-100">
-                    View packages<Icon name="arrow" className="size-4" />
-                </a>
+        <article className={`flex overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand/10 ${featured ? 'flex-col md:flex-row' : 'w-[85%] shrink-0 snap-start flex-col md:w-auto'}`}>
+            {/* Occasion band */}
+            <div className={`relative overflow-hidden bg-linear-to-br p-5 text-white sm:p-6 ${offerThemes[offer.theme]} ${featured ? 'md:flex md:w-80 md:shrink-0 md:flex-col md:justify-between md:p-8' : ''}`}>
+                <Icon name={offer.icon} className="pointer-events-none absolute -bottom-6 -right-6 size-36 text-white/15" />
+
+                <div className="relative flex items-center gap-3">
+                    <span className="flex w-12 shrink-0 flex-col items-center rounded-xl bg-white/15 py-1.5 leading-none ring-1 ring-white/25">
+                        <span className="text-lg font-bold">{date.getDate()}</span>
+                        <span className="mt-1 text-[10px] font-semibold uppercase tracking-wider text-white/80">
+                            {MONTHS[date.getMonth()]}
+                        </span>
+                    </span>
+                    <span className="leading-tight">
+                        <span className="block text-[11px] font-semibold uppercase tracking-wider text-white/75">Special day offer</span>
+                        <span className="block font-bold">{offer.occasion}</span>
+                    </span>
+                </div>
+
+                <p className="relative mt-5 flex items-baseline gap-1.5">
+                    <span className="text-5xl font-extrabold tracking-tight">{discount(offer.price, offer.offerPrice)}%</span>
+                    <span className="text-lg font-bold">OFF</span>
+                </p>
             </div>
 
-            <div className="relative overflow-hidden rounded-3xl bg-sky-100 p-6 sm:p-8">
-                <Icon name="home" className="pointer-events-none absolute -bottom-8 -right-6 size-48 text-sky-600/10" />
-                <span className="inline-flex rounded-full bg-white px-3 py-1 text-xs font-semibold text-sky-700">Doorstep service</span>
-                <h3 className="mt-4 text-2xl font-bold text-brand-dark sm:text-3xl">Free home sample<br />collection</h3>
-                <p className="mt-2 max-w-xs text-sm text-slate-600">Book before 9 PM for a next-morning visit by a trained phlebotomist.</p>
-                <a href={tel} className="mt-6 inline-flex items-center gap-2 rounded-xl bg-brand-dark px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-mid">
-                    <Icon name="phone" className="size-4" />Call to book
-                </a>
+            {/* Details */}
+            <div className={`flex flex-1 flex-col p-5 sm:p-6 ${featured ? 'md:justify-center md:p-8' : ''}`}>
+                <h3 className="text-lg font-semibold text-slate-900">{offer.title}</h3>
+                <p className="mt-1 text-sm text-slate-500">{offer.text}</p>
+
+                <p className="mt-4 flex items-baseline gap-2">
+                    <span className="text-2xl font-bold text-brand-dark">{inr(offer.offerPrice)}</span>
+                    <span className="text-sm text-slate-400 line-through">{inr(offer.price)}</span>
+                </p>
+
+                <div className="mt-auto flex items-center justify-between gap-3 pt-5">
+                    <span className={`flex items-center gap-1.5 text-xs font-semibold ${urgent ? 'text-rose-600' : 'text-slate-500'}`}>
+                        {urgent ? (
+                            <span className="relative flex size-2">
+                                <span className="absolute inline-flex size-full animate-ping rounded-full bg-rose-500 opacity-60 motion-reduce:animate-none" />
+                                <span className="relative size-2 rounded-full bg-rose-500" />
+                            </span>
+                        ) : (
+                            <Icon name="clock" className="size-3.5" />
+                        )}
+                        {label}
+                    </span>
+                    <Link to={offer.to} className="rounded-xl bg-brand-dark px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid">
+                        Book now
+                    </Link>
+                </div>
             </div>
+        </article>
+    )
+}
+
+function OccasionOffers() {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const active = occasionOffers.filter((o) => (!o.startsOn || toDate(o.startsOn) <= today) && toDate(o.validTill) >= today)
+
+    if (!active.length) return null
+
+    return (
+        <section aria-labelledby="offers-heading" className={`${wrap} mt-14`}>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                    <p className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-rose-600">
+                        <span className="size-2 rounded-full bg-rose-500" />Limited-time offers
+                    </p>
+                    <h2 id="offers-heading" className="mt-2 text-2xl font-bold tracking-tight text-brand-dark sm:text-3xl">Health day specials</h2>
+                </div>
+                <p className="text-sm text-slate-500">Special prices on awareness days, for a short time only.</p>
+            </div>
+
+            {active.length === 1 ? (
+                <div className="mt-8">
+                    <OfferCard offer={active[0]} featured />
+                </div>
+            ) : (
+                // Swipe on phones, grid from md up
+                <div className={`-mx-4 mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 scrollbar-none md:mx-0 md:grid md:overflow-visible md:px-0 md:pb-0 ${active.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-2 xl:grid-cols-3'}`}>
+                    {active.map((offer) => <OfferCard key={offer.occasion} offer={offer} />)}
+                </div>
+            )}
         </section>
     )
 }
@@ -410,9 +517,9 @@ function PackageCard({ pkg }) {
                     </span>
                 </div>
                 <div className="mt-4 grid grid-cols-2 gap-2">
-                    <a href="#packages" className="rounded-xl border border-slate-200 py-2.5 text-center text-sm font-semibold text-slate-700 transition hover:border-brand-light hover:text-brand">
+                    <Link to="/packages" className="rounded-xl border border-slate-200 py-2.5 text-center text-sm font-semibold text-slate-700 transition hover:border-brand-light hover:text-brand">
                         Details
-                    </a>
+                    </Link>
                     <button type="button" className="rounded-xl bg-brand-dark py-2.5 text-sm font-semibold text-white transition hover:bg-brand-mid">
                         Book now
                     </button>
@@ -429,7 +536,7 @@ function Packages() {
                 eyebrow="Health checkups"
                 title="Popular health packages"
                 text="Comprehensive checkups at a fraction of the price of individual tests."
-                action={<ViewAll href="#packages">View all packages</ViewAll>}
+                action={<ViewAll to="/packages">View all packages</ViewAll>}
             />
             {/* Scrolls sideways on phones, grid from sm up */}
             <div className="-mx-4 mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-4">
@@ -450,13 +557,13 @@ function Concerns() {
                     text="Not sure what to book? Start with what you want to check."
                 />
                 <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5">
-                    {concerns.map(({ label, icon, tone }) => (
-                        <a key={label} href="#tests" className="group flex flex-col items-center gap-3 rounded-2xl bg-white p-5 text-center ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand/5 hover:ring-brand-light/30">
+                    {concerns.map(({ label, tag, icon, tone }) => (
+                        <Link key={label} to={`/tests?concern=${tag}`} className="group flex flex-col items-center gap-3 rounded-2xl bg-white p-5 text-center ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand/5 hover:ring-brand-light/30">
                             <span className={`grid size-14 place-items-center rounded-full transition group-hover:scale-105 ${tone}`}>
                                 <Icon name={icon} className="size-7" />
                             </span>
                             <span className="text-sm font-semibold text-slate-800">{label}</span>
-                        </a>
+                        </Link>
                     ))}
                 </div>
             </div>
@@ -471,7 +578,7 @@ function Tests() {
                 eyebrow="Lab tests"
                 title="Most booked tests"
                 text="Individual tests with transparent pricing and quick turnaround."
-                action={<ViewAll href="#tests">View all tests</ViewAll>}
+                action={<ViewAll to="/tests">View all tests</ViewAll>}
             />
             <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {tests.map((t) => (
@@ -484,9 +591,6 @@ function Tests() {
                         </div>
 
                         <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500">
-                            <span className="flex items-center gap-1">
-                                <Icon name="list" className="size-3.5" />{t.parameters} parameter{t.parameters > 1 ? 's' : ''}
-                            </span>
                             <span className="flex items-center gap-1">
                                 <Icon name="clock" className="size-3.5" />Report in {t.tat}
                             </span>
@@ -737,7 +841,7 @@ export default function Home() {
         <>
             <Hero />
             <QuickActions />
-            <Offers />
+            <OccasionOffers />
             <Packages />
             <Concerns />
             <Tests />
