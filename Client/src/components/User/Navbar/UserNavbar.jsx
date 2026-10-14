@@ -3,6 +3,7 @@ import { Link, NavLink } from 'react-router-dom'
 import LOGO from '../../../assets/logo.png'
 import Icon from '../../Icon/Icon'
 import { CONTACT, tel, landlineTel, directions } from '../../../constants/contact'
+import { wrap } from '../../../constants/layout'
 
 // Tests and Packages are pages; the rest are sections on the home page
 const navLinks = [
@@ -13,8 +14,6 @@ const navLinks = [
     { label: 'FAQs', to: '/#faqs' },
     { label: 'Contact', to: '/#contact' },
 ]
-
-const wrap = 'mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'
 
 // Highlight only real pages - every /#section link would otherwise match "/"
 const isCurrent = (to, isActive) => isActive && !to.includes('#')

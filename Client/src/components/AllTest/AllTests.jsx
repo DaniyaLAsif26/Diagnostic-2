@@ -2,53 +2,14 @@ import { useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 
 import Icon from '../Icon/Icon'
+import TestCard from './TestCard'
+import { tests } from '../../constants/tests'
+import Filters from '../Home/Filters'
+import { concernLabel } from '../../constants/concerns'
 import { EcgAccent } from '../Common/SectionAccents'
 import { CONTACT, tel, whatsapp } from '../../constants/contact'
-
-/* ------------------------------------------------------------------
-   Sample data - same shape as the Test model, swap for the API later.
-   `relevance` holds the health-concern tags used by the filter.
-------------------------------------------------------------------- */
-
-const tests = [
-    { id: 1, name: 'Complete Blood Count (CBC)', category: 'LABORATORY', price: 450, offerPrice: 299, isPopular: true, relevance: ['fever'], preparation: '', description: 'Checks red cells, white cells and platelets to screen for infection, anaemia and more.' },
-    { id: 2, name: 'Thyroid Profile (T3, T4, TSH)', category: 'LABORATORY', price: 700, offerPrice: 449, isPopular: true, relevance: ['thyroid', 'women'], preparation: '', description: 'Measures thyroid hormones to check for an under- or over-active thyroid.' },
-    { id: 3, name: 'TSH (Ultrasensitive)', category: 'LABORATORY', price: 350, offerPrice: 0, isPopular: false, relevance: ['thyroid'], preparation: '', description: 'The main screening test for thyroid function.' },
-    { id: 4, name: 'Lipid Profile', category: 'LABORATORY', price: 800, offerPrice: 499, isPopular: true, relevance: ['heart'], preparation: '10–12 hrs fasting', description: 'Cholesterol and triglycerides, to assess your risk of heart disease.' },
-    { id: 5, name: 'HbA1c', category: 'LABORATORY', price: 600, offerPrice: 399, isPopular: true, relevance: ['diabetes'], preparation: '', description: 'Average blood sugar over the last 3 months.' },
-    { id: 6, name: 'Fasting Blood Sugar', category: 'LABORATORY', price: 100, offerPrice: 60, isPopular: false, relevance: ['diabetes'], preparation: 'Overnight fasting', description: 'Blood glucose after an overnight fast.' },
-    { id: 7, name: 'Vitamin D (25-OH)', category: 'LABORATORY', price: 1500, offerPrice: 899, isPopular: true, relevance: ['vitamin', 'bone'], preparation: '', description: 'Checks for vitamin D deficiency, which affects bones and immunity.' },
-    { id: 8, name: 'Vitamin B12', category: 'LABORATORY', price: 1100, offerPrice: 649, isPopular: false, relevance: ['vitamin'], preparation: '', description: 'Low B12 can cause tiredness, weakness and numbness.' },
-    { id: 9, name: 'Liver Function Test (LFT)', category: 'LABORATORY', price: 900, offerPrice: 549, isPopular: false, relevance: ['liver'], preparation: '8 hrs fasting', description: 'Enzymes, proteins and bilirubin that show how well your liver works.' },
-    { id: 10, name: 'Kidney Function Test (KFT)', category: 'LABORATORY', price: 900, offerPrice: 549, isPopular: false, relevance: ['kidney'], preparation: '', description: 'Urea, creatinine and electrolytes to check kidney health.' },
-    { id: 11, name: 'Urine Routine & Microscopy', category: 'LABORATORY', price: 250, offerPrice: 0, isPopular: false, relevance: ['kidney', 'fever'], preparation: 'First morning sample', description: 'Screens for urinary infection and kidney problems.' },
-    { id: 12, name: 'C-Reactive Protein (CRP)', category: 'LABORATORY', price: 600, offerPrice: 399, isPopular: false, relevance: ['fever', 'heart'], preparation: '', description: 'A marker of inflammation or infection in the body.' },
-    { id: 13, name: 'Dengue NS1 Antigen', category: 'LABORATORY', price: 900, offerPrice: 699, isPopular: false, relevance: ['fever'], preparation: '', description: 'Early detection of dengue in the first days of fever.' },
-    { id: 14, name: 'Calcium (Serum)', category: 'LABORATORY', price: 300, offerPrice: 0, isPopular: false, relevance: ['bone'], preparation: '', description: 'Calcium level, important for bones, muscles and nerves.' },
-    { id: 15, name: 'Uric Acid', category: 'LABORATORY', price: 300, offerPrice: 199, isPopular: false, relevance: ['bone', 'kidney'], preparation: '', description: 'High levels can cause gout and joint pain.' },
-    { id: 16, name: 'Iron Studies', category: 'LABORATORY', price: 1200, offerPrice: 799, isPopular: false, relevance: ['women', 'vitamin'], preparation: '', description: 'Iron, ferritin and TIBC to check for iron deficiency.' },
-    { id: 17, name: 'IgE (Total)', category: 'LABORATORY', price: 900, offerPrice: 0, isPopular: false, relevance: ['lung'], preparation: '', description: 'Raised levels can point to allergies or asthma.' },
-    { id: 18, name: 'Beta hCG', category: 'LABORATORY', price: 800, offerPrice: 549, isPopular: false, relevance: ['women'], preparation: '', description: 'Confirms and monitors pregnancy.' },
-    { id: 19, name: 'Chest X-Ray (PA View)', category: 'RADIOLOGY', price: 500, offerPrice: 399, isPopular: true, relevance: ['lung'], preparation: '', description: 'Digital X-ray of the chest for lungs and heart outline.' },
-    { id: 20, name: 'ECG', category: 'RADIOLOGY', price: 300, offerPrice: 0, isPopular: false, relevance: ['heart'], preparation: '', description: 'Records the heart’s electrical activity in a few minutes.' },
-    { id: 21, name: 'Ultrasound Abdomen', category: 'RADIOLOGY', price: 1500, offerPrice: 1199, isPopular: false, relevance: ['liver', 'kidney'], preparation: '6 hrs fasting, full bladder', description: 'Images the liver, gallbladder, kidneys and other abdominal organs.' },
-    { id: 22, name: 'X-Ray Knee (AP & Lateral)', category: 'RADIOLOGY', price: 600, offerPrice: 0, isPopular: false, relevance: ['bone'], preparation: '', description: 'Checks the knee joint for injury or arthritis.' },
-    { id: 23, name: 'Ultrasound Pelvis', category: 'RADIOLOGY', price: 1400, offerPrice: 1099, isPopular: false, relevance: ['women'], preparation: 'Full bladder', description: 'Images the uterus, ovaries and bladder.' },
-]
-
-const concerns = [
-    { tag: 'diabetes', label: 'Diabetes', icon: 'droplet', tone: 'bg-rose-50 text-rose-600' },
-    { tag: 'heart', label: 'Heart', icon: 'heart', tone: 'bg-red-50 text-red-600' },
-    { tag: 'thyroid', label: 'Thyroid', icon: 'thyroid', tone: 'bg-violet-50 text-violet-600' },
-    { tag: 'liver', label: 'Liver', icon: 'liver', tone: 'bg-amber-50 text-amber-600' },
-    { tag: 'kidney', label: 'Kidney', icon: 'kidney', tone: 'bg-orange-50 text-orange-600' },
-    { tag: 'vitamin', label: 'Vitamins', icon: 'sun', tone: 'bg-yellow-50 text-yellow-600' },
-    { tag: 'fever', label: 'Fever & Infection', icon: 'thermometer', tone: 'bg-sky-50 text-sky-600' },
-    { tag: 'bone', label: 'Bone & Joints', icon: 'bone', tone: 'bg-stone-100 text-stone-600' },
-    { tag: 'women', label: 'Women’s Health', icon: 'female', tone: 'bg-pink-50 text-pink-600' },
-    { tag: 'lung', label: 'Lungs & Allergy', icon: 'lungs', tone: 'bg-teal-50 text-teal-600' },
-]
-const concernLabel = Object.fromEntries(concerns.map(({ tag, label }) => [tag, label]))
+import { wrap } from '../../constants/layout'
+import { finalPrice } from '../../utils/price'
 
 const types = [
     { value: '', label: 'All' },
@@ -61,121 +22,6 @@ const sorts = {
     'price-asc': { label: 'Price: low to high', compare: (a, b) => finalPrice(a) - finalPrice(b) },
     'price-desc': { label: 'Price: high to low', compare: (a, b) => finalPrice(b) - finalPrice(a) },
     name: { label: 'Name: A to Z', compare: (a, b) => a.name.localeCompare(b.name) },
-}
-
-const wrap = 'mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'
-
-const inr = (n) => `₹${n.toLocaleString('en-IN')}`
-// offerPrice is 0 when there is no offer; only a lower offer counts as a discount
-const onOffer = ({ price, offerPrice }) => offerPrice > 0 && offerPrice < price
-const finalPrice = (t) => (onOffer(t) ? t.offerPrice : t.price)
-
-/* ------------------------------------------------------------------
-   Pieces
-------------------------------------------------------------------- */
-
-function ConcernFilter({ active, onChange }) {
-    return (
-        <section aria-labelledby="concern-heading" className="mt-8">
-            <div className="flex items-end justify-between gap-4">
-                <div>
-                    <h2 id="concern-heading" className="text-lg font-semibold text-brand-dark">Filter by health concern</h2>
-                    <p className="mt-0.5 text-sm text-slate-500">Pick what you want to check.</p>
-                </div>
-                {active && (
-                    <button type="button" onClick={() => onChange('')} className="text-sm font-semibold text-brand-light transition hover:text-brand">
-                        Clear
-                    </button>
-                )}
-            </div>
-
-            {/* One row of circles - scrolls sideways on phones */}
-            <div className="-mx-4 mt-4 flex gap-3 overflow-x-auto px-4 pb-2 pt-1 [scrollbar-width:none] sm:mx-0 sm:px-0 lg:justify-between">
-                {concerns.map(({ tag, label, icon, tone }) => {
-                    const selected = active === tag
-                    const count = tests.filter((t) => t.relevance.includes(tag)).length
-
-                    return (
-                        <button
-                            key={tag}
-                            type="button"
-                            aria-pressed={selected}
-                            onClick={() => onChange(selected ? '' : tag)}
-                            className="group flex w-24 shrink-0 flex-col items-center gap-2.5 text-center"
-                        >
-                            <span className={`relative grid size-20 place-items-center rounded-full bg-white transition ${selected ? 'shadow-lg shadow-brand/10 ring-2 ring-brand-light' : 'ring-1 ring-slate-200 group-hover:-translate-y-0.5 group-hover:shadow-lg group-hover:shadow-brand/5 group-hover:ring-brand-light/30'}`}>
-                                <span className={`grid size-14 place-items-center rounded-full transition group-hover:scale-105 ${tone}`}>
-                                    <Icon name={icon} className="size-7" />
-                                </span>
-                                {selected && (
-                                    <span className="absolute right-0 top-0 grid size-5 place-items-center rounded-full bg-brand-light text-white ring-2 ring-white">
-                                        <Icon name="check" className="size-3" />
-                                    </span>
-                                )}
-                            </span>
-                            <span>
-                                <span className="block text-sm font-semibold leading-tight text-slate-800">{label}</span>
-                                <span className="text-xs text-slate-400">{count} test{count === 1 ? '' : 's'}</span>
-                            </span>
-                        </button>
-                    )
-                })}
-            </div>
-        </section>
-    )
-}
-
-function TestCard({ test }) {
-    const isScan = test.category === 'RADIOLOGY'
-    const discounted = onOffer(test)
-
-    return (
-        <article className="flex flex-col rounded-2xl bg-white p-5 ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand/5 hover:ring-brand-light/30">
-            <div className="flex-1 pb-5">
-                <div className="flex items-start justify-between gap-3">
-                    <span className={`grid size-11 place-items-center rounded-xl ${isScan ? 'bg-teal-50 text-teal-600' : 'bg-sky-50 text-sky-600'}`}>
-                        <Icon name={isScan ? 'scan' : 'tube'} className="size-5" />
-                    </span>
-                    {test.isPopular && (
-                        <span className="flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-700">
-                            <Icon name="star" className="size-3 fill-current" />Popular
-                        </span>
-                    )}
-                </div>
-
-                <h3 className="mt-4 font-semibold leading-snug text-slate-900">{test.name}</h3>
-                <p className="mt-0.5 text-xs font-medium uppercase tracking-wide text-slate-400">{isScan ? 'Radiology' : 'Laboratory'}</p>
-                {test.description && <p className="mt-2 line-clamp-2 text-sm text-slate-500">{test.description}</p>}
-
-                <div className="mt-3 flex flex-wrap gap-1.5">
-                    {test.relevance.map((tag) => (
-                        <span key={tag} className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600">{concernLabel[tag] ?? tag}</span>
-                    ))}
-                </div>
-
-                {test.preparation && (
-                    <p className="mt-3 flex w-fit items-center gap-1.5 rounded-md bg-amber-50 px-2 py-1 text-[11px] font-medium text-amber-700">
-                        <Icon name="clock" className="size-3.5 shrink-0" />{test.preparation}
-                    </p>
-                )}
-            </div>
-
-            <div className="flex items-end justify-between gap-3 border-t border-slate-100 pt-4">
-                <div>
-                    {discounted && (
-                        <p className="flex items-center gap-2 text-xs">
-                            <span className="text-slate-400 line-through">{inr(test.price)}</span>
-                            <span className="font-semibold text-emerald-600">{Math.round((1 - test.offerPrice / test.price) * 100)}% off</span>
-                        </p>
-                    )}
-                    <p className="text-xl font-bold text-brand-dark">{inr(finalPrice(test))}</p>
-                </div>
-                <Link to="/#book" className="rounded-xl border border-brand/20 px-4 py-2 text-sm font-semibold text-brand transition hover:bg-brand hover:text-white">
-                    Book
-                </Link>
-            </div>
-        </article>
-    )
 }
 
 /* ------------------------------------------------------------------
@@ -269,7 +115,16 @@ export default function AllTests() {
                             )}
                         </div>
 
-                        <ConcernFilter active={concern} onChange={(tag) => setParam('concern', tag)} />
+                        <div className="mt-8">
+                            <Filters
+                                title="Filter by health concern"
+                                subtitle="Pick what you want to check."
+                                active={concern}
+                                onChange={(tag) => setParam('concern', tag)}
+                                items={tests}
+                                noun="test"
+                            />
+                        </div>
                     </div>
                 </div>
             </section>

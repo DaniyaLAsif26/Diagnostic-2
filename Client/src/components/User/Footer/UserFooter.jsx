@@ -3,13 +3,12 @@ import { Link } from 'react-router-dom'
 import LOGO from '../../../assets/logo.png'
 import Icon from '../../Icon/Icon'
 import { CONTACT, tel, landlineTel, directions } from '../../../constants/contact'
+import { wrap } from '../../../constants/layout'
 
 const footerLinks = [
     { title: 'Services', links: [['Lab tests', '/tests'], ['Health packages', '/packages'], ['Radiology', '/tests?type=radiology'], ['Home collection', '/#book']] },
     { title: 'Company', links: [['How it works', '/#how-it-works'], ['FAQs', '/#faqs'], ['Book a test', '/#book'], ['Login', '/login']] },
 ]
-
-const wrap = 'mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'
 
 export default function UserFooter() {
     return (
