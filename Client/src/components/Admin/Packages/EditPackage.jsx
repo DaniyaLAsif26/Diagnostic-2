@@ -232,7 +232,6 @@ export default function EditPackage({ data, PackageId }) {
                     <label className="relative flex items-center justify-between gap-3 rounded-xl border border-slate-200 p-3.5 transition has-[:enabled]:cursor-pointer has-[:enabled]:hover:bg-slate-50">
                         <IsPopular
                             register={register}
-                            data={data}
                             disabled={!editing}
                         />
                     </label>

@@ -1,6 +1,8 @@
 import { stroke } from "../../styles/iconStroke"
 
-export default function IsPopular({ register ,data=null,disabled=false }) {
+// The form's defaultValues set the checked state. Don't add defaultChecked here: react-hook-form would then
+// read the starting value from the input, and a disabled checkbox always reads as false.
+export default function IsPopular({ register, disabled = false }) {
     return (
         <>
             <span className="flex items-center gap-3">
@@ -12,7 +14,7 @@ export default function IsPopular({ register ,data=null,disabled=false }) {
                     <span className="block text-xs text-slate-500">Highlights this test for patients</span>
                 </span>
             </span>
-            <input {...register("isPopular")} type="checkbox" defaultChecked={data?.isPopular} disabled={disabled} className="peer sr-only" />
+            <input {...register("isPopular")} type="checkbox" disabled={disabled} className="peer sr-only" />
             <span className="relative h-6 w-11 shrink-0 rounded-full bg-slate-200 transition after:absolute after:left-0.5 after:top-0.5 after:size-5 after:rounded-full after:bg-white after:shadow after:transition peer-checked:bg-brand-light peer-checked:after:translate-x-5 peer-disabled:opacity-70" />
         </>
     )

@@ -103,6 +103,24 @@ router.route('/search').get(asyncHandler(async (req, res) => {
     )
 }))
 
+router.route('/popular').get(asyncHandler(async(req,res)=>{
+
+const limit = Math.min(Number(req.query.limit) || 3 , 20)
+
+    const popularTests = await prisma.test.findMany({
+        where : {isPopular : true},
+        orderBy : {name :'asc'},
+        take : limit,
+    })
+
+    return res.status(200)
+    .json(new ApiResponse(
+        200,
+        {popularTests},
+        "Popular Tests"
+    ))
+}))
+
 router.route('/:id').get(asyncHandler(async (req, res) => {
 
     const id = Number(req.params.id)

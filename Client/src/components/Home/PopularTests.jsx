@@ -1,14 +1,28 @@
 import TestCard from '../AllTest/TestCard'
 import SectionHeading from '../Common/SectionHeading'
 import ViewAll from '../Common/ViewAll'
+import { useQuery } from '@tanstack/react-query'
 import { tint } from '../Common/SectionAccents'
 import { tests } from '../../constants/tests'
 import { wrap } from '../../constants/layout'
 
-// Tests marked isPopular in the shared data
-const popular = tests.filter((t) => t.isPopular)
+import api from '../../api/api.js'
+
+// const popular = tests.filter((t) => t.isPopular)
 
 export default function PopularTests() {
+
+    const limit = 3
+
+    const popularTests = () => api.get("tests/popular" ,{params : {limit}})
+        .then((res) => res.data.data.popularTests)
+
+    const { data: popular = [], isPending, error, isError } = useQuery({
+        queryKey: ['popularTests'],
+        queryFn: popularTests
+    })
+
+
     return (
         <section className={`${tint} py-16 sm:py-20`}>
             <div className={wrap}>
