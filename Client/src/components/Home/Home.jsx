@@ -42,7 +42,7 @@ export default function Home() {
             <Concerns />
             <PopularTests />
             <Services />
-            <Steps />
+            <Steps id="how-it-works" />
             <WhyUs />
             <Testimonials />
             <Faq />

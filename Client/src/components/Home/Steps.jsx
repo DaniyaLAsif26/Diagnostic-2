@@ -3,19 +3,23 @@ import SectionHeading from '../Common/SectionHeading'
 import { tint } from '../Common/SectionAccents'
 import { wrap } from '../../constants/layout'
 
-const steps = [
+// Lab-test journey - the default on the home page and lab test pages
+const labSteps = [
     { icon: 'calendar', title: 'Book a test', text: 'Search and book online, or simply give us a call.' },
     { icon: 'home', title: 'Sample collection', text: 'A trained phlebotomist visits your home, or walk in to the centre.' },
     { icon: 'flask', title: 'Lab processing', text: 'Samples are tested on calibrated, quality-checked analysers.' },
     { icon: 'report', title: 'Get your report', text: 'Download your report online or receive it on WhatsApp.' },
 ]
 
-/** "Your test in 4 simple steps" - the How it works section. */
-export default function Steps() {
+/**
+ * "How it works" band. Defaults to the lab-test journey; pass `steps` / `title` for another
+ * (e.g. scans). `id` is the in-page anchor - only the home page needs it for /#how-it-works.
+ */
+export default function Steps({ steps = labSteps, title = 'Your test in 4 simple steps', id }) {
     return (
-        <section id="how-it-works" className={`${tint} scroll-mt-24 py-16 sm:py-20`}>
+        <section id={id} className={`${tint} scroll-mt-24 py-16 sm:py-20`}>
             <div className={wrap}>
-                <SectionHeading center eyebrow="How it works" icon="calendar" title="Your test in 4 simple steps" />
+                <SectionHeading center eyebrow="How it works" icon="calendar" title={title} />
                 <div className="relative mt-12">
                     {/* dashed connector behind the step icons */}
                     <div aria-hidden="true" className="absolute inset-x-[12.5%] top-8 hidden border-t-2 border-dashed border-brand/15 lg:block" />

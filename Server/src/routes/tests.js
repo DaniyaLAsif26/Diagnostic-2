@@ -132,7 +132,10 @@ router.route('/:id').get(asyncHandler(async (req, res) => {
         )
     }
 
-    const test = await prisma.test.findUnique({ where: { id: id } })
+    const test = await prisma.test.findUnique({ 
+        where: { id: id } 
+    
+    })
 
     if (!test) {
         throw new ApiError(
