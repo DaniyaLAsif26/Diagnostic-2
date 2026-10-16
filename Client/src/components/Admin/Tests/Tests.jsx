@@ -1,13 +1,12 @@
 import { useState } from 'react';
 
 import { createColumnHelper, tableFeatures } from '@tanstack/react-table';
-import { useQuery } from '@tanstack/react-query'
 
-import api from '../../../api/api.js'
 
 import DataTable from '../Table/DataTable.jsx';
 import PageHeader from '../PageHeader/PageHeader.jsx';
 
+import { useAllTest } from '../../../hooks/useTest.js';
 
 const features = tableFeatures({});
 const columnHelper = createColumnHelper()
@@ -28,15 +27,8 @@ export default function Tests() {
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('')
 
-  const allTests = async () => {
-    const res = await api.get('/tests/all')
-    return res.data.data.allTests
-  }
 
-  const { data, isPending, isError, error } = useQuery({
-    queryKey: ['tests'],
-    queryFn: allTests
-  })
+  const { data, isPending, error, isError } = useAllTest()
 
   if (isPending) return <p>Loading...</p>;
   if (isError) return <p>Error: {error.message}</p>;

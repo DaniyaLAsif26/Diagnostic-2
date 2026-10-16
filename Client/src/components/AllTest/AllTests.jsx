@@ -8,10 +8,11 @@ import Filters from '../Home/Filters'
 import ResultsToolbar from '../Listing/ResultsToolbar'
 import NoResults from '../Listing/NoResults'
 import HelpBanner from '../Listing/HelpBanner'
-import { tests } from '../../constants/tests'
 import { concernLabel } from '../../constants/concerns'
 import { wrap } from '../../constants/layout'
 import { finalPrice } from '../../utils/price'
+
+import { useAllTest } from '../../hooks/useTest'
 
 const sorts = {
     popular: { label: 'Most popular', compare: (a, b) => Number(b.isPopular) - Number(a.isPopular) || a.name.localeCompare(b.name) },
@@ -48,13 +49,15 @@ export default function AllTests() {
         setParams({}, { replace: true, preventScrollReset: true })
     }
 
+    const { data: tests, isPending, isError } = useAllTest()
+
     const term = search.trim().toLowerCase()
-    const visible = useMemo(() => tests
+    const visible = useMemo(() => (tests ?? [])
         .filter((t) => !concern || t.relevance.includes(concern))
         .filter((t) => !type || t.category.toLowerCase() === type)
         .filter((t) => !term || t.name.toLowerCase().includes(term) || t.relevance.some((tag) => (concernLabel[tag] ?? tag).toLowerCase().includes(term)))
         .sort(sorts[sort].compare),
-    [concern, type, term, sort])
+        [tests, concern, type, term, sort])
 
     const hasFilters = Boolean(term || concern || type)
 
@@ -74,7 +77,7 @@ export default function AllTests() {
                     subtitle="Pick what you want to check."
                     active={concern}
                     onChange={(tag) => setParam('concern', tag)}
-                    items={tests}
+                    items={tests ?? []}
                     noun="test"
                 />
             </TestPackageHeader>
@@ -82,7 +85,7 @@ export default function AllTests() {
             <div className={`${wrap} pb-16 pt-4 sm:pb-20`}>
                 <ResultsToolbar
                     shown={visible.length}
-                    total={tests.length}
+                    total={tests?.length ?? 0}
                     noun="test"
                     hasFilters={hasFilters}
                     onClear={clearFilters}
@@ -93,7 +96,11 @@ export default function AllTests() {
                     <TypeToggle type={type} onChange={(value) => setParam('type', value)} />
                 </ResultsToolbar>
 
-                {visible.length ? (
+                {isPending ? (
+                    <p className="mt-6 text-center text-sm text-slate-500">Loading tests…</p>
+                ) : isError ? (
+                    <p className="mt-6 text-center text-sm text-red-600">Couldn’t load tests. Please try again.</p>
+                ) : visible.length ? (
                     <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                         {visible.map((test) => <TestCard key={test.id} test={test} />)}
                     </div>

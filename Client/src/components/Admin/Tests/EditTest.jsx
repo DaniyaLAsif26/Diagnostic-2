@@ -14,6 +14,7 @@ import { toast } from 'sonner'
 
 import { testSchema } from '../../../schemas/testSchema.js'
 import api from "../../../api/api.js"
+import { testKeys } from "../../../api/queryKeys.js"
 import TagInput from "../../Forms/Admin/FormHelpers/TagInput.jsx"
 import Category from '../../Forms/Admin/FormHelpers/Category.jsx'
 import Price from "../../Forms/Admin/FormHelpers/Price.jsx"
@@ -48,9 +49,7 @@ export default function EditTest({ data, testId }) {
             toast.success("Test updated successfully")
             setEditing(false)
             reset(getValues())
-            queryClient.invalidateQueries({ queryKey: ['tests', testId] })
-
-            queryClient.invalidateQueries({ queryKey: ['tests'], exact: true })
+            queryClient.invalidateQueries({ queryKey: testKeys.all })
         },
         onError: (err) => {
             toast.error(err.response?.data?.message || err.message || "Something went wrong")
@@ -79,8 +78,8 @@ export default function EditTest({ data, testId }) {
         mutationFn: (id) => api.delete(`/tests/delete/${id}`),
 
         onSuccess: () => {
-            queryClient.removeQueries({ queryKey: ['tests', testId] })
-            queryClient.invalidateQueries({ queryKey: ['tests'], exact: true })
+            queryClient.removeQueries({ queryKey: testKeys.detail(testId) })
+            queryClient.invalidateQueries({ queryKey: testKeys.all })
 
             navigate('/admin/tests')
             toast.success("Test deleted Successfully")

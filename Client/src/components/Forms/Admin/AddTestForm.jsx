@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import api from '../../../api/api'
+import { testKeys } from '../../../api/queryKeys'
 import TagInput from './FormHelpers/TagInput'
 import Category from './FormHelpers/Category'
 import Price from './FormHelpers/Price'
@@ -43,7 +44,7 @@ export default function AddTestForm() {
     const addTestMutation = useMutation({
         mutationFn: (data) => api.post('/tests/add', data),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['tests'] })
+            queryClient.invalidateQueries({ queryKey: testKeys.all })
             navigate('/admin/tests')
         },
         onError: (err) => {
