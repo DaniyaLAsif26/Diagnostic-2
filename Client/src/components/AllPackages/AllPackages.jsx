@@ -7,7 +7,7 @@ import Filters from '../Home/Filters'
 import ResultsToolbar from '../Listing/ResultsToolbar'
 import NoResults from '../Listing/NoResults'
 import HelpBanner from '../Listing/HelpBanner'
-import { packages } from '../../constants/packages'
+import { useAllPackages } from '../../hooks/usePackage'
 import { concernLabel } from '../../constants/concerns'
 import { wrap } from '../../constants/layout'
 import { finalPrice } from '../../utils/price'
@@ -20,6 +20,8 @@ const sorts = {
 }
 
 export default function AllPackages() {
+    const { data: packages = [], isPending, isError } = useAllPackages()
+
     // Filters live in the URL (?q=&concern=&sort=) so links can open a filtered view
     const [params, setParams] = useSearchParams()
     const concern = concernLabel[params.get('concern')] ? params.get('concern') : ''
@@ -53,9 +55,9 @@ export default function AllPackages() {
         .filter((p) => !term
             || p.name.toLowerCase().includes(term)
             || p.relevance.some((tag) => (concernLabel[tag] ?? tag).toLowerCase().includes(term))
-            || p.tests.some((t) => t.toLowerCase().includes(term)))
+            || p.tests.some((t) => t.name.toLowerCase().includes(term)))
         .sort(sorts[sort].compare),
-    [concern, term, sort])
+    [packages, concern, term, sort])
 
     const hasFilters = Boolean(term || concern)
 
@@ -92,7 +94,13 @@ export default function AllPackages() {
                     onSort={(value) => setParam('sort', value === 'popular' ? '' : value)}
                 />
 
-                {visible.length ? (
+                {isPending ? (
+                    <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        {[0, 1, 2].map((i) => <div key={i} className="h-96 animate-pulse rounded-3xl bg-slate-100" />)}
+                    </div>
+                ) : isError ? (
+                    <p className="mt-6 rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600">Couldn’t load packages. Please refresh the page.</p>
+                ) : visible.length ? (
                     <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                         {visible.map((pkg) => <PackageCard key={pkg.id} pkg={pkg} />)}
                     </div>

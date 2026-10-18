@@ -14,7 +14,7 @@ import { toast } from 'sonner'
 
 import { testSchema } from '../../../schemas/testSchema.js'
 import api from "../../../api/api.js"
-import { testKeys } from "../../../api/queryKeys.js"
+import { testKeys, packageKeys } from "../../../api/queryKeys.js"
 import TagInput from "../../Forms/Admin/FormHelpers/TagInput.jsx"
 import Category from '../../Forms/Admin/FormHelpers/Category.jsx'
 import Price from "../../Forms/Admin/FormHelpers/Price.jsx"
@@ -50,6 +50,8 @@ export default function EditTest({ data, testId }) {
             setEditing(false)
             reset(getValues())
             queryClient.invalidateQueries({ queryKey: testKeys.all })
+            // Packages show test names and categories, so refresh them too
+            queryClient.invalidateQueries({ queryKey: packageKeys.all })
         },
         onError: (err) => {
             toast.error(err.response?.data?.message || err.message || "Something went wrong")
@@ -80,6 +82,8 @@ export default function EditTest({ data, testId }) {
         onSuccess: () => {
             queryClient.removeQueries({ queryKey: testKeys.detail(testId) })
             queryClient.invalidateQueries({ queryKey: testKeys.all })
+            // Packages show test names and categories, so refresh them too
+            queryClient.invalidateQueries({ queryKey: packageKeys.all })
 
             navigate('/admin/tests')
             toast.success("Test deleted Successfully")

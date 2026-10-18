@@ -3,6 +3,7 @@ import { useTest, usePopularTests } from '../../hooks/useTest.js'
 
 import DetailsHeader from './DetailsHeader'
 import PriceCard from './PriceCard'
+import IncludedInPackages from './IncludedInPackages'
 import OtherPopularTests from './OtherPopularTests'
 import MobileBookBar from './MobileBookBar'
 import DetailsSkeleton from './DetailsSkeleton'
@@ -32,6 +33,8 @@ export default function TestDetails() {
             <DetailsHeader test={test} prepTitle={copy.prepTitle}>
                 <PriceCard test={test} priceLabel={copy.priceLabel} perks={copy.perks} payNote={copy.payNote} />
             </DetailsHeader>
+
+            <IncludedInPackages packages={test.packages} />
 
             <OtherPopularTests tests={otherPopular} />
 

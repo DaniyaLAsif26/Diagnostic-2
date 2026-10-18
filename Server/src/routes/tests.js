@@ -86,39 +86,61 @@ router.route('/search').get(asyncHandler(async (req, res) => {
     }
 
     const tests = await prisma.test.findMany({
-        where : { name: { contains : search, mode: 'insensitive' } },
-        select : { id : true , name : true , price : true},
-        orderBy : {name : 'asc'},
-        take : 8
+        where: {
+            name:
+            {
+                contains: search, mode: 'insensitive'
+            }
+        },
+        select: {
+            id: true, name: true, price: true
+        },
+        orderBy: { name: 'asc' },
+        take: 8
     })
 
     return res
-    .status(200)
-    .json(
-        new ApiResponse(
-            200,
-            {tests},
-            "Search Results"
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                { tests },
+                "Search Results"
+            )
         )
-    )
 }))
 
-router.route('/popular').get(asyncHandler(async(req,res)=>{
+router.route('/popular').get(asyncHandler(async (req, res) => {
 
-const limit = Math.min(Number(req.query.limit) || 3 , 20)
+    const limit = Math.min(Number(req.query.limit) || 3, 20)
 
     const popularTests = await prisma.test.findMany({
-        where : {isPopular : true},
-        orderBy : {name :'asc'},
-        take : limit,
+        where: { isPopular: true },
+        orderBy: { name: 'asc' },
+        take: limit,
+        include: {
+            packageItems: {
+                select: {
+                    pkg: {
+                        select: {
+                            id: true,
+                            name: true,
+                            price: true,
+                            offerPrice: true,
+                            description: true
+                        }
+                    }
+                }
+            }
+        }
     })
 
     return res.status(200)
-    .json(new ApiResponse(
-        200,
-        {popularTests},
-        "Popular Tests"
-    ))
+        .json(new ApiResponse(
+            200,
+            { popularTests },
+            "Popular Tests"
+        ))
 }))
 
 router.route('/:id').get(asyncHandler(async (req, res) => {
@@ -132,9 +154,28 @@ router.route('/:id').get(asyncHandler(async (req, res) => {
         )
     }
 
-    const test = await prisma.test.findUnique({ 
-        where: { id: id } 
-    
+    const test = await prisma.test.findUnique({
+        where: { id: id },
+        include: {
+            packageItems: {
+                select: {
+                    // Full package with its tests, so the site can show the usual package card
+                    pkg: {
+                        include: {
+                            items: {
+                                select: {
+                                    testId: true,
+                                    testName: true,
+                                    test: { select: { name: true, category: true } }
+                                }
+                            }
+                        }
+                    }
+                },
+                orderBy: { pkg: { name: 'asc' } }
+            }
+        }
+
     })
 
     if (!test) {

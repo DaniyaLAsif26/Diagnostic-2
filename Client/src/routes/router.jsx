@@ -15,6 +15,7 @@ import AllTests from '../components/AllTest/AllTests.jsx'
 import AllPackages from '../components/AllPackages/AllPackages.jsx'
 
 import TestDetails from '../components/TestDetails/TestDetails.jsx'
+import PackageDetails from '../components/PackageDetails/PackageDetails.jsx'
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -27,6 +28,7 @@ export const router = createBrowserRouter(
                 <Route path='tests' element={<AllTests />} />
                 <Route path='packages' element={<AllPackages />} />
                 <Route path='test/:name/:id' element={<TestDetails />} />
+                <Route path='package/:name/:id' element={<PackageDetails />} />
             </Route>
 
             <Route path='/login' element={<LoginForm />} />

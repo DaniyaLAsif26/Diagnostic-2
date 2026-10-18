@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom"
 import { useForm, useFieldArray, Controller } from "react-hook-form"
 
 import api from "../../../api/api.js"
+import { packageKeys, testKeys } from "../../../api/queryKeys.js"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { packageSchema } from "../../../schemas/packageSchema.js"
 
@@ -49,9 +50,9 @@ export default function EditPackage({ data, PackageId }) {
             toast.success("Package updated successfully")
             setEditing(false)
             reset(getValues())
-            queryClient.invalidateQueries({ queryKey: ['packages', PackageId] })
-
-            queryClient.invalidateQueries({ queryKey: ['packages'], exact: true })
+            queryClient.invalidateQueries({ queryKey: packageKeys.all })
+            // Test pages list the packages that include them, so refresh them too
+            queryClient.invalidateQueries({ queryKey: testKeys.all })
         },
         onError: (err) => {
             toast.error(err.response?.data?.message || err.message || "Something went wrong")
@@ -75,9 +76,10 @@ export default function EditPackage({ data, PackageId }) {
         mutationFn: (id) => api.delete(`/packages/delete/${id}`),
 
         onSuccess: () => {
-            queryClient.removeQueries({ queryKey: ["packages", PackageId] })
-            queryClient.invalidateQueries({ queryKey: ['packages'], exact: true })
-
+            queryClient.removeQueries({ queryKey: packageKeys.detail(PackageId) })
+            queryClient.invalidateQueries({ queryKey: packageKeys.all })
+            // Test pages list the packages that include them, so refresh them too
+            queryClient.invalidateQueries({ queryKey: testKeys.all })
 
             navigate('/admin/packages')
             toast.success("Package deleted successfully")

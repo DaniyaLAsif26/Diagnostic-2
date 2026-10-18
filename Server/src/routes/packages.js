@@ -34,10 +34,21 @@ const validateTests = async (tests) => {
     }
 }
 
+// Every package response carries its tests: saved tests via the relation, new ones by name
+const withItems = {
+    items: {
+        select: {
+            testId: true,
+            testName: true,
+            test: { select: { name: true, category: true } }
+        }
+    }
+}
+
 const toItems = (tests) => tests.map(t => t.testId != null ? { testId: t.testId } : { testName: t.name?.trim() })
 
 router.route('/all').get(asyncHandler(async (req, res) => {
-    const allPackages = await prisma.package.findMany({ include: { _count: { select: { items: true } } } })
+    const allPackages = await prisma.package.findMany({ include: { _count: { select: { items: true } }, ...withItems } })
 
     return res.
         status(200)
@@ -47,6 +58,26 @@ router.route('/all').get(asyncHandler(async (req, res) => {
             "All Packages"
         ))
 }))
+
+router.route('/popular').get(asyncHandler(async(req,res)=>{
+
+const limit = Math.min(Number(req.query.limit) || 4,6)
+
+    const popularPackages = await prisma.package.findMany({
+        where : {isPopular : true},
+        take : limit,
+        orderBy : {name : 'asc'},
+        include : withItems
+    })
+
+    return res.status(200)
+        .json(new ApiResponse(
+            200,
+            { popularPackages },
+            "Popular Packages"
+        ))
+}
+))
 
 router.route('/add').post(asyncHandler(async (req, res) => {
     const { name, price, category, preparation, description, relevance, offerPrice, isPopular, tests } = req.body
@@ -117,15 +148,7 @@ router.route('/:id').get(asyncHandler(async (req, res) => {
 
     const getPackage = await prisma.package.findUnique({
         where: { id: id },
-        include: {
-            items: {
-                select: {
-                    testId: true,
-                    testName: true,
-                    test : {select : {name : true}}
-                }
-            }
-        }
+        include: withItems
     })
 
     if (!getPackage) {

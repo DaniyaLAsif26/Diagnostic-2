@@ -15,6 +15,7 @@ import Description from './FormHelpers/Description'
 import TestPicker from './FormHelpers/TestPicker'
 
 import api from '../../../api/api'
+import { packageKeys, testKeys } from '../../../api/queryKeys'
 
 export default function AddPackageForm() {
 
@@ -39,7 +40,9 @@ export default function AddPackageForm() {
     const addPackage = useMutation({
         mutationFn: (data) => api.post('/packages/add', data),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['packages'] })
+            queryClient.invalidateQueries({ queryKey: packageKeys.all })
+            // Test pages list the packages that include them, so refresh them too
+            queryClient.invalidateQueries({ queryKey: testKeys.all })
             navigate('/admin/packages')
         },
         onError : (err)=> console.log(err.message)

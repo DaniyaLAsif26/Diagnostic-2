@@ -44,7 +44,7 @@ export default function PriceCard({ test, priceLabel, perks, payNote }) {
                     ))}
                 </ul>
 
-                <Link to="/#book" className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-brand-dark py-3 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid active:scale-[0.99]">
+                <Link to="/#book" className={`${perks.length ? 'mt-6' : ''} flex w-full items-center justify-center gap-2 rounded-xl bg-brand-dark py-3 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid active:scale-[0.99]`}>
                     Book now<Icon name="arrow" className="size-4" />
                 </Link>
                 <div className="mt-3 grid grid-cols-2 gap-3">

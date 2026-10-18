@@ -6,3 +6,11 @@ export const testKeys = {
     detail: (id) => [...testKeys.all, "detail", String(id)],  // ids from useParams are strings
     search: (term) => [...testKeys.all, "search", term],
 }
+
+export const packageKeys = {
+    all: ['packages'],
+    list: () => [...packageKeys.all, 'list'],
+    detail: (id) => [...packageKeys.all, 'detail', String(id)],
+    populars: () => [...packageKeys.all, "popular"],
+    popular: (limit) => [...packageKeys.populars(), limit],
+}

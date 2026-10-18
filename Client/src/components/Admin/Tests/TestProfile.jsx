@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom"
 import { useTest } from "../../../hooks/useTest"
 
 import EditTest from "./EditTest"
+import TestPackages from "./TestPackages"
 
 export default function TestProfile() {
 
@@ -13,9 +14,12 @@ export default function TestProfile() {
     if(isError) return <p>Error: {error?.message}</p>
 
     return (
-       <EditTest
-       testId={id}
-       data={data}
-       />
+        <>
+            <EditTest
+                testId={id}
+                data={data}
+            />
+            <TestPackages packages={data.packageItems?.map((item) => item.pkg)} />
+        </>
     )
 }

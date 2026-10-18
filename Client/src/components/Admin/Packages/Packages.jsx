@@ -1,11 +1,10 @@
 import { useState } from "react"
-import { useQuery } from "@tanstack/react-query"
 import { createColumnHelper, tableFeatures } from "@tanstack/react-table"
 import PageHeader from "../PageHeader/PageHeader"
 
 import DataTable from '../Table/DataTable.jsx'
 
-import api from "../../../api/api"
+import { useAllPackages } from "../../../hooks/usePackage"
 
 const features = tableFeatures({})
 const columnHelper = createColumnHelper()
@@ -32,15 +31,7 @@ export default function Packages() {
     const [search, setSearch] = useState('')
     const [category, setCategory] = useState('')
 
-    const allPackages = async () => {
-        const res = await api.get('/packages/all')
-        return res.data.data.allPackages
-    }
-
-    const { data, isPending, isError, error } = useQuery({
-        queryKey: ['packages'],
-        queryFn: allPackages
-    })
+    const { data, isPending, isError, error } = useAllPackages()
 
     if (isPending) return <p>Loading...</p>;
     if (isError) return <p>Error: {error.message}</p>;
