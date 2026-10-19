@@ -1,23 +1,14 @@
 import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
-import PackageCard from './PackageCard'
+import PackageResults from './PackageResults'
 import TestPackageHeader from '../Header/TestPackageHeader'
 import Filters from '../Home/Filters'
-import ResultsToolbar from '../Listing/ResultsToolbar'
-import NoResults from '../Listing/NoResults'
 import HelpBanner from '../Listing/HelpBanner'
 import { useAllPackages } from '../../hooks/usePackage'
 import { concernLabel } from '../../constants/concerns'
 import { wrap } from '../../constants/layout'
-import { finalPrice } from '../../utils/price'
-
-const sorts = {
-    popular: { label: 'Most popular', compare: (a, b) => Number(b.isPopular) - Number(a.isPopular) || a.name.localeCompare(b.name) },
-    'price-asc': { label: 'Price: low to high', compare: (a, b) => finalPrice(a) - finalPrice(b) },
-    'price-desc': { label: 'Price: high to low', compare: (a, b) => finalPrice(b) - finalPrice(a) },
-    'tests-desc': { label: 'Most tests included', compare: (a, b) => b.tests.length - a.tests.length },
-}
+import { packageSorts as sorts } from '../../utils/sorts'
 
 export default function AllPackages() {
     const { data: packages = [], isPending, isError } = useAllPackages()
@@ -83,30 +74,16 @@ export default function AllPackages() {
             </TestPackageHeader>
 
             <div className={`${wrap} pb-16 pt-4 sm:pb-20`}>
-                <ResultsToolbar
-                    shown={visible.length}
+                <PackageResults
+                    packages={visible}
                     total={packages.length}
-                    noun="package"
+                    isPending={isPending}
+                    isError={isError}
                     hasFilters={hasFilters}
                     onClear={clearFilters}
-                    sorts={sorts}
                     sort={sort}
                     onSort={(value) => setParam('sort', value === 'popular' ? '' : value)}
                 />
-
-                {isPending ? (
-                    <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                        {[0, 1, 2].map((i) => <div key={i} className="h-96 animate-pulse rounded-3xl bg-slate-100" />)}
-                    </div>
-                ) : isError ? (
-                    <p className="mt-6 rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600">Couldn’t load packages. Please refresh the page.</p>
-                ) : visible.length ? (
-                    <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                        {visible.map((pkg) => <PackageCard key={pkg.id} pkg={pkg} />)}
-                    </div>
-                ) : (
-                    <NoResults noun="package" onClear={clearFilters} />
-                )}
 
                 <HelpBanner
                     title="Need a custom package?"

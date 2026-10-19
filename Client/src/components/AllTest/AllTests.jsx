@@ -1,25 +1,15 @@
 import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
-import TestCard from './TestCard'
-import TypeToggle from './TypeToggle'
+import TestResults from './TestResults'
 import TestPackageHeader from '../Header/TestPackageHeader'
 import Filters from '../Home/Filters'
-import ResultsToolbar from '../Listing/ResultsToolbar'
-import NoResults from '../Listing/NoResults'
 import HelpBanner from '../Listing/HelpBanner'
 import { concernLabel } from '../../constants/concerns'
 import { wrap } from '../../constants/layout'
-import { finalPrice } from '../../utils/price'
+import { testSorts as sorts } from '../../utils/sorts'
 
 import { useAllTest } from '../../hooks/useTest'
-
-const sorts = {
-    popular: { label: 'Most popular', compare: (a, b) => Number(b.isPopular) - Number(a.isPopular) || a.name.localeCompare(b.name) },
-    'price-asc': { label: 'Price: low to high', compare: (a, b) => finalPrice(a) - finalPrice(b) },
-    'price-desc': { label: 'Price: high to low', compare: (a, b) => finalPrice(b) - finalPrice(a) },
-    name: { label: 'Name: A to Z', compare: (a, b) => a.name.localeCompare(b.name) },
-}
 
 export default function AllTests() {
     // Filters live in the URL (?q=&concern=&type=&sort=) so home-page links can open a filtered view
@@ -83,30 +73,18 @@ export default function AllTests() {
             </TestPackageHeader>
 
             <div className={`${wrap} pb-16 pt-4 sm:pb-20`}>
-                <ResultsToolbar
-                    shown={visible.length}
+                <TestResults
+                    tests={visible}
                     total={tests?.length ?? 0}
-                    noun="test"
+                    isPending={isPending}
+                    isError={isError}
                     hasFilters={hasFilters}
                     onClear={clearFilters}
-                    sorts={sorts}
                     sort={sort}
                     onSort={(value) => setParam('sort', value === 'popular' ? '' : value)}
-                >
-                    <TypeToggle type={type} onChange={(value) => setParam('type', value)} />
-                </ResultsToolbar>
-
-                {isPending ? (
-                    <p className="mt-6 text-center text-sm text-slate-500">Loading tests…</p>
-                ) : isError ? (
-                    <p className="mt-6 text-center text-sm text-red-600">Couldn’t load tests. Please try again.</p>
-                ) : visible.length ? (
-                    <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                        {visible.map((test) => <TestCard key={test.id} test={test} />)}
-                    </div>
-                ) : (
-                    <NoResults noun="test" onClear={clearFilters} />
-                )}
+                    type={type}
+                    onTypeChange={(value) => setParam('type', value)}
+                />
 
                 <HelpBanner
                     title="Not sure which test to book?"

@@ -16,6 +16,7 @@ import AllPackages from '../components/AllPackages/AllPackages.jsx'
 
 import TestDetails from '../components/TestDetails/TestDetails.jsx'
 import PackageDetails from '../components/PackageDetails/PackageDetails.jsx'
+import SearchResults from '../components/SearchResults/SearchResults.jsx'
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -29,6 +30,7 @@ export const router = createBrowserRouter(
                 <Route path='packages' element={<AllPackages />} />
                 <Route path='test/:name/:id' element={<TestDetails />} />
                 <Route path='package/:name/:id' element={<PackageDetails />} />
+                <Route path='search' element={<SearchResults />} />
             </Route>
 
             <Route path='/login' element={<LoginForm />} />
