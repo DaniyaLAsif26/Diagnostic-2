@@ -14,3 +14,8 @@ export const packageKeys = {
     populars: () => [...packageKeys.all, "popular"],
     popular: (limit) => [...packageKeys.populars(), limit],
 }
+
+export const searchKeys = {
+    all: ["search"],
+    search: (term) => [...searchKeys.all, term]
+}

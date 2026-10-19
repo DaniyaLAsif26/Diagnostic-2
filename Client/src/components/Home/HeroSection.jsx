@@ -1,15 +1,12 @@
-import { Form } from 'react-router-dom'
-
 import LOGO from '../../assets/logo.png'
 import Icon from '../Icon/Icon'
+import HeroSearch from './HeroSearch'
 import { wrap } from '../../constants/layout'
 
-// Rotating words in the headline
 const tickerWords = ['heart health', 'thyroid levels', 'blood sugar', 'vitamin levels']
 
 const heroPerks = ['Free home collection', 'Reports in 24 hrs', 'Expert pathologists']
 
-// Body systems circling the seal in the hero (angle in degrees, 0 = right)
 const orbitIcons = [
     { icon: 'heart', angle: 225 },
     { icon: 'thyroid', angle: 315 },
@@ -21,13 +18,11 @@ const ECG = 'M0 60h50l12-34 14 70 14-52 10 16h70l8-20 10 40 10-30 6 10h192l8-20 
 
 function HeroBackdrop() {
     return (
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-            {/* soft colour washes, same family as the login backdrop */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-[inherit]">
             <div className="absolute -left-40 -top-40 size-[520px] rounded-full bg-sky-200/50 blur-3xl" />
             <div className="absolute -right-32 top-1/4 size-[560px] rounded-full bg-indigo-200/40 blur-3xl" />
             <div className="absolute -bottom-48 left-1/3 size-[420px] rounded-full bg-cyan-100/70 blur-3xl" />
 
-            {/* dot grid, faded towards the edges */}
             <svg className="absolute inset-0 size-full text-brand [mask-image:radial-gradient(ellipse_80%_70%_at_50%_40%,black_30%,transparent_80%)]">
                 <defs>
                     <pattern id="hero-dots" width="26" height="26" patternUnits="userSpaceOnUse">
@@ -40,7 +35,6 @@ function HeroBackdrop() {
     )
 }
 
-/** Places a child on a ring at `angle` and spins it the other way so it stays upright. */
 function OrbitNode({ angle, counter, children }) {
     const rad = (angle * Math.PI) / 180
     return (
@@ -72,7 +66,6 @@ function StatusChip({ icon, tone, title, text, className, delay }) {
 function HeroOrbit() {
     return (
         <div aria-hidden="true" className="relative mx-auto hidden aspect-square w-full max-w-[500px] sm:block">
-            {/* ECG trace running through the seal */}
             <svg viewBox="0 0 600 120" preserveAspectRatio="none" className="absolute -left-[6%] top-[40%] h-[20%] w-[112%]">
                 <path d={ECG} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-brand/10" />
                 <path
@@ -88,7 +81,6 @@ function HeroOrbit() {
                 />
             </svg>
 
-            {/* rings echoing the seal */}
             <div className="absolute inset-0 rounded-full border border-brand/[0.06]" />
             <div className="absolute inset-[12%] animate-orbit-outer rounded-full border border-dashed border-brand/15 motion-reduce:animate-none">
                 <span className="absolute left-1/2 top-0 size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-400 ring-4 ring-sky-400/20" />
@@ -103,7 +95,6 @@ function HeroOrbit() {
                 ))}
             </div>
 
-            {/* seal */}
             <div className="absolute inset-[35%]">
                 <span className="absolute inset-0 animate-pulse-ring rounded-full bg-brand/10 motion-reduce:animate-none" />
                 <span className="absolute inset-0 animate-pulse-ring rounded-full bg-brand/10 motion-reduce:animate-none" style={{ animationDelay: '1.5s' }} />
@@ -119,12 +110,13 @@ function HeroOrbit() {
 }
 
 export default function HeroSection() {
+
     return (
         <section className="px-2 pt-2 sm:px-4 sm:pt-4">
-            <div className="relative isolate overflow-hidden rounded-[1.75rem] bg-slate-50 ring-1 ring-slate-900/5 sm:rounded-[2.5rem]">
+            <div className="relative overflow-x-clip rounded-[1.75rem] bg-slate-50 ring-1 ring-slate-900/5 sm:rounded-[2.5rem]">
                 <HeroBackdrop />
 
-                <div className={`${wrap} grid items-center gap-14 pb-28 pt-12 sm:pt-16 lg:grid-cols-[1.1fr_1fr] lg:gap-10 lg:pb-36 lg:pt-20`}>
+                <div className={`${wrap} relative grid items-center gap-14 pb-28 pt-12 sm:pt-16 lg:grid-cols-[1.1fr_1fr] lg:gap-10 lg:pb-36 lg:pt-20`}>
                     <div>
                         <h1 className="text-4xl font-bold leading-[1.1] tracking-tight text-brand-dark sm:text-5xl lg:text-6xl">
                             <span className="sr-only">Check your health from home.</span>
@@ -148,20 +140,8 @@ export default function HeroSection() {
                             usually within 24 hours.
                         </p>
 
-                        {/* Search - submits to /tests?q=... */}
-                        <Form action="/tests" role="search" className="mt-8 flex max-w-xl items-center gap-2 rounded-2xl bg-white p-2 shadow-xl shadow-brand/10 ring-1 ring-slate-900/5 transition focus-within:ring-4 focus-within:ring-brand-light/15">
-                            <Icon name="search" className="ml-2.5 size-5 shrink-0 text-slate-400" />
-                            <input
-                                type="search"
-                                name="q"
-                                aria-label="Search tests and scans"
-                                placeholder="Search tests and scans, e.g. CBC"
-                                className="min-w-0 flex-1 bg-transparent py-2.5 text-sm text-slate-900 outline-none placeholder:text-slate-400 sm:text-base"
-                            />
-                            <button type="submit" className="shrink-0 rounded-xl bg-brand-dark px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid sm:px-6">
-                                Search
-                            </button>
-                        </Form>
+                        {/* Search with suggestions - see HeroSearch */}
+                        <HeroSearch />
 
                         <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm font-medium text-slate-700">
                             {heroPerks.map((p) => (

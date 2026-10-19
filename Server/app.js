@@ -23,10 +23,12 @@ app.get('/api/health', (_, res) => {
 import loginRoute from './src/routes/login.js'
 import testsRoute from './src/routes/tests.js'
 import packageRoute from './src/routes/packages.js'
+import searchRoute from './src/routes/search.js'
 
 app.use('/api', loginRoute)
 app.use('/api/tests', testsRoute)
 app.use('/api/packages', packageRoute)
+app.use('/api/search', searchRoute)
 
 
 app.use((err, req, res, next) => {

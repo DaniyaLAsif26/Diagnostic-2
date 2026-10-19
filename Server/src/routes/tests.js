@@ -117,22 +117,7 @@ router.route('/popular').get(asyncHandler(async (req, res) => {
     const popularTests = await prisma.test.findMany({
         where: { isPopular: true },
         orderBy: { name: 'asc' },
-        take: limit,
-        include: {
-            packageItems: {
-                select: {
-                    pkg: {
-                        select: {
-                            id: true,
-                            name: true,
-                            price: true,
-                            offerPrice: true,
-                            description: true
-                        }
-                    }
-                }
-            }
-        }
+        take: limit
     })
 
     return res.status(200)
