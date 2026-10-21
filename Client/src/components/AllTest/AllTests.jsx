@@ -42,6 +42,7 @@ export default function AllTests() {
     const { data: tests, isPending, isError } = useAllTest()
 
     const term = search.trim().toLowerCase()
+
     const visible = useMemo(() => (tests ?? [])
         .filter((t) => !concern || t.relevance.includes(concern))
         .filter((t) => !type || t.category.toLowerCase() === type)
@@ -54,17 +55,12 @@ export default function AllTests() {
     return (
         <>
             <TestPackageHeader
-                crumb="Tests"
-                title="Lab tests & scans"
-                text="Book blood tests and imaging at Vision Diagnostic Centre, with free home sample collection and reports shared online."
                 search={search}
                 onSearch={updateSearch}
                 searchLabel="Search tests"
                 placeholder="Search tests, e.g. CBC, Thyroid"
             >
                 <Filters
-                    title="Filter by health concern"
-                    subtitle="Pick what you want to check."
                     active={concern}
                     onChange={(tag) => setParam('concern', tag)}
                     items={tests ?? []}
@@ -72,7 +68,10 @@ export default function AllTests() {
                 />
             </TestPackageHeader>
 
-            <div className={`${wrap} pb-16 pt-4 sm:pb-20`}>
+            <div className={`${wrap} pb-16 pt-6 sm:pb-20`}>
+                <h1 className="text-xl font-bold tracking-tight text-brand-dark sm:text-2xl">Lab tests & scans</h1>
+                <p className="mb-4 mt-1 text-sm text-slate-500">Blood tests and imaging with free home sample collection and reports shared online.</p>
+
                 <TestResults
                     tests={visible}
                     total={tests?.length ?? 0}

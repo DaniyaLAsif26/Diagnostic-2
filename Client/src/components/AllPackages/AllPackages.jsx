@@ -55,17 +55,12 @@ export default function AllPackages() {
     return (
         <>
             <TestPackageHeader
-                crumb="Health packages"
-                title="Health checkup packages"
-                text="Preventive checkups that bundle the right tests together, at a lower price than booking them one by one."
                 search={search}
                 onSearch={updateSearch}
                 searchLabel="Search packages"
                 placeholder="Search packages or tests, e.g. Full Body"
             >
                 <Filters
-                    title="Filter by health concern"
-                    subtitle="Find a package for what you want to check."
                     active={concern}
                     onChange={(tag) => setParam('concern', tag)}
                     items={packages}
@@ -73,7 +68,10 @@ export default function AllPackages() {
                 />
             </TestPackageHeader>
 
-            <div className={`${wrap} pb-16 pt-4 sm:pb-20`}>
+            <div className={`${wrap} pb-16 pt-6 sm:pb-20`}>
+                <h1 className="text-xl font-bold tracking-tight text-brand-dark sm:text-2xl">Health checkup packages</h1>
+                <p className="mb-4 mt-1 text-sm text-slate-500">Preventive checkups that bundle the right tests together, for less than booking them one by one.</p>
+
                 <PackageResults
                     packages={visible}
                     total={packages.length}

@@ -1,29 +1,21 @@
-import { Link } from 'react-router-dom'
-
 import Icon from '../Icon/Icon'
 import HeaderBackdrop from './HeaderBackdrop'
-import { EcgAccent } from '../Common/SectionAccents'
 import { wrap } from '../../constants/layout'
 
-// Page header for the tests and packages listings: breadcrumb, title, search box and a slot for filters
-export default function TestPackageHeader({ crumb, title, text, search, onSearch, searchLabel, placeholder, children }) {
+// Compact header for the tests, packages and search pages: a search box and a slot for the concern filters.
+// `onSubmit` adds a Search button (search page); without it the box filters as you type.
+export default function TestPackageHeader({ search, onSearch, onSubmit, searchLabel, placeholder, children }) {
     return (
         <section className="px-2 pt-2 sm:px-4 sm:pt-4">
             <div className="relative isolate overflow-hidden rounded-[1.75rem] bg-slate-50 ring-1 ring-slate-900/5 sm:rounded-[2.5rem]">
                 <HeaderBackdrop />
 
-                <div className={`${wrap} py-10 sm:py-12`}>
-                    <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-sm text-slate-500">
-                        <Link to="/" className="transition hover:text-brand">Home</Link>
-                        <Icon name="chevron" className="size-3.5 -rotate-90" />
-                        <span className="font-medium text-brand-dark">{crumb}</span>
-                    </nav>
-
-                    <h1 className="mt-4 text-3xl font-bold tracking-tight text-brand-dark sm:text-4xl">{title}</h1>
-                    <EcgAccent />
-                    <p className="mt-3 max-w-2xl text-slate-600">{text}</p>
-
-                    <div className="mt-7 flex max-w-xl items-center gap-2 rounded-2xl bg-white p-2 shadow-xl shadow-brand/10 ring-1 ring-slate-900/5 transition focus-within:ring-4 focus-within:ring-brand-light/15">
+                <div className={`${wrap} py-6 sm:py-8`}>
+                    <form
+                        role="search"
+                        onSubmit={(e) => { e.preventDefault(); onSubmit?.() }}
+                        className="flex max-w-2xl items-center gap-2 rounded-2xl bg-white p-2 shadow-xl shadow-brand/10 ring-1 ring-slate-900/5 transition focus-within:ring-4 focus-within:ring-brand-light/15"
+                    >
                         <Icon name="search" className="ml-2.5 size-5 shrink-0 text-slate-400" />
                         <input
                             type="search"
@@ -38,9 +30,14 @@ export default function TestPackageHeader({ crumb, title, text, search, onSearch
                                 <Icon name="close" className="size-4" />
                             </button>
                         )}
-                    </div>
+                        {onSubmit && (
+                            <button type="submit" className="shrink-0 rounded-xl bg-brand-dark px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid sm:px-6">
+                                Search
+                            </button>
+                        )}
+                    </form>
 
-                    {children && <div className="mt-8">{children}</div>}
+                    {children && <div className="mt-6">{children}</div>}
                 </div>
             </div>
         </section>

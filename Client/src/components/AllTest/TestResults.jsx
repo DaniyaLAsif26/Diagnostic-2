@@ -4,10 +4,6 @@ import ResultsToolbar from '../Listing/ResultsToolbar'
 import NoResults from '../Listing/NoResults'
 import { testSorts } from '../../utils/sorts'
 
-/**
- * The tests results area: toolbar (count, clear, Lab/Radiology, sort), loading / error / empty states and the card grid.
- * Purely presentational - used by /tests and /search, which own the filtering.
- */
 export default function TestResults({ tests, total, isPending, isError, hasFilters, onClear, sort, onSort, type, onTypeChange }) {
     return (
         <>

@@ -1,6 +1,7 @@
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { prisma } from "../database/db-connection.js";
+import { withItems } from "./packages.js";
 
 import { Router } from "express"
 
@@ -8,7 +9,7 @@ const router = Router()
 
 router.route("/").get(asyncHandler(async (req, res) => {
     const q = String(req.query.q || "").trim()
-    const limit = Math.min(Number(req.query.limit) || 5, 11)
+    const limit = Math.min(Number(req.query.limit) || 5, 50)
 
     if (q.length < 2) {
         return res
@@ -35,30 +36,13 @@ router.route("/").get(asyncHandler(async (req, res) => {
             where,
             orderBy,
             take: limit,
-            select: {
-                id: true,
-                name: true,
-                price: true,
-                offerPrice: true,
-                category: true
-            }
         }),
 
         prisma.package.findMany({
             where,
             orderBy,
             take: limit,
-            select: {
-                id: true,
-                name: true,
-                price: true,
-                offerPrice: true,
-                _count: {
-                    select: {
-                        items: true
-                    }
-                }
-            }
+            include: withItems,
         })
     ])
 

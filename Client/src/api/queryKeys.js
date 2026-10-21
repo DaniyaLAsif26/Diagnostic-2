@@ -17,5 +17,6 @@ export const packageKeys = {
 
 export const searchKeys = {
     all: ["search"],
-    search: (term) => [...searchKeys.all, term]
+    search: (term) => [...searchKeys.all, term],
+    searchResults: (term) => [...searchKeys.all, 'searchResults', term]
 }

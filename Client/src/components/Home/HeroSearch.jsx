@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
 import Icon from '../Icon/Icon'
-import useSearch from '../../hooks/useSearch'
+import {useSearch} from '../../hooks/useSearch'
 import { slugify } from '../../utils/slug'
 import { inr, finalPrice } from '../../utils/price'
 
@@ -82,7 +82,7 @@ export default function HeroSearch() {
                                 to={`/package/${slugify(p.name)}/${p.id}`}
                                 icon="package"
                                 name={p.name}
-                                type={`Package · ${p._count.items} tests`}
+                                type={`Package · ${p.tests.length} tests`}
                                 price={finalPrice(p)}
                             />
                         ))}

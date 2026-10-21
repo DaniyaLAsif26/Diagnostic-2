@@ -35,7 +35,7 @@ const validateTests = async (tests) => {
 }
 
 // Every package response carries its tests: saved tests via the relation, new ones by name
-const withItems = {
+export const withItems = {
     items: {
         select: {
             testId: true,

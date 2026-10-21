@@ -11,34 +11,9 @@ import { concerns } from '../../constants/concerns'
  *
  * Optional: `title` / `subtitle` add a heading with a Clear button,
  * `items` + `noun` show a count under each label ("3 tests"),
- * `layout="wrap"` wraps and centres the circles instead of scrolling sideways,
- * `compact` renders one row of small chips instead of circles (search page).
+ * `layout="wrap"` wraps and centres the circles instead of scrolling sideways.
  */
-export default function Filters({ active = '', onChange, items, noun, title, subtitle, layout = 'scroll', compact = false }) {
-    if (compact) {
-        return (
-            <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 scrollbar-none">
-                {concerns.map(({ tag, label, icon, tone }) => {
-                    const selected = active === tag
-                    return (
-                        <button
-                            key={tag}
-                            type="button"
-                            aria-pressed={selected}
-                            onClick={() => onChange?.(selected ? '' : tag)}
-                            className={`flex shrink-0 items-center gap-2 rounded-full py-1 pl-1 pr-3.5 text-sm font-medium transition ${selected ? 'bg-brand-dark text-white shadow-md shadow-brand/20' : 'bg-white text-slate-700 ring-1 ring-slate-200 hover:ring-brand-light/40'}`}
-                        >
-                            <span className={`grid size-7 place-items-center rounded-full ${selected ? 'bg-white/15 text-white' : tone}`}>
-                                <Icon name={icon} className="size-4" />
-                            </span>
-                            {label}
-                        </button>
-                    )
-                })}
-            </div>
-        )
-    }
-
+export default function Filters({ active = '', onChange, items, noun, title, subtitle, layout = 'scroll' }) {
     const row = layout === 'wrap'
         ? 'flex flex-wrap justify-center gap-x-3 gap-y-6 lg:justify-between'
         : '-mx-4 flex gap-3 overflow-x-auto px-4 pb-2 pt-1 scrollbar-none sm:mx-0 sm:px-0 lg:justify-between'
