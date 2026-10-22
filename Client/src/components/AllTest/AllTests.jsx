@@ -12,7 +12,7 @@ import { testSorts as sorts } from '../../utils/sorts'
 import { useAllTest } from '../../hooks/useTest'
 
 export default function AllTests() {
-    // Filters live in the URL (?q=&concern=&type=&sort=) so home-page links can open a filtered view
+
     const [params, setParams] = useSearchParams()
     const concern = concernLabel[params.get('concern')] ? params.get('concern') : ''
     const type = params.get('type') ?? ''
@@ -46,7 +46,8 @@ export default function AllTests() {
     const visible = useMemo(() => (tests ?? [])
         .filter((t) => !concern || t.relevance.includes(concern))
         .filter((t) => !type || t.category.toLowerCase() === type)
-        .filter((t) => !term || t.name.toLowerCase().includes(term) || t.relevance.some((tag) => (concernLabel[tag] ?? tag).toLowerCase().includes(term)))
+        .filter((t) => !term || t.name.toLowerCase().includes(term) || 
+        t.relevance.some((tag) => (concernLabel[tag] ?? tag).toLowerCase().includes(term)))
         .sort(sorts[sort].compare),
         [tests, concern, type, term, sort])
 

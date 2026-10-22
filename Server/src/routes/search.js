@@ -24,11 +24,21 @@ router.route("/").get(asyncHandler(async (req, res) => {
     }
 
     const where = {
-        name: {
-            contains: q,
-            mode: 'insensitive'
-        }
+        OR: [
+            {
+                name: {
+                    contains: q,
+                    mode: 'insensitive'
+                }
+            },
+            {
+                relevance: {
+                    has: q.toLowerCase()
+                }
+            }
+        ]
     }
+
     const orderBy = [{ isPopular: 'desc' }, { name: 'asc' }]
 
     const [tests, packages] = await Promise.all([

@@ -13,7 +13,7 @@ import { useSearchResults } from '../../hooks/useSearch'
 export default function SearchResults() {
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const term = searchParams.get('q') ?? ''
+    const term = searchParams.get('q') || searchParams.get('concern')
 
     const { tests, packages, isPending, isError } = useSearchResults(term)
 

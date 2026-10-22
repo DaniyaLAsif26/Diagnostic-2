@@ -3,23 +3,13 @@ import { Link } from 'react-router-dom'
 import Icon from '../Icon/Icon'
 import { concerns } from '../../constants/concerns'
 
-/**
- * Health-concern circles, used on the home page and the tests / packages pages.
- *
- * - With `onChange`: toggle buttons; `active` is the selected tag ('' for none).
- * - Without it: links to /tests?concern=<tag> (home page).
- *
- * Optional: `title` / `subtitle` add a heading with a Clear button,
- * `items` + `noun` show a count under each label ("3 tests"),
- * `layout="wrap"` wraps and centres the circles instead of scrolling sideways.
- */
-export default function Filters({ active = '', onChange, items, noun, title, subtitle, layout = 'scroll' }) {
+export default function Filters({ active = '', onChange, items, noun, layout = 'scroll' }) {
     const row = layout === 'wrap'
         ? 'flex flex-wrap justify-center gap-x-3 gap-y-6 lg:justify-between'
         : '-mx-4 flex gap-3 overflow-x-auto px-4 pb-2 pt-1 scrollbar-none sm:mx-0 sm:px-0 lg:justify-between'
 
-    const tiles = (
-        <div className={`${title ? 'mt-4' : ''} ${row}`}>
+    return (
+        <div className={row}>
             {concerns.map(({ tag, label, icon, tone }) => {
                 const selected = active === tag
                 const count = items?.filter((i) => i.relevance.includes(tag)).length
@@ -52,30 +42,11 @@ export default function Filters({ active = '', onChange, items, noun, title, sub
                         {body}
                     </button>
                 ) : (
-                    <Link key={tag} to={`/tests?concern=${tag}`} className={tile}>
+                    <Link key={tag} to={`/search?concern=${tag}`} className={tile}>
                         {body}
                     </Link>
                 )
             })}
         </div>
-    )
-
-    if (!title) return tiles
-
-    return (
-        <section aria-labelledby="concern-heading">
-            <div className="flex items-end justify-between gap-4">
-                <div>
-                    <h2 id="concern-heading" className="text-lg font-semibold text-brand-dark">{title}</h2>
-                    {subtitle && <p className="mt-0.5 text-sm text-slate-500">{subtitle}</p>}
-                </div>
-                {active && onChange && (
-                    <button type="button" onClick={() => onChange('')} className="text-sm font-semibold text-brand-light transition hover:text-brand">
-                        Clear
-                    </button>
-                )}
-            </div>
-            {tiles}
-        </section>
     )
 }

@@ -6,7 +6,7 @@ export const concerns = [
     { tag: 'diabetes', label: 'Diabetes', icon: 'droplet', tone: 'bg-rose-50 text-rose-600' },
     { tag: 'heart', label: 'Heart', icon: 'heart', tone: 'bg-red-50 text-red-600' },
     { tag: 'thyroid', label: 'Thyroid', icon: 'thyroid', tone: 'bg-violet-50 text-violet-600' },
-    { tag: 'liver', label: 'Liver', icon: 'liver', tone: 'bg-amber-50 text-amber-600' },
+    { tag: 'liver', label: 'Liver', icon: 'liver', tone: 'bg-amber-50  text-amber-600' },
     { tag: 'kidney', label: 'Kidney', icon: 'kidney', tone: 'bg-orange-50 text-orange-600' },
     { tag: 'vitamin', label: 'Vitamins', icon: 'sun', tone: 'bg-yellow-50 text-yellow-600' },
     { tag: 'fever', label: 'Fever & Infection', icon: 'thermometer', tone: 'bg-sky-50 text-sky-600' },
