@@ -17,7 +17,7 @@ export default function SearchResults() {
 
     const { tests, packages, isPending, isError } = useSearchResults(term)
 
-    const [view , setView] = useState('tests')
+    const [view, setView] = useState('tests')
 
     const search = ''                    // input value
     const concern = ''                   // selected health concern tag
@@ -34,7 +34,12 @@ export default function SearchResults() {
                 searchLabel="Search tests and packages"
                 placeholder="Search tests or packages, e.g. CBC, Full Body"
             >
-                <Filters active={concern} onChange={noop} />
+                <Filters
+                    active={concern}
+                    onChange={noop}
+                    noun={view === 'tests' ? 'test' : 'package'}
+                    items={view === 'tests' ? tests : packages}
+                />
             </TestPackageHeader>
 
             <div className={`${wrap} pb-16 pt-6 sm:pb-20`}>
