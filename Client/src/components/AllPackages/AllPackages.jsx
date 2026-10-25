@@ -18,7 +18,7 @@ export default function AllPackages() {
     const concern = concernLabel[params.get('concern')] ? params.get('concern') : ''
     const sort = sorts[params.get('sort')] ? params.get('sort') : 'popular'
 
-    // The input keeps its own state so typing stays smooth; the URL mirrors it
+    // The input keeps its own state; ?q= is only updated when the search is submitted
     const [search, setSearch] = useState(params.get('q') ?? '')
 
     // Sets one filter in the URL without adding history entries or jumping to the top
@@ -29,18 +29,13 @@ export default function AllPackages() {
         return next
     }, { replace: true, preventScrollReset: true })
 
-    const updateSearch = (value) => {
-        setSearch(value)
-        setParam('q', value.trim())
-    }
-
     const clearFilters = () => {
         setSearch('')
         setParams({}, { replace: true, preventScrollReset: true })
     }
 
     // Search matches the package name, its concerns, or any test inside it
-    const term = search.trim().toLowerCase()
+    const term = (params.get('q') ?? '').trim().toLowerCase()
     const visible = useMemo(() => packages
         .filter((p) => !concern || p.relevance.includes(concern))
         .filter((p) => !term
@@ -56,7 +51,8 @@ export default function AllPackages() {
         <>
             <TestPackageHeader
                 search={search}
-                onSearch={updateSearch}
+                onSearch={setSearch}
+                onSubmit={(value) => setParam('q', value)}
                 searchLabel="Search packages"
                 placeholder="Search packages or tests, e.g. Full Body"
             >

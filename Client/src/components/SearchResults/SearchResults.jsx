@@ -5,38 +5,61 @@ import PackageResults from '../AllPackages/PackageResults'
 import HelpBanner from '../Listing/HelpBanner'
 import ResultTypeToggle from './ResultTypeToggle'
 import { wrap } from '../../constants/layout'
+import { concernLabel } from '../../constants/concerns'
 
 import { useSearchParams } from 'react-router-dom'
 import { useState } from 'react'
 import { useSearchResults } from '../../hooks/useSearch'
+import { testSorts as sorts } from '../../utils/sorts'
 
 export default function SearchResults() {
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const term = searchParams.get('q') || searchParams.get('concern')
+    const term = searchParams.get('q') || searchParams.get('concern') || ''
+    const concern = concernLabel[searchParams.get('concern')] ? searchParams.get('concern') : ''
+    const type = searchParams.get('type') ?? ''
+    const sort = sorts[searchParams.get('sort')] ? searchParams.get('sort') : 'popular'
 
     const { tests, packages, isPending, isError } = useSearchResults(term)
 
     const [view, setView] = useState('tests')
+    const [search, setSearch] = useState(term || '')
 
-    const search = ''                    // input value
-    const concern = ''                   // selected health concern tag
-    const hasFilters = false
+    const hasFilters = Boolean(concern || type || sort !== 'popular')
     const noop = () => { }
+
+    const setParams = (key, value) => setSearchParams((prev) => {
+        const next = new URLSearchParams(prev)
+        if (value) next.set(key, value)
+        else next.delete(key)
+        return next
+    }, { replace: true, preventScrollReset: true })
+
+    const clearFilters = () => {
+        setSearch('')
+        setSearchParams({}, { replace: true, preventScrollReset: true })
+    }
+
+    const changeView = (next) => {
+        if (next === view) return
+        setView(next)
+        const q = searchParams.get('q')
+        setSearchParams(q ? { q } : term ? { concern: term } : {}, { replace: true, preventScrollReset: true })
+    }
 
     return (
         <>
             {/* 1. Search box + 2. search by health concern */}
             <TestPackageHeader
                 search={search}
-                onSearch={noop}
-                onSubmit={noop}
+                onSearch={setSearch}
+                onSubmit={(value) => setParams('q', value)}
                 searchLabel="Search tests and packages"
                 placeholder="Search tests or packages, e.g. CBC, Full Body"
             >
                 <Filters
                     active={concern}
-                    onChange={noop}
+                    onChange={(tag) => setParams('concern', tag)}
                     noun={view === 'tests' ? 'test' : 'package'}
                     items={view === 'tests' ? tests : packages}
                 />
@@ -56,7 +79,7 @@ export default function SearchResults() {
                         </p>
                     </div>
 
-                    <ResultTypeToggle value={view} onChange={setView} counts={{ tests: tests.length, packages: packages.length }} />
+                    <ResultTypeToggle value={view} onChange={changeView}counts={{ tests: tests.length, packages: packages.length }} />
                 </div>
 
                 {/* 4. Results - the same results area as /tests or /packages */}
@@ -68,11 +91,11 @@ export default function SearchResults() {
                             isPending={isPending}
                             isError={isError}
                             hasFilters={hasFilters}
-                            onClear={noop}
-                            sort="popular"
-                            onSort={noop}
-                            type=""
-                            onTypeChange={noop}
+                            onClear={clearFilters}
+                            sort={sort}
+                            onSort={(value) => setParams('sort', value === 'popular' ? '' : value)}
+                            type={type}
+                            onTypeChange={(value) => setParams('type', value)}
                         />
                     ) : (
                         <PackageResults

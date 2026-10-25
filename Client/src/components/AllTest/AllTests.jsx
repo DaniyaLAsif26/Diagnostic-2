@@ -18,21 +18,14 @@ export default function AllTests() {
     const type = params.get('type') ?? ''
     const sort = sorts[params.get('sort')] ? params.get('sort') : 'popular'
 
-    // The input keeps its own state so typing stays smooth; the URL mirrors it
     const [search, setSearch] = useState(params.get('q') ?? '')
 
-    // Sets one filter in the URL without adding history entries or jumping to the top
     const setParam = (key, value) => setParams((prev) => {
         const next = new URLSearchParams(prev)
         if (value) next.set(key, value)
         else next.delete(key)
         return next
     }, { replace: true, preventScrollReset: true })
-
-    const updateSearch = (value) => {
-        setSearch(value)
-        setParam('q', value.trim())
-    }
 
     const clearFilters = () => {
         setSearch('')
@@ -41,7 +34,7 @@ export default function AllTests() {
 
     const { data: tests, isPending, isError } = useAllTest()
 
-    const term = search.trim().toLowerCase()
+    const term = (params.get('q') ?? '').trim().toLowerCase()
 
     const visible = useMemo(() => (tests ?? [])
         .filter((t) => !concern || t.relevance.includes(concern))
@@ -57,7 +50,8 @@ export default function AllTests() {
         <>
             <TestPackageHeader
                 search={search}
-                onSearch={updateSearch}
+                onSearch={setSearch}
+                onSubmit={(value) => setParam('q', value)}
                 searchLabel="Search tests"
                 placeholder="Search tests, e.g. CBC, Thyroid"
             >
