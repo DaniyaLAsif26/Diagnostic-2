@@ -8,9 +8,9 @@ import { wrap } from '../../constants/layout'
 import { concernLabel } from '../../constants/concerns'
 
 import { useSearchParams } from 'react-router-dom'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useSearchResults } from '../../hooks/useSearch'
-import { testSorts as sorts } from '../../utils/sorts'
+import { testSorts, packageSorts } from '../../utils/sorts'
 
 export default function SearchResults() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -18,15 +18,16 @@ export default function SearchResults() {
     const term = searchParams.get('q') || searchParams.get('concern') || ''
     const concern = concernLabel[searchParams.get('concern')] ? searchParams.get('concern') : ''
     const type = searchParams.get('type') ?? ''
+
+    const [view, setView] = useState('tests')
+    const sorts = view === 'tests' ? testSorts : packageSorts
     const sort = sorts[searchParams.get('sort')] ? searchParams.get('sort') : 'popular'
 
     const { tests, packages, isPending, isError } = useSearchResults(term)
 
-    const [view, setView] = useState('tests')
     const [search, setSearch] = useState(term || '')
 
     const hasFilters = Boolean(concern || type || sort !== 'popular')
-    const noop = () => { }
 
     const setParams = (key, value) => setSearchParams((prev) => {
         const next = new URLSearchParams(prev)
@@ -46,6 +47,15 @@ export default function SearchResults() {
         const q = searchParams.get('q')
         setSearchParams(q ? { q } : term ? { concern: term } : {}, { replace: true, preventScrollReset: true })
     }
+
+    const visible = useMemo(() => (view === 'tests' ? tests : packages)
+        .filter((t) => !concern || t.relevance.includes(concern))
+        .filter((t) => !type || t.category.toLowerCase() === type)
+        .filter((t) => !term || t.name.includes(term) ||
+            t.relevance.some((tag) => (concernLabel[tag] ?? tag).toLowerCase().includes(term)))
+        .sort(sorts[sort].compare),
+        [tests, packages, view, concern, type, term, sort, sorts]
+    )
 
     return (
         <>
@@ -79,15 +89,15 @@ export default function SearchResults() {
                         </p>
                     </div>
 
-                    <ResultTypeToggle value={view} onChange={changeView}counts={{ tests: tests.length, packages: packages.length }} />
+                    <ResultTypeToggle value={view} onChange={changeView} counts={{ tests: tests.length, packages: packages.length }} />
                 </div>
 
                 {/* 4. Results - the same results area as /tests or /packages */}
                 <div className="mt-4">
                     {view === 'tests' ? (
                         <TestResults
-                            tests={tests}
-                            total={tests.length}
+                            tests={visible}
+                            total={visible.length}
                             isPending={isPending}
                             isError={isError}
                             hasFilters={hasFilters}
@@ -99,14 +109,14 @@ export default function SearchResults() {
                         />
                     ) : (
                         <PackageResults
-                            packages={packages}
-                            total={packages.length}
+                            packages={visible}
+                            total={visible.length}
                             isPending={isPending}
                             isError={isError}
                             hasFilters={hasFilters}
-                            onClear={noop}
-                            sort="popular"
-                            onSort={noop}
+                            onClear={clearFilters}
+                            sort={sort}
+                            onSort={(value) => setParams('sort', value === 'popular' ? '' : value)}
                         />
                     )}
                 </div>
