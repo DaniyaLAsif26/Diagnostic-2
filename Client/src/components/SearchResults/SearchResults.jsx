@@ -3,6 +3,7 @@ import Filters from '../Home/Filters'
 import TestResults from '../AllTest/TestResults'
 import PackageResults from '../AllPackages/PackageResults'
 import HelpBanner from '../Listing/HelpBanner'
+import CreatePackageBanner from '../CreatePackage/CreatePackageBanner'
 import ResultTypeToggle from './ResultTypeToggle'
 import { wrap } from '../../constants/layout'
 import { concernLabel } from '../../constants/concerns'
@@ -91,6 +92,8 @@ export default function SearchResults() {
 
                     <ResultTypeToggle value={view} onChange={changeView} counts={{ tests: tests.length, packages: packages.length }} />
                 </div>
+
+                <CreatePackageBanner />
 
                 {/* 4. Results - the same results area as /tests or /packages */}
                 <div className="mt-4">

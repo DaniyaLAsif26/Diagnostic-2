@@ -5,6 +5,7 @@ import PackageResults from './PackageResults'
 import TestPackageHeader from '../Header/TestPackageHeader'
 import Filters from '../Home/Filters'
 import HelpBanner from '../Listing/HelpBanner'
+import CreatePackageBanner from '../CreatePackage/CreatePackageBanner'
 import { useAllPackages } from '../../hooks/usePackage'
 import { concernLabel } from '../../constants/concerns'
 import { wrap } from '../../constants/layout'
@@ -67,6 +68,8 @@ export default function AllPackages() {
             <div className={`${wrap} pb-16 pt-6 sm:pb-20`}>
                 <h1 className="text-xl font-bold tracking-tight text-brand-dark sm:text-2xl">Health checkup packages</h1>
                 <p className="mb-4 mt-1 text-sm text-slate-500">Preventive checkups that bundle the right tests together, for less than booking them one by one.</p>
+
+                <CreatePackageBanner />
 
                 <PackageResults
                     packages={visible}

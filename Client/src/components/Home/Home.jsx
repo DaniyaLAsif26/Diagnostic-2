@@ -4,6 +4,7 @@ import Filters from './Filters'
 import Steps from './Steps'
 import PopularTests from './PopularTests'
 import PopularPackages from './PopularPackages'
+import CreatePackage from './CreatePackage'
 import Services from './Services'
 import WhyUs from './WhyUs'
 import Testimonials from './Testimonials'
@@ -39,6 +40,7 @@ export default function Home() {
             <QuickActions />
             <Offers />
             <PopularPackages />
+            <CreatePackage />
             <Concerns />
             <PopularTests />
             <Services />

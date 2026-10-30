@@ -9,7 +9,7 @@ import { wrap } from '../../../constants/layout'
 const navLinks = [
     { label: 'Tests', to: '/tests' },
     { label: 'Packages', to: '/packages' },
-    { label: 'Radiology', to: '/#radiology' },
+    { label: 'Create Package', to: '/create-package' },
     { label: 'How it works', to: '/#how-it-works' },
     { label: 'FAQs', to: '/#faqs' },
     { label: 'Contact', to: '/#contact' },
