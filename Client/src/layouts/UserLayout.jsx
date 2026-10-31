@@ -1,4 +1,4 @@
-import { Outlet, ScrollRestoration } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import UserNavbar from '../components/User/Navbar/UserNavbar'
 import UserFooter from '../components/User/Footer/UserFooter'
 
@@ -10,9 +10,6 @@ export default function UserLayout() {
                 <Outlet />
             </main>
             <UserFooter />
-
-            {/* Scrolls to the top on page change, or to the #section in links like /#tests */}
-            <ScrollRestoration />
         </div>
     )
 }

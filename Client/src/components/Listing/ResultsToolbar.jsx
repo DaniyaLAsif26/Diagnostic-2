@@ -1,9 +1,8 @@
 import Icon from '../Icon/Icon'
 
-// Sticky bar above the results: count, clear link, optional extra controls and the sort menu
 export default function ResultsToolbar({ shown, total, noun, hasFilters, onClear, sorts, sort, onSort, children }) {
     return (
-        <div className={`z-30 -mx-4 flex flex-col gap-4 border-b border-slate-200 bg-white/90 px-4 py-3 backdrop-blur sm:sticky sm:top-[73px] sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 ${children ? 'lg:flex-row lg:items-center lg:justify-between' : 'sm:flex-row sm:items-center sm:justify-between'}`}>
+        <div className={`z-30 -mx-4 flex flex-col gap-3 rounded-b-2xl border border-slate-200 bg-slate-100/90 shadow-[0_10px_20px_-14px_rgba(15,27,61,0.35)] px-4 py-2.5 backdrop-blur sm:sticky sm:top-[61px] sm:-mx-6 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-x-4 sm:gap-y-2 sm:px-6 sm:py-2 lg:-mx-8 lg:px-8`}>
             <p className="text-sm text-slate-500">
                 Showing <span className="font-semibold text-slate-900">{shown}</span> of {total} {noun}s
                 {hasFilters && (
@@ -13,11 +12,11 @@ export default function ResultsToolbar({ shown, total, noun, hasFilters, onClear
                 )}
             </p>
 
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center justify-between gap-3 sm:justify-end">
                 {children}
 
                 <label className="relative flex items-center gap-2 text-sm text-slate-500">
-                    <span className="hidden sm:inline">Sort by</span>
+                    <span className="hidden md:inline">Sort by</span>
                     <select
                         value={sort}
                         onChange={(e) => onSort(e.target.value)}

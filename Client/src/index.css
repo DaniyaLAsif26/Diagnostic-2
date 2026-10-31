@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* Short screens (laptops ~768px tall, small phones) - used as short:py-4 etc.
+   to tighten spacing so full-page layouts like the login form fit without scrolling */
+@custom-variant short (@media (max-height: 760px));
+
 /* Brand palette taken from the Vision Diagnostic Centre seal.
    Usable anywhere as bg-brand, text-brand-dark, ring-brand-light/15, etc. */
 @theme {

@@ -53,10 +53,10 @@ export default function UserNavbar() {
             <TopBar />
 
             <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 backdrop-blur">
-                <div className={`${wrap} flex h-16 items-center justify-between gap-4 sm:h-18`}>
+                <div className={`${wrap} flex h-14 items-center justify-between gap-4 sm:h-15`}>
                     <Link to="/" className="flex shrink-0 items-center gap-2.5">
-                        <img src={LOGO} alt="Vision Diagnostic Centre" className="size-10 rounded-full sm:size-11" />
-                        <span className="h-9 w-0.5 bg-brand" />
+                        <img src={LOGO} alt="Vision Diagnostic Centre" className="size-9 rounded-full sm:size-10" />
+                        <span className="h-8 w-0.5 bg-brand" />
                         <p className="text-xs font-bold uppercase leading-tight text-brand sm:text-sm">Vision Diagnostic<br />Centre</p>
                     </Link>
 
@@ -76,13 +76,9 @@ export default function UserNavbar() {
                         <a href={tel} className="hidden items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-brand transition hover:bg-slate-100 xl:flex">
                             <Icon name="phone" className="size-4" />Call us
                         </a>
-                        <Link to="/login" className="hidden items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-brand ring-1 ring-slate-200 transition hover:bg-slate-50 hover:ring-brand-light/40 sm:flex">
+                        <Link to="/login" className="hidden items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold text-brand ring-1 ring-slate-200 transition hover:bg-slate-50 hover:ring-brand-light/40 sm:flex">
                             <Icon name="user" className="size-4" />Login
                         </Link>
-                        <Link to="/tests" className="whitespace-nowrap rounded-xl bg-brand-dark px-3.5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid sm:px-5">
-                            Book a Test
-                        </Link>
-
                         {/* Mobile menu */}
                         <details className="group relative lg:hidden">
                             <summary aria-label="Menu" className="grid size-10 cursor-pointer list-none place-items-center rounded-xl text-slate-600 transition hover:bg-slate-100 [&::-webkit-details-marker]:hidden">

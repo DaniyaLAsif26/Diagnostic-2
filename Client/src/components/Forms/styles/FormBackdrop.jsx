@@ -69,20 +69,23 @@ function FormBackdrop() {
         <rect width="100%" height="100%" fill="url(#glyphs)" />
       </svg>
 
-      {/* ECG trace across the lower third */}
-      <svg
-        className="absolute inset-x-0 bottom-24 h-24 w-full text-brand/15"
-        viewBox="0 0 1200 100"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-      >
-        <path
-          d="M0 60h180l24-40 20 74 26-56 18 22h150l24-40 20 74 26-56 18 22h150l24-40 20 74 26-56 18 22h436"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinejoin="round"
-        />
+      {/* Heartbeat trace across the lower third - one beat every 180px,
+          so beats show on both sides of the form at any screen width */}
+      <svg className="absolute inset-x-0 bottom-24 h-24 w-full text-brand/20" aria-hidden="true">
+        <defs>
+          <pattern id="heartbeat" width="180" height="96" patternUnits="userSpaceOnUse">
+            {/* flat, P bump, sharp QRS spike, T bump, flat */}
+            <path
+              d="M0 56H60q8-8 16 0H90l4 6 6-46 6 64 6-24H128q11-14 22 0H180"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#heartbeat)" />
       </svg>
     </div>
   )

@@ -1,5 +1,6 @@
 import { createBrowserRouter, createRoutesFromElements, Route, redirect } from 'react-router-dom'
 
+import RootLayout from '../layouts/RootLayout.jsx'
 import Adminlayout from '../layouts/AdminLayout.jsx'
 import UserLayout from '../layouts/UserLayout.jsx'
 import LoginForm from '../components/Forms/LoginForm.jsx'
@@ -17,10 +18,11 @@ import AllPackages from '../components/AllPackages/AllPackages.jsx'
 import TestDetails from '../components/TestDetails/TestDetails.jsx'
 import PackageDetails from '../components/PackageDetails/PackageDetails.jsx'
 import SearchResults from '../components/SearchResults/SearchResults.jsx'
+import CreatePackage from '../components/CreatePackage/CreatePackage.jsx'
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
-        <>
+        <Route element={<RootLayout />}>
             <Route
                 path='/'
                 element={<UserLayout />}
@@ -31,6 +33,7 @@ export const router = createBrowserRouter(
                 <Route path='test/:name/:id' element={<TestDetails />} />
                 <Route path='package/:name/:id' element={<PackageDetails />} />
                 <Route path='search' element={<SearchResults />} />
+                <Route path='create-package' element={<CreatePackage />} />
             </Route>
 
             <Route path='/login' element={<LoginForm />} />
@@ -48,6 +51,6 @@ export const router = createBrowserRouter(
                 <Route path="tests/:id/:name" element={<TestProfile />} />
                 <Route path="packages/:id/:name" element={<PacakgeProfile />} />
             </Route>
-        </>
+        </Route>
     )
 )
