@@ -6,7 +6,7 @@ export default function UserLayout() {
     return (
         <div className="flex min-h-dvh flex-col bg-white text-slate-900">
             <UserNavbar />
-            <main className="flex-1">
+            <main className="flex-1 overflow-x-clip">
                 <Outlet />
             </main>
             <UserFooter />
