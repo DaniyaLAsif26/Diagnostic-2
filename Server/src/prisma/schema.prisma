@@ -22,6 +22,66 @@ updatedAt DateTime @default(now()) @map("updated_at")
 @@map("admins")
 }
 
+model User{
+    id Int @id @default(autoincrement())
+    name String @db.VarChar(50)
+    phone String @db.VarChar(10) @unique
+    email String @db.VarChar(60) @unique
+    password String
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+    customPackages CustomPackage[]
+
+    @@map("users")
+}
+
+enum CustomPackageStatus {
+    PENDING
+    COMPLETED
+    CANCELLED
+}
+
+model CustomPackage {
+    id Int @id @default(autoincrement())
+    name String @db.VarChar(100)
+
+    price Int
+    couponCode String? @map("coupon_code")
+    status CustomPackageStatus @default(PENDING)
+
+    userId Int @map("user_id")
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    items CustomPackageItem[]
+
+createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+@@index([userId])
+    @@index([status])
+    @@map("custom_packages")
+}
+
+model CustomPackageItem{
+
+id Int @id @default(autoincrement())
+price Int
+testName String @db.VarChar(100) @map("test_name")
+
+testId Int @map("test_id")
+customPackageId Int @map("custom_package_id")
+
+customPackage CustomPackage @relation(fields: [customPackageId], references: [id], onDelete: Cascade)
+
+test Test @relation(fields: [testId], references: [id], onDelete: Cascade)
+
+@@unique([customPackageId, testId])
+    @@index([testId])
+    @@map("custom_package_items")
+}
+
 model Test {
     id Int @id @default(autoincrement())
     name String @db.VarChar(100) @unique
@@ -34,6 +94,7 @@ model Test {
     description String?
 
     packageItems PackageItem[]
+    customPackageItems CustomPackageItem[]
 
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @default(now()) @map("updated_at")
