@@ -3,26 +3,20 @@ import { Link } from 'react-router-dom'
 import Icon from '../Icon/Icon'
 import { concerns } from '../../constants/concerns'
 
-// layout="wrap": big tiles for the home page. Default: one row of small tiles for the listing pages.
+// Same tile size on every page, growing with the screen
+const tileSizes = {
+    tile: 'w-20 gap-1.5 lg:w-24 xl:w-28 2xl:w-32 2xl:gap-2',
+    outer: 'size-14 lg:size-16 xl:size-20 2xl:size-24',
+    inner: 'size-10 lg:size-12 xl:size-14 2xl:size-17',
+    icon: 'size-5 lg:size-6 xl:size-7 2xl:size-9',
+    label: 'text-xs xl:text-sm 2xl:text-base',
+    count: 'text-[11px] xl:text-xs 2xl:text-sm',
+}
+
+// layout="wrap": tiles wrap onto rows (home page). Default: one scrolling row (listing pages).
 const sizes = {
-    wrap: {
-        row: 'flex flex-wrap justify-center gap-x-3 gap-y-6 lg:gap-x-5',
-        tile: 'w-24 gap-2.5 lg:w-28 xl:w-32 2xl:w-36 2xl:gap-3',
-        outer: 'size-20 lg:size-24 xl:size-28 2xl:size-32',
-        inner: 'size-14 lg:size-17 xl:size-20 2xl:size-24',
-        icon: 'size-7 lg:size-8 xl:size-10 2xl:size-12',
-        label: 'text-sm xl:text-base 2xl:text-lg',
-        count: 'text-xs xl:text-sm 2xl:text-base',
-    },
-    scroll: {
-        row: '-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 pt-1 scrollbar-none sm:mx-0 sm:px-0 lg:justify-between',
-        tile: 'w-20 gap-1.5 lg:w-24 xl:w-28 2xl:w-32 2xl:gap-2',
-        outer: 'size-14 lg:size-16 xl:size-20 2xl:size-24',
-        inner: 'size-10 lg:size-12 xl:size-14 2xl:size-17',
-        icon: 'size-5 lg:size-6 xl:size-7 2xl:size-9',
-        label: 'text-xs xl:text-sm 2xl:text-base',
-        count: 'text-[11px] xl:text-xs 2xl:text-sm',
-    },
+    wrap: { ...tileSizes, row: 'flex flex-wrap justify-center gap-x-1 gap-y-5 sm:gap-x-3 lg:gap-x-5' },
+    scroll: { ...tileSizes, row: '-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 pt-1 scrollbar-none sm:mx-0 sm:px-0 lg:justify-between' },
 }
 
 export default function Filters({ active = '', onChange, items, noun, layout = 'scroll' }) {
