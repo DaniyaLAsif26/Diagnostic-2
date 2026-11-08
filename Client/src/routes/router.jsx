@@ -20,6 +20,7 @@ import PackageDetails from '../components/PackageDetails/PackageDetails.jsx'
 import SearchResults from '../components/SearchResults/SearchResults.jsx'
 import CreatePackage from '../components/CreatePackage/CreatePackage.jsx'
 import Cart from '../components/Cart/Cart.jsx'
+import Checkout from '../components/Checkout/Checkout.jsx'
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -36,6 +37,7 @@ export const router = createBrowserRouter(
                 <Route path='search' element={<SearchResults />} />
                 <Route path='create-package' element={<CreatePackage />} />
                 <Route path='cart' element={<Cart />} />
+                <Route path='checkout' element={<Checkout />} />
             </Route>
 
             <Route path='/login' element={<LoginForm />} />

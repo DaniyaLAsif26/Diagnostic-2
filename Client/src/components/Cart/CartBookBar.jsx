@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 import Icon from '../Icon/Icon'
 import { inr } from '../../utils/price'
 
@@ -10,9 +12,9 @@ export default function CartBookBar({ count, total }) {
                     <p className="text-[11px] text-slate-500">{count} {count === 1 ? 'item' : 'items'} · Total</p>
                     <p className="text-lg font-bold text-brand-dark">{inr(total)}</p>
                 </div>
-                <button type="button" className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-brand-dark px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid active:scale-[0.99]">
+                <Link to="/checkout" className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-brand-dark px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid active:scale-[0.99]">
                     Proceed to book<Icon name="arrow" className="size-4" />
-                </button>
+                </Link>
             </div>
         </div>
     )

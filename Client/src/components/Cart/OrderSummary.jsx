@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 import Icon from '../Icon/Icon'
 import CouponDropdown from './CouponDropdown'
 import { inr } from '../../utils/price'
@@ -38,9 +40,9 @@ export default function OrderSummary({ count, mrp, subtotal, total, coupon, offe
 
                 {/* Phones and tablets use CartBookBar instead */}
                 <div className="hidden lg:block">
-                    <button type="button" className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-dark px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid active:scale-[0.99]">
+                    <Link to="/checkout" className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-dark px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid active:scale-[0.99]">
                         Proceed to book<Icon name="arrow" className="size-4" />
-                    </button>
+                    </Link>
                     <p className="mt-3 flex items-center justify-center gap-1.5 text-xs text-slate-500">
                         <Icon name="phone" className="size-3.5" />Our team will call you to confirm and book
                     </p>
