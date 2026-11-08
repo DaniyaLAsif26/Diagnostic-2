@@ -19,7 +19,7 @@ export default function TestCard({ test }) {
 
     return (
         <article className="flex h-full flex-col rounded-2xl bg-white p-5 ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand/5 hover:ring-brand-light/30">
-            <Link to={`/test/${slugify(test.name)}/${test.id}`}>
+            <Link to={`/test/${slugify(test.name)}/${test.id}`} className="flex flex-1 flex-col">
                 <div className="flex-1 pb-5">
                     <div className="flex items-start justify-between gap-3">
                         <span className={`grid size-11 place-items-center rounded-xl ${isScan ? 'bg-teal-50 text-teal-600' : 'bg-sky-50 text-sky-600'}`}>

@@ -2,8 +2,7 @@ import Icon from '../Icon/Icon'
 import { concernLabel } from '../../constants/concerns'
 import { inr, onOffer, finalPrice, discountPercent } from '../../utils/price'
 
-/** TestCard with an Add checkbox instead of Book. The whole card is a label, so tapping anywhere ticks it. */
-export default function SelectableTestCard({ test, checked }) {
+export default function SelectableTestCard({ test, checked, onToggle }) {
     const isScan = test.category === 'RADIOLOGY'
 
     return (
@@ -48,12 +47,12 @@ export default function SelectableTestCard({ test, checked }) {
                     <p className="text-lg font-bold text-brand-dark">{inr(finalPrice(test))}</p>
                 </div>
 
-                {/* Looks like a button; fills in and reads "Added" once ticked */}
                 <span className="flex items-center gap-2 rounded-lg border border-brand/20 px-3 py-1.5 text-[13px] font-semibold text-brand transition group-hover:border-brand-light group-has-checked:border-brand group-has-checked:bg-brand group-has-checked:text-white">
                     <span className="relative grid place-items-center">
                         <input
                             type="checkbox"
-                            defaultChecked={checked}
+                            checked={checked}
+                            onChange={() => onToggle(test)}
                             aria-label={`Add ${test.name} to package`}
                             className="peer size-4 cursor-pointer appearance-none rounded border-2 border-current outline-none checked:border-white checked:bg-white focus-visible:ring-4 focus-visible:ring-brand-light/30"
                         />

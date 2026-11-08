@@ -10,17 +10,12 @@ const Row = ({ name, value, className = 'text-slate-700' }) => (
     </div>
 )
 
-/**
- * Cart bar stuck to the bottom of the page, plus the drawer it opens to name and review the package.
- * The drawer uses the native popover attribute, so it opens and closes without any state.
- */
-export default function PackageCart({ tests }) {
+export default function PackageCart({ tests, onRemove }) {
     const mrp = tests.reduce((sum, t) => sum + t.price, 0)
     const total = tests.reduce((sum, t) => sum + finalPrice(t), 0)
 
     return (
         <>
-            {/* Floating cart button - stays in the corner while scrolling and stops above the footer */}
             <div className={`${wrap} pointer-events-none sticky bottom-4 z-30 mb-4 flex justify-center sm:justify-end`}>
                 <button type="button" popoverTarget="package-cart" className="pointer-events-auto flex items-center gap-3 rounded-full bg-brand-dark py-1.5 pl-1.5 pr-4 text-white shadow-xl shadow-brand/30 transition hover:bg-brand-mid">
                     <span className="relative grid size-9 place-items-center rounded-full bg-white/15">
@@ -37,7 +32,6 @@ export default function PackageCart({ tests }) {
                 </button>
             </div>
 
-            {/* Bottom sheet on phones, right-hand drawer from sm up */}
             <form
                 id="package-cart"
                 popover="auto"
@@ -61,7 +55,6 @@ export default function PackageCart({ tests }) {
                     <div>
                         <label htmlFor="package-name" className={label}>Package name <span className="text-red-500">*</span></label>
                         <input id="package-name" name="name" type="text" required maxLength={60} placeholder="e.g. My yearly checkup" className={input} />
-                        {/* <p role="alert" className="mt-1.5 pl-1 text-xs font-medium text-red-600">Please name your package</p> */}
                     </div>
 
                     <div>
@@ -93,7 +86,7 @@ export default function PackageCart({ tests }) {
                                                 {onOffer(test) && <span className="block text-[11px] text-slate-400 line-through">{inr(test.price)}</span>}
                                                 <span className="text-sm font-semibold text-slate-900">{inr(finalPrice(test))}</span>
                                             </span>
-                                            <button type="button" aria-label={`Remove ${test.name}`} className="grid size-8 shrink-0 place-items-center rounded-lg text-slate-400 transition hover:bg-red-50 hover:text-red-600">
+                                            <button type="button" aria-label={`Remove ${test.name}`} onClick={() => onRemove(test)} className="grid size-8 shrink-0 place-items-center rounded-lg text-slate-400 transition hover:bg-red-50 hover:text-red-600">
                                                 <Icon name="close" className="size-4" />
                                             </button>
                                         </li>
@@ -120,10 +113,10 @@ export default function PackageCart({ tests }) {
                     </div>
                     <button
                         type="submit"
-                        disabled={tests.length === 0}
+                        disabled={tests.length <= 1}
                         className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-brand-dark px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none"
                     >
-                        Create package<Icon name="arrow" className="size-4" />
+                        {tests.length <= 1 ? 'Add two or more tests' : <><Icon name="cart" className="size-4" />Add & save to cart</>}
                     </button>
                     <p className="mt-2 flex items-center justify-center gap-1.5 text-xs text-slate-500">
                         <Icon name="phone" className="size-3.5" />Our team will call you to confirm and book

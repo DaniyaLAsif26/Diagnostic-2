@@ -6,23 +6,23 @@ import HelpBanner from '../Listing/HelpBanner'
 import SelectableTestCard from './SelectableTestCard'
 import PackageCart from './PackageCart'
 import { wrap } from '../../constants/layout'
-import { testSorts } from '../../utils/sorts'
+import { testSorts as sorts } from '../../utils/sorts'
 import { useSearchParams } from 'react-router-dom'
 import { useAllTest } from '../../hooks/useTest'
+import { concernLabel } from '../../constants/concerns'
 
-import { tests } from '../../constants/tests'
 import { useMemo, useState } from 'react'
-const selected = tests.filter((t) => [1, 2, 4, 19].includes(t.id))
-const noop = () => { }
-
 
 export default function CreatePackage() {
-
     const [searchParams, setSearchParams] = useSearchParams()
+    const [selected, setSelected] = useState([])
 
-    const term = searchParams.get('q') || ''
+    const term = (searchParams.get('q') ?? '').trim().toLowerCase()
+    const concern = concernLabel[searchParams.get('concern')] ? searchParams.get('concern') : ''
+    const type = searchParams.get('type') ?? ''
+    const sort = sorts[searchParams.get('sort')] ? searchParams.get('sort') : 'popular'
 
-    const [search, setSearch] = useState(term || '')
+    const [search, setSearch] = useState(term)
 
     const setParams = (key, value) => setSearchParams((prev) => {
         const next = new URLSearchParams(prev)
@@ -31,11 +31,18 @@ export default function CreatePackage() {
         return next
     }, { replace: true, preventScrollReset: true })
 
+    const toggle = (test) => setSelected((prev) => prev.includes(test) ? prev.filter((t) => t !== test) : [...prev, test])
+
     const { data: allTests = [] } = useAllTest()
 
-    const tests = useMemo(
-        () => allTests.filter((t) => !term || t.name.toLowerCase().includes(term.trim().toLowerCase())),
-        [allTests, term]
+    const tests = useMemo(() =>
+        allTests
+            .filter((t) => !term || t.name.toLowerCase().includes(term) ||
+                t.relevance.some((tag) => (concernLabel[tag] ?? tag).toLowerCase().includes(term)))
+            .filter((t) => !concern || t.relevance.includes(concern))
+            .filter((t) => !type || t.category.toLowerCase() === type)
+            .sort(sorts[sort].compare),
+        [allTests, term, concern, type, sort]
     )
 
     return (
@@ -43,12 +50,13 @@ export default function CreatePackage() {
             <TestPackageHeader
                 search={search}
                 onSearch={setSearch}
-                onSubmit={(value) => setParams('q' , value)}
+                onSubmit={(value) => setParams('q', value)}
                 searchLabel="Search tests"
                 placeholder="Search tests to add, e.g. CBC, Thyroid">
 
                 <Filters
-                    onChange={noop}
+                    active={concern}
+                    onChange={(tag) => setParams('concern', tag)}
                     items={tests}
                     noun="test" />
 
@@ -60,13 +68,13 @@ export default function CreatePackage() {
 
                 <ResultsToolbar
                     shown={tests.length}
-                    total={tests.length}
+                    total={allTests.length}
                     noun="test"
-                    sorts={testSorts}
-                    sort="popular"
-                    onSort={noop}>
+                    sorts={sorts}
+                    sort={sort}
+                    onSort={(value) => setParams('sort', value === 'popular' ? '' : value)}>
 
-                    <TypeToggle type="" onChange={noop} />
+                    <TypeToggle type={type} onChange={(type) => setParams('type', type)} />
 
                 </ResultsToolbar>
 
@@ -75,7 +83,8 @@ export default function CreatePackage() {
                         <SelectableTestCard
                             key={test.id}
                             test={test}
-                            checked={selected.includes(test)} />
+                            checked={selected.includes(test)}
+                            onToggle={toggle} />
                     )}
                 </div>
 
@@ -85,7 +94,7 @@ export default function CreatePackage() {
                 />
             </div>
 
-            <PackageCart tests={selected} />
+            <PackageCart tests={selected} onRemove={toggle} />
         </>
     )
 }
