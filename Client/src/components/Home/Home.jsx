@@ -12,12 +12,11 @@ import Faq from './Faq'
 import Book from './Book'
 import SectionHeading from '../Common/SectionHeading'
 import Offers from './Offer/Offers'
-import { wrap } from '../../constants/layout'
 
 function Concerns() {
     return (
         <section className="py-16 sm:py-20">
-            <div className={wrap}>
+            <div className="mx-auto max-w-384 px-6 sm:px-10 lg:px-15">
                 <SectionHeading
                     center
                     eyebrow="Find the right test"

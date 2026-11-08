@@ -15,7 +15,7 @@ const tileSizes = {
 
 // layout="wrap": tiles wrap onto rows (home page). Default: one scrolling row (listing pages).
 const sizes = {
-    wrap: { ...tileSizes, row: 'flex flex-wrap justify-center gap-x-1 gap-y-5 sm:gap-x-3 lg:gap-x-5' },
+    wrap: { ...tileSizes, row: 'flex flex-wrap justify-center gap-x-1 gap-y-5 sm:gap-x-3 lg:flex-nowrap lg:justify-between lg:gap-x-2' },
     scroll: { ...tileSizes, row: '-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 pt-1 scrollbar-none sm:mx-0 sm:px-0 lg:justify-between' },
 }
 

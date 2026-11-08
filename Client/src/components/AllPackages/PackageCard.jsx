@@ -65,19 +65,17 @@ export default function PackageCard({ pkg }) {
                 )}
             </div>
 
-            <div className="border-t border-slate-100 pt-4">
-                <div className="flex items-end justify-between gap-2">
-                    <div>
-                        {discounted && <p className="text-xs text-slate-400 line-through">{inr(pkg.price)}</p>}
-                        <p className="text-2xl font-bold text-brand-dark">{inr(finalPrice(pkg))}</p>
-                    </div>
+            <div className="flex items-end justify-between gap-3 border-t border-slate-100 pt-4">
+                <div>
                     {discounted && (
-                        <span className="rounded-lg bg-emerald-50 px-2 py-1 text-xs font-bold text-emerald-700">
-                            {discountPercent(pkg)}% OFF
-                        </span>
+                        <p className="flex items-center gap-2 text-xs">
+                            <span className="text-slate-400 line-through">{inr(pkg.price)}</span>
+                            <span className="font-bold text-emerald-600">{discountPercent(pkg)}% OFF</span>
+                        </p>
                     )}
+                    <p className="text-2xl font-bold text-brand-dark">{inr(finalPrice(pkg))}</p>
                 </div>
-                <button type="button" className="relative z-10 mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-brand-dark py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid">
+                <button type="button" className="relative z-10 flex shrink-0 items-center gap-1.5 rounded-xl bg-brand-dark px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid">
                     <Icon name="cart" className="size-4" />Add to cart
                 </button>
             </div>

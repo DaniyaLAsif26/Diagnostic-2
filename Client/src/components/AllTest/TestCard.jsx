@@ -5,7 +5,6 @@ import { concernLabel } from '../../constants/concerns'
 import { inr, onOffer, finalPrice, discountPercent } from '../../utils/price'
 import { slugify } from '../../utils/slug'
 
-/** One test, shaped like the Test model. Used on /tests and the home page's popular tests. */
 export default function TestCard({ test }) {
     const isScan = test.category === 'RADIOLOGY'
     const discounted = onOffer(test)
@@ -55,8 +54,8 @@ export default function TestCard({ test }) {
                 )}
                 <div className="flex items-end justify-between gap-3">
                     <p className="text-xl font-bold text-brand-dark">{inr(finalPrice(test))}</p>
-                    {/* z-10 keeps the button above the stretched title link */}
-                    <button type="button" className="relative z-10 flex items-center gap-1.5 rounded-xl border border-brand/20 px-4 py-2 text-sm font-semibold text-brand transition hover:bg-brand hover:text-white">
+
+                    <button type="button" className="relative z-10 flex items-center gap-1.5 rounded-xl bg-brand-dark px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid">
                         <Icon name="cart" className="size-4" />Add to cart
                     </button>
                 </div>
