@@ -77,9 +77,9 @@ export default function PackageCard({ pkg }) {
                         </span>
                     )}
                 </div>
-                <Link to="/#book" className="relative z-10 mt-4 block rounded-xl bg-brand-dark py-2.5 text-center text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid">
-                    Book now
-                </Link>
+                <button type="button" className="relative z-10 mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-brand-dark py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid">
+                    <Icon name="cart" className="size-4" />Add to cart
+                </button>
             </div>
         </article>
     )
