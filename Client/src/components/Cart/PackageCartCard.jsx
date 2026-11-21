@@ -5,6 +5,7 @@ import { finalPrice } from '../../utils/price'
 export default function PackageCartCard({ item }) {
     return (
         <CartCard
+            itemKey={item.key}
             icon="shield"
             name={item.name}
             label="Package"

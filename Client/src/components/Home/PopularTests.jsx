@@ -14,7 +14,7 @@ export default function PopularTests() {
     if (isError || (!isPending && !popular.length)) return null
 
     return (
-        <section className={`${tint} py-16 sm:py-20`}>
+        <section className={`${tint} py-10 sm:py-12 lg:py-14`}>
             <div className={wrap}>
                 <SectionHeading
                     eyebrow="Lab tests"

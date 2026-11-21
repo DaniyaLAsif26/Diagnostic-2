@@ -9,6 +9,7 @@ import { itemMrp, itemPrice } from '../../utils/cart'
 export default function CustomPackageCartCard({ item }) {
     return (
         <CartCard
+            itemKey={item.key}
             icon="package"
             name={item.name}
             label="Custom package"

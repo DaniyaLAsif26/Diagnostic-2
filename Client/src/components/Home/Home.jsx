@@ -15,7 +15,7 @@ import Offers from './Offer/Offers'
 
 function Concerns() {
     return (
-        <section className="py-16 sm:py-20">
+        <section className="py-10 sm:py-12 lg:py-14">
             <div className="mx-auto max-w-384 px-6 sm:px-10 lg:px-15">
                 <SectionHeading
                     center

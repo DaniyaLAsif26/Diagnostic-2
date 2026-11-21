@@ -11,30 +11,10 @@ import EmptyCart from './EmptyCart'
 import { wrap } from '../../constants/layout'
 import { itemMrp, itemPrice } from '../../utils/cart'
 
-const items = [
-    {
-        id: 'c1',
-        type: 'custom',
-        name: 'My yearly checkup',
-        tests: [
-            { id: 1, name: 'Complete Blood Count (CBC)', category: 'LABORATORY', price: 450, offerPrice: 350 },
-            { id: 2, name: 'Thyroid Profile (T3, T4, TSH)', category: 'LABORATORY', price: 800, offerPrice: 599 },
-            { id: 3, name: 'Chest X-Ray (PA View)', category: 'RADIOLOGY', price: 500, offerPrice: 0 },
-        ],
-    },
-    {
-        id: 'p1',
-        type: 'package',
-        name: 'Full Body Checkup',
-        price: 2999,
-        offerPrice: 1499,
-        tests: ['Complete Blood Count', 'Lipid Profile', 'Liver Function Test', 'Kidney Function Test', 'Thyroid Profile', 'HbA1c', 'Fasting Blood Sugar', 'Vitamin B12', 'Vitamin D', 'Iron Studies', 'Urine Routine', 'ECG']
-            .map((name, i) => ({ id: i + 1, name })),
-    },
-    { id: 't1', type: 'test', name: 'Vitamin D (25-OH)', category: 'LABORATORY', price: 1200, offerPrice: 899 },
-    { id: 't2', type: 'test', name: 'Ultrasound Whole Abdomen', category: 'RADIOLOGY', price: 1500, offerPrice: 0 },
-]
-const coupon = { code: 'HEALTH10', amount: 250 } // null when no coupon is applied
+import {useSelector , useDispatch} from 'react-redux'
+import {selectCartItems , clearCart} from '../../features/cart/cartSlice.js'
+
+const coupon = null // null when no coupon is applied
 const offers = [
     { code: 'HEALTH10', text: '10% off on orders above ₹999' },
     { code: 'FIRST200', text: '₹200 off on your first booking' },
@@ -47,6 +27,10 @@ const cards = {
 }
 
 export default function Cart() {
+
+    const dispatch = useDispatch()
+    const items= useSelector(selectCartItems)
+
     if (items.length === 0) return <EmptyCart />
 
     const mrp = items.reduce((sum, i) => sum + itemMrp(i), 0)
@@ -78,10 +62,13 @@ export default function Cart() {
                                 <ul className="space-y-2.5">
                                     {items.map((item) => {
                                         const Card = cards[item.type]
-                                        return <Card key={item.id} item={item} />
+                                        return <Card key={item.key} item={item} />
                                     })}
                                 </ul>
-                                <button type="button" className="mt-3 text-sm font-semibold text-slate-400 transition hover:text-red-600">Clear cart</button>
+                                <button 
+                                onClick={()=>dispatch(clearCart())}
+                                type="button" 
+                                className="mt-3 text-sm font-semibold text-slate-400 transition hover:text-red-600">Clear cart</button>
                             </div>
 
                             <OrderSummary

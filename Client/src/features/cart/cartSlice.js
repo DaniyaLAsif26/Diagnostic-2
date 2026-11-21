@@ -12,6 +12,7 @@ const cartSlice = createSlice({
                     key: `${type}-${item.id}`,
                     type,
                     name: item.name,
+                    category : item.category,
                     price: item.price,
                     offerPrice: item.offerPrice ?? 0,
                 }

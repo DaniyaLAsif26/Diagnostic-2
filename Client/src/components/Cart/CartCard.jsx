@@ -1,12 +1,17 @@
 import Icon from '../Icon/Icon'
 import { inr } from '../../utils/price'
 
-/** Shared shell for every cart row: icon, name, kind label + meta, price and remove. Extra content goes in children. */
-export default function CartCard({ icon, name, label, meta, extra, mrp, price, children }) {
+import {useDispatch} from 'react-redux'
+import {removeFromCart} from '../../features/cart/cartSlice.js'
+
+export default function CartCard({itemKey, icon, iconTone = 'bg-brand-light/10 text-brand', name, label, meta, extra, mrp, price, children }){
+
+const dispatch = useDispatch()
+
     return (
         <li className="rounded-xl bg-white py-3 pl-3 pr-2 shadow-sm ring-1 ring-slate-900/5 sm:pr-3">
             <div className="flex items-center gap-3">
-                <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-brand-light/10 text-brand">
+                <span className={`grid size-9 shrink-0 place-items-center rounded-lg ${iconTone}`}>
                     <Icon name={icon} className="size-4.5" />
                 </span>
 
@@ -24,7 +29,11 @@ export default function CartCard({ icon, name, label, meta, extra, mrp, price, c
                     <span className="text-[15px] font-bold text-brand-dark">{inr(price)}</span>
                 </div>
 
-                <button type="button" aria-label={`Remove ${name}`} className="grid size-8 shrink-0 place-items-center rounded-lg text-slate-400 transition hover:bg-red-50 hover:text-red-600">
+                <button 
+                onClick={()=> dispatch(removeFromCart(itemKey))}
+                type="button" 
+                aria-label={`Remove ${name}`} 
+                className="grid size-8 shrink-0 place-items-center rounded-lg text-slate-400 transition hover:bg-red-50 hover:text-red-600">
                     <Icon name="close" className="size-4" />
                 </button>
             </div>
