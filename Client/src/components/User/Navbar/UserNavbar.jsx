@@ -5,7 +5,9 @@ import Icon from '../../Icon/Icon'
 import { CONTACT, tel, landlineTel, directions } from '../../../constants/contact'
 import { wrap } from '../../../constants/layout'
 
-// Tests and Packages are pages; the rest are sections on the home page
+import { useSelector } from 'react-redux'
+import { selectCartCount } from '../../../features/cart/cartSlice.js'
+
 const navLinks = [
     { label: 'Tests', to: '/tests' },
     { label: 'Packages', to: '/packages' },
@@ -48,6 +50,9 @@ function TopBar() {
 }
 
 export default function UserNavbar() {
+
+    const cartCount = useSelector(selectCartCount)
+
     return (
         <>
             <TopBar />
@@ -77,9 +82,9 @@ export default function UserNavbar() {
                             <Icon name="phone" className="size-4" />Call us
                         </a>
                         {/* Cart - replace the badge number with the real cart count */}
-                        <NavLink to="/cart" aria-label="Cart, 0 items" className={({ isActive }) => `relative grid size-10 place-items-center rounded-xl transition hover:bg-slate-100 hover:text-brand ${isActive ? 'bg-brand/5 text-brand' : 'text-slate-600'}`}>
+                        <NavLink to="/cart" aria-label={`Cart, ${cartCount} items`} className={({ isActive }) => `relative grid size-10 place-items-center rounded-xl transition hover:bg-slate-100 hover:text-brand ${isActive ? 'bg-brand/5 text-brand' : 'text-slate-600'}`}>
                             <Icon name="cart" className="size-5" />
-                            <span className="absolute right-0.5 top-0.5 grid min-w-4.5 place-items-center rounded-full bg-brand-light px-1 text-[10px] font-bold leading-4.5 text-white ring-2 ring-white">0</span>
+                            <span className="absolute right-0.5 top-0.5 grid min-w-4.5 place-items-center rounded-full bg-brand-light px-1 text-[10px] font-bold leading-4.5 text-white ring-2 ring-white">{cartCount ?? 0}</span>
                         </NavLink>
                         <Link to="/login" className="hidden items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold text-brand ring-1 ring-slate-200 transition hover:bg-slate-50 hover:ring-brand-light/40 sm:flex">
                             <Icon name="user" className="size-4" />Login
