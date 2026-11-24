@@ -9,12 +9,8 @@ const cartSlice = createSlice({
             prepare: (type, item) => ({
                 payload: {
                     id: item.id,
-                    key: `${type}-${item.id}`,
                     type,
-                    name: item.name,
-                    category : item.category,
-                    price: item.price,
-                    offerPrice: item.offerPrice ?? 0,
+                    key: `${type}-${item.id}`
                 }
             }),
             reducer: (state, action) => {
@@ -38,9 +34,4 @@ export default cartSlice.reducer
 
 export const selectCartItems = (state) => state.cart.items
 export const selectCartCount = (state) => state.cart.items.length
-export const selectCartTotal = (state) => state.cart.items.reduce((sum,i) => sum + finalPrice(i) , 0)
-export const selectCartSavings = (state) => state.cart.items.reduce((sum,i) => sum +(i.price - finalPrice(i)) , 0)
 export const selectIsInCart = (type , id) => (state) =>state.cart.items.some((i)=> i.key === `${type}-${id}`)
-
-export const selectCartTests = createSelector([selectCartItems] , (items) => items.filter((i) => i.type === 'test'))
-export const selectCartPackages = createSelector([selectCartItems] , (items) => items.filter((i) => i.type === 'package'))

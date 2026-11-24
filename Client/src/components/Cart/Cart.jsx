@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom'
 
 import HeaderBackdrop from '../Header/HeaderBackdrop'
 import HelpBanner from '../Listing/HelpBanner'
-import CustomPackageCartCard from './CustomPackageCartCard'
 import PackageCartCard from './PackageCartCard'
 import TestCartCard from './TestCartCard'
 import OrderSummary from './OrderSummary'
@@ -11,8 +10,9 @@ import EmptyCart from './EmptyCart'
 import { wrap } from '../../constants/layout'
 import { itemMrp, itemPrice } from '../../utils/cart'
 
-import {useSelector , useDispatch} from 'react-redux'
-import {selectCartItems , clearCart} from '../../features/cart/cartSlice.js'
+import { useSelector, useDispatch } from 'react-redux'
+import { selectCartCount, clearCart } from '../../features/cart/cartSlice.js'
+import { useCartItems } from '../../hooks/useCartItems'
 
 const coupon = null // null when no coupon is applied
 const offers = [
@@ -21,7 +21,6 @@ const offers = [
 ]
 
 const cards = {
-    custom: CustomPackageCartCard,
     package: PackageCartCard,
     test: TestCartCard,
 }
@@ -29,8 +28,12 @@ const cards = {
 export default function Cart() {
 
     const dispatch = useDispatch()
-    const items= useSelector(selectCartItems)
+    const count = useSelector(selectCartCount)
+    const { items, isLoading, isError } = useCartItems()
 
+    if (count === 0) return <EmptyCart />
+    if (isLoading) return <p className="p-8 text-center text-sm text-slate-500">Loading your cart…</p> // swap for your skeleton
+    if (isError) return <p className="p-8 text-center text-sm text-red-600">Couldn't load your cart. Please retry.</p>
     if (items.length === 0) return <EmptyCart />
 
     const mrp = items.reduce((sum, i) => sum + itemMrp(i), 0)
@@ -65,10 +68,10 @@ export default function Cart() {
                                         return <Card key={item.key} item={item} />
                                     })}
                                 </ul>
-                                <button 
-                                onClick={()=>dispatch(clearCart())}
-                                type="button" 
-                                className="mt-3 text-sm font-semibold text-slate-400 transition hover:text-red-600">Clear cart</button>
+                                <button
+                                    onClick={() => dispatch(clearCart())}
+                                    type="button"
+                                    className="mt-3 text-sm font-semibold text-slate-400 transition hover:text-red-600">Clear cart</button>
                             </div>
 
                             <OrderSummary

@@ -16,7 +16,7 @@ export default function PackageCartCard({ item }) {
             <ViewTests>
                 <ul className="mt-2 flex flex-wrap gap-1.5">
                     {item.tests.map((test) => (
-                        <li key={test.id} className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600">{test.name}</li>
+                        <li key={test.testId}className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600">{test.name}</li>
                     ))}
                 </ul>
             </ViewTests>
