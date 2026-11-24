@@ -41,6 +41,7 @@ export const router = createBrowserRouter(
             </Route>
 
             <Route path='/login' element={<LoginForm />} />
+            <Route path='/signup' element={<LoginForm />} />
 
             <Route
                 path='/admin'

@@ -23,6 +23,13 @@ const loginSchema = z.object({
   rememberMe: z.boolean()
 })
 
+// Sign up is passwordless: just an email
+const signupSchema = z.object({
+  email:
+    z.string()
+      .email("Please enter a valid email"),
+})
+
 // Shown on the brand panel (desktop only)
 const highlights = [
   'Qualified pathologists and radiologists review every report.',
@@ -46,19 +53,49 @@ export default function LoginForm() {
   const location = useLocation()
 
   const [error, setError] = useState('')
+  const [notice, setNotice] = useState('')
   const [showPassword, setShowPassword] = useState(false)
 
-  // 'default' key means /login was opened directly (no in-app history), so go home instead
-  const goBack = () => location.key === 'default' ? navigate('/') : navigate(-1)
+  // /login and /signup render this same form; the URL decides which view shows
+  const isSignup = location.pathname === '/signup'
+
+  // history idx 0 means this page was opened directly (no in-app history), so go home instead
+  const goBack = () => window.history.state?.idx > 0 ? navigate(-1) : navigate('/')
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting }
   } = useForm({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(isSignup ? signupSchema : loginSchema),
     mode: 'onBlur'
   })
+
+  // Swap between the log in and sign up forms, starting each one clean.
+  // `replace` keeps Back pointing at the page the user came from, not the other form.
+  const switchMode = () => {
+    navigate(isSignup ? '/login' : '/signup', { replace: true })
+    setError('')
+    setNotice('')
+    setShowPassword(false)
+    reset()
+  }
+
+  const submitSignup = async ({ email }) => {
+    setError('')
+    setNotice('')
+
+    try {
+      // Passwordless: the server emails a sign-in link to this address
+      await api.post("/signup", { email })
+      setNotice(`We've sent a sign-in link to ${email}. Check your inbox to finish creating your account.`)
+      reset()
+    }
+    catch (err) {
+      setError(err.message)
+    }
+  }
 
   const submitLogin = async (data) => {
     setError('')
@@ -128,16 +165,18 @@ export default function LoginForm() {
 
           <div className="mt-8 sm:mt-10 lg:mt-7 short:mt-4 sm:short:mt-5 lg:short:mt-4">
             <h1 className="text-2xl font-bold tracking-tight text-brand-dark sm:text-3xl">
-              Welcome back
+              {isSignup ? 'Create your account' : 'Welcome back'}
             </h1>
             <p className="mt-1.5 text-sm text-slate-500">
-              Log in to your Vision Diagnostic Centre account
+              {isSignup
+                ? "Enter your email and we'll send you a verification link to get started."
+                : 'Log in to your Vision Diagnostic Centre account'}
             </p>
           </div>
 
           <form
             noValidate
-            onSubmit={handleSubmit(submitLogin)}
+            onSubmit={handleSubmit(isSignup ? submitSignup : submitLogin)}
             className="mt-7 space-y-5 sm:mt-8 short:mt-4 short:space-y-4 sm:short:mt-5">
             {/* Email */}
             <div>
@@ -160,8 +199,8 @@ export default function LoginForm() {
               <FieldError e={errors.email} />
             </div>
 
-            {/* Password */}
-            <div>
+            {/* Password - log in only */}
+            {!isSignup && <div>
               <div className="flex items-center justify-between">
                 <label htmlFor="password" className={label}>Password</label>
                 <a href="#forgot" className="mb-1.5 text-sm font-medium text-brand-light hover:underline">
@@ -196,19 +235,27 @@ export default function LoginForm() {
                 </button>
               </div>
               <FieldError e={errors.password} />
-            </div>
+            </div>}
 
-            <label className="flex w-fit items-center gap-2 text-sm text-slate-600">
-              <input
-                {...register('rememberMe')}
-                type="checkbox"
-                className="size-4 rounded accent-brand" />
-              Remember me
-            </label>
+            {!isSignup && (
+              <label className="flex w-fit items-center gap-2 text-sm text-slate-600">
+                <input
+                  {...register('rememberMe')}
+                  type="checkbox"
+                  className="size-4 rounded accent-brand" />
+                Remember me
+              </label>
+            )}
 
             {error && (
               <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700 ring-1 ring-red-200">
                 {error}
+              </p>
+            )}
+
+            {notice && (
+              <p role="status" className="rounded-xl bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700 ring-1 ring-emerald-200">
+                {notice}
               </p>
             )}
 
@@ -217,7 +264,9 @@ export default function LoginForm() {
               type="submit"
               className="w-full rounded-xl bg-brand-dark py-3 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70 sm:py-3.5 short:py-2.5 sm:short:py-3"
             >
-              {isSubmitting ? "Logging in..." : "Log in"}
+              {isSignup
+                ? (isSubmitting ? "Sending link..." : "Continue to verify email")
+                : (isSubmitting ? "Logging in..." : "Log in")}
             </button>
           </form>
 
@@ -238,14 +287,17 @@ export default function LoginForm() {
               <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
               <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
             </svg>
-            Continue with Google
+            {isSignup ? 'Sign up with Google' : 'Continue with Google'}
           </button>
 
           <p className="mt-6 text-center text-sm text-slate-500 short:mt-3">
-            Don&apos;t have an account?{' '}
-            <a href="#signup" className="font-semibold text-brand-light hover:underline">
-              Sign up
-            </a>
+            {isSignup ? 'Already have an account?' : "Don't have an account?"}{' '}
+            <button
+              type="button"
+              onClick={switchMode}
+              className="font-semibold text-brand-light hover:underline">
+              {isSignup ? 'Log in' : 'Sign up'}
+            </button>
           </p>
         </section>
       </div>
