@@ -24,11 +24,13 @@ import loginRoute from './src/routes/login.js'
 import testsRoute from './src/routes/tests.js'
 import packageRoute from './src/routes/packages.js'
 import searchRoute from './src/routes/search.js'
+// import fabricRoute from './src/routes/fabric.js' // Fabric is for testing/future use only - disabled for now
 
 app.use('/api', loginRoute)
 app.use('/api/tests', testsRoute)
 app.use('/api/packages', packageRoute)
 app.use('/api/search', searchRoute)
+// app.use('/api/fabric', fabricRoute)
 
 
 app.use((err, req, res, next) => {

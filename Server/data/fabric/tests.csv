@@ -1,0 +1,115 @@
+id,name,price,offer_price,is_popular,category,relevance,preparation,description
+1,Pus Culture,500,450,0,LABORATORY,fever,,Helps find the cause of fever and infection.
+2,Serum Amylase,500,0,0,LABORATORY,stomach,Fast for 8-12 hours before the test,Checks your digestive system.
+3,Complete Blood Picture,250,0,1,LABORATORY,blood,,Checks your blood health.
+4,PAR Smear,1000,0,0,LABORATORY,blood,,Checks your blood health.
+5,S.G.P.T,100,0,0,LABORATORY,liver,,Checks how well your liver is working.
+6,Urine For Albumin,150,0,0,LABORATORY,kidney,,Checks how well your kidneys are working.
+7,Antinuclear Antibody (ANA) Profile,4000,0,0,LABORATORY,blood,,Checks your blood health.
+8,Gamma Glutamyl Transferase (GGT),400,0,0,LABORATORY,liver,,Checks how well your liver is working.
+9,Serum Calcium,250,0,0,LABORATORY,bone,,Checks bone health.
+10,Anti Cyclic Citrullinated Peptide Antibody,2000,0,0,LABORATORY,blood,,Checks your blood health.
+11,Stool Examination,200,0,0,LABORATORY,stomach,Collect a fresh sample in the container provided,Checks your digestive system.
+12,Testosterone Free,1000,0,0,LABORATORY,hormone,,Measures hormone levels.
+13,Rubella IGG,1000,900,0,LABORATORY,fever,,Helps find the cause of fever and infection.
+14,"Anti Phospholipid, Antibodies IGA",2200,0,0,LABORATORY,blood,,Checks your blood health.
+15,Rubella IGM,1000,0,0,LABORATORY,fever,,Helps find the cause of fever and infection.
+16,"Dengue IGG, IGM, NS1",1200,0,0,LABORATORY,fever,,Helps find the cause of fever and infection.
+17,Malarial Parasite,600,540,0,LABORATORY,fever,,Helps find the cause of fever and infection.
+18,Calcitonin,4000,0,0,LABORATORY,thyroid,,Checks your thyroid and related hormones.
+19,Cortisol,1000,0,0,LABORATORY,thyroid,Sample is taken in the morning; avoid heavy exercise the day before,Checks your thyroid and related hormones.
+20,Serum Bilirubin,200,0,0,LABORATORY,liver,,Checks how well your liver is working.
+21,Albert Stain,500,450,0,LABORATORY,fever,,Helps find the cause of fever and infection.
+22,Anti HAV Hepatatis A Virus IGM,850,0,0,LABORATORY,fever,,Helps find the cause of fever and infection.
+23,"Thyroid Profile (T3, T4, TSH)",450,0,0,LABORATORY,thyroid,,Checks your thyroid and related hormones.
+24,Coombs Direct,500,0,0,LABORATORY,blood,,Checks your blood health.
+25,Semen Analysis,450,410,0,LABORATORY,fertility,Abstain for 2-5 days; sample must reach the lab within 1 hour,Checks fertility health.
+26,C-Reactive Protein (CRP),450,0,0,LABORATORY,fever,,Helps find the cause of fever and infection.
+27,HCV,550,0,0,LABORATORY,fever,,Helps find the cause of fever and infection.
+28,Prostate-Specific Antigen (P.S.A),1000,0,0,LABORATORY,cancer,,Screening marker for cancer risk.
+29,Biopsy Large,1500,1350,0,LABORATORY,stomach,,Checks your digestive system.
+30,Iron Profile,2000,0,0,LABORATORY,blood,Fast for 8-12 hours; avoid iron supplements for 24 hours,Checks your blood health.
+31,Pleural Fluid ADA,550,0,0,LABORATORY,lung,,Checks your lungs and breathing.
+32,Serum Lipase,600,0,0,LABORATORY,stomach,Fast for 8-12 hours before the test,Checks your digestive system.
+33,Liver Function Test (LFT),550,500,1,LABORATORY,liver,Fast for 8-10 hours before the test,Checks how well your liver is working.
+34,Urine For Pregnancy,200,0,0,LABORATORY,women,,Supports women's and pregnancy care.
+35,Biopsy Medium,1200,0,0,LABORATORY,stomach,,Checks your digestive system.
+36,S.G.O.T,100,0,0,LABORATORY,liver,,Checks how well your liver is working.
+37,Urine Culture,450,410,0,LABORATORY,kidney,Collect a clean-catch midstream sample in the sterile container provided,Checks how well your kidneys are working.
+38,Random Blood Sugar,60,0,0,LABORATORY,diabetes,,Helps screen for and monitor diabetes.
+39,Serum Prolactin,500,0,0,LABORATORY,hormone,,Measures hormone levels.
+40,Blood Urea,200,0,0,LABORATORY,kidney,,Checks how well your kidneys are working.
+41,HB Electropherosis,1450,1310,0,LABORATORY,blood,,Checks your blood health.
+42,HLAB - 27,2800,0,0,LABORATORY,blood,,Checks your blood health.
+43,Sputum For Culture,550,0,0,LABORATORY,fever,,Helps find the cause of fever and infection.
+44,Biopsy Small,800,0,0,LABORATORY,stomach,,Checks your digestive system.
+45,Platelet Count,100,0,0,LABORATORY,blood,,Checks your blood health.
+46,Activated Partial Thromboplastin Time(APTT),600,0,0,LABORATORY,blood,,Checks your blood health.
+47,Lactate Dehydrogenase (LDH),500,0,0,LABORATORY,blood,,Checks your blood health.
+48,Blood Group,100,0,0,LABORATORY,blood,,Checks your blood health.
+49,"Prothrombin Time (PT), INR Blood test",650,590,0,LABORATORY,blood,,Checks your blood health.
+50,Serum Creatinine,200,0,0,LABORATORY,kidney,,Checks how well your kidneys are working.
+51,Widal,300,0,0,LABORATORY,fever,,Helps find the cause of fever and infection.
+52,Post Lunch Blood Sugar,60,0,0,LABORATORY,diabetes,,Helps screen for and monitor diabetes.
+53,Oral Glucose Challenge Test (OGCT),250,0,0,LABORATORY,diabetes,No fasting needed; the test takes about 1 hour,Helps screen for and monitor diabetes.
+54,Rheumatoid Factor (RF),400,0,0,LABORATORY,blood,,Checks your blood health.
+55,Oral Glucose Tolerance Test (OGTT),350,0,0,LABORATORY,diabetes,Fast for 8-10 hours; the test takes about 2 hours,Helps screen for and monitor diabetes.
+56,Vitamin B12,800,0,0,LABORATORY,blood|vitamin,Fast for 8 hours before the test,Checks your blood health.
+57,Stool for Culture & Sensitivity,500,450,0,LABORATORY,fever,,Helps find the cause of fever and infection.
+58,Serum Uric Acid,300,0,0,LABORATORY,blood,,Checks your blood health.
+59,Absolute Eosinophil Count (AEC),110,0,0,LABORATORY,blood,,Checks your blood health.
+60,HBA1C,700,0,0,LABORATORY,diabetes,,Helps screen for and monitor diabetes.
+61,Venereal Disease Research Laboratory (VDRL),450,410,0,LABORATORY,fever,,Helps find the cause of fever and infection.
+62,Alkaline Phosphate,200,0,0,LABORATORY,liver,,Checks how well your liver is working.
+63,Free T4,550,0,0,LABORATORY,thyroid,,Checks your thyroid and related hormones.
+64,Free T3,500,0,0,LABORATORY,thyroid,,Checks your thyroid and related hormones.
+65,Ferretin,800,720,0,LABORATORY,blood,,Checks your blood health.
+66,Complete Haemogram,400,0,0,LABORATORY,blood,,Checks your blood health.
+67,ECG,300,0,0,LABORATORY,heart,,Checks your heart health.
+68,Blood For MP (SMEAR),110,0,0,LABORATORY,blood,,Checks your blood health.
+69,Erythrocyte Sedimentation Rate test,110,0,0,LABORATORY,blood,,Checks your blood health.
+70,Sputum For Gram Stain,500,0,0,LABORATORY,fever,,Helps find the cause of fever and infection.
+71,Haemoglobin,100,0,0,LABORATORY,blood,,Checks your blood health.
+72,HIV 1&2,500,0,0,LABORATORY,fever,,Helps find the cause of fever and infection.
+73,Immuno Globulin Profile,2300,2070,0,LABORATORY,blood,,Checks your blood health.
+74,Bleeding Time(BT) & Clotting Time(CT),100,0,0,LABORATORY,blood,,Checks your blood health.
+75,Complete Blood Count,500,0,0,LABORATORY,blood,,Checks your blood health.
+76,Cholestrol,250,0,0,LABORATORY,liver,Fast for 10-12 hours; water is allowed,Checks how well your liver is working.
+77,Stool for Occult Blood & Reducing Substances,350,320,0,LABORATORY,stomach,,Checks your digestive system.
+78,Vitamin D3,1200,0,0,LABORATORY,blood|vitamin,,Checks your blood health.
+79,Lipid Profile,550,0,0,LABORATORY,liver,Fast for 10-12 hours; water is allowed,Checks how well your liver is working.
+80,Urine For Ketone Bodies,100,0,0,LABORATORY,diabetes,,Helps screen for and monitor diabetes.
+81,Serum Electrolytes,500,450,0,LABORATORY,blood,,Checks your blood health.
+82,Progesterone,500,0,0,LABORATORY,hormone,,Measures hormone levels.
+83,Complete Urine Examination,100,0,0,LABORATORY,kidney,,Checks how well your kidneys are working.
+84,Antistreptolysin O (ASO),550,0,0,LABORATORY,blood,,Checks your blood health.
+85,Human Growth Hormone,1000,900,0,LABORATORY,hormone,,Measures hormone levels.
+86,Coombs Indirect,550,0,0,LABORATORY,blood,,Checks your blood health.
+87,Fasting Blood Sugar,60,0,1,LABORATORY,diabetes,Fast for 8-10 hours; water is allowed,Helps screen for and monitor diabetes.
+88,Mantoux,300,0,0,LABORATORY,fever,,Helps find the cause of fever and infection.
+89,Total Cell Count & Differential Cell Count (TC/DC),100,0,0,LABORATORY,blood,,Checks your blood health.
+90,Pleural Fluid Analysis,1000,0,0,LABORATORY,lung,,Checks your lungs and breathing.
+91,Testosterone - Total,600,0,0,LABORATORY,hormone,,Measures hormone levels.
+92,Beta HCG,1000,0,0,LABORATORY,women,,Supports women's and pregnancy care.
+93,Luteinizing Hormone (LH),500,450,0,LABORATORY,hormone,,Measures hormone levels.
+94,Reticulocyte Count,200,0,0,LABORATORY,blood,,Checks your blood health.
+95,Sputum For AFB,300,0,0,LABORATORY,fever,,Helps find the cause of fever and infection.
+96,Thyroid Stimulating Hormone(TSH),300,0,0,LABORATORY,thyroid,,Checks your thyroid and related hormones.
+97,Hepatitis B Surface Antigen (HBSAG),450,410,0,LABORATORY,fever,,Helps find the cause of fever and infection.
+98,X-Ray PNS,450,0,0,RADIOLOGY,lung,,Checks your lungs and breathing.
+99,USG Obstric Scan/Antenatal Scan,1100,0,0,RADIOLOGY,women,Come with a comfortably full bladder,Supports women's and pregnancy care.
+100,GrowthScan,1300,0,0,RADIOLOGY,women,,Supports women's and pregnancy care.
+101,X-Ray Chest AP/LAT View,900,810,0,RADIOLOGY,lung,Remove metal objects and jewellery from the chest area,Checks your lungs and breathing.
+102,TIFFA,1500,0,0,RADIOLOGY,women,,Supports women's and pregnancy care.
+103,USG Scrotum,1600,0,0,RADIOLOGY,scan,,Imaging scan of the area.
+104,X-Rays AP/LAT,450,0,0,RADIOLOGY,bone,,Checks bone health.
+105,USG Abdomen & Pelvis,1100,990,0,RADIOLOGY,stomach,Drink 4-5 glasses of water and do not pass urine 1 hour before the scan,Checks your digestive system.
+106,USG Neck Plus,1650,0,0,RADIOLOGY,thyroid,,Checks your thyroid and related hormones.
+107,GrowthScan Doppler,3000,0,0,RADIOLOGY,women,,Supports women's and pregnancy care.
+108,Chest Ap View,450,0,0,RADIOLOGY,lung,,Checks your lungs and breathing.
+109,X-Rays Chest PA View,450,410,0,RADIOLOGY,lung,,Checks your lungs and breathing.
+110,2D Echo,2000,0,0,RADIOLOGY,heart,,Checks your heart health.
+111,X-Ray Nasal Bone Lat,450,0,0,RADIOLOGY,bone,,Checks bone health.
+112,USG Axilla,1500,0,0,RADIOLOGY,scan,,Imaging scan of the area.
+113,Nt Scan,1500,1350,0,RADIOLOGY,women,,Supports women's and pregnancy care.
+114,"X-Ray Cervical, Lumbar, Shull, Erect Abdomen",600,0,0,RADIOLOGY,bone,,Checks bone health.

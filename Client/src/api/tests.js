@@ -10,6 +10,8 @@ export default function searchTests(q, signal) {
 }
 
 export const getAllTests = () => api.get('/tests/all').then((res) => res.data.data.allTests)
+// Fabric version (testing / future use) - disabled for now:
+// export const getAllTests = () => api.get('/fabric/tests').then((res) => res.data.data.allTests)
 
 export const getPopularTests = (limit) => api.get('/tests/popular', { params: { limit } }).then((res) => res.data.data.popularTests)
 
