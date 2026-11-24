@@ -17,21 +17,21 @@ const labSteps = [
  */
 export default function Steps({ steps = labSteps, title = 'Your test in 4 simple steps', id }) {
     return (
-        <section id={id} className={`${tint} scroll-mt-24 py-16 sm:py-20`}>
+        <section id={id} className={`${tint} scroll-mt-24 py-10 sm:py-14`}>
             <div className={wrap}>
                 <SectionHeading center eyebrow="How it works" icon="calendar" title={title} />
-                <div className="relative mt-12">
+                <div className="relative mt-8">
                     {/* dashed connector behind the step icons */}
                     <div aria-hidden="true" className="absolute inset-x-[12.5%] top-8 hidden border-t-2 border-dashed border-brand/15 lg:block" />
-                    <ol className="relative grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+                    <ol className="relative grid gap-7 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
                         {steps.map(({ icon, title, text }, i) => (
                             <li key={title} className="flex flex-col items-center text-center">
                                 <span className="relative grid size-16 place-items-center rounded-2xl bg-white text-brand shadow-lg shadow-brand/10 ring-1 ring-slate-900/5">
                                     <Icon name={icon} className="size-7" />
                                     <span className="absolute -right-2 -top-2 grid size-6 place-items-center rounded-full bg-brand-dark text-xs font-bold text-white">{i + 1}</span>
                                 </span>
-                                <h3 className="mt-5 font-semibold text-slate-900">{title}</h3>
-                                <p className="mt-2 max-w-60 text-sm text-slate-500">{text}</p>
+                                <h3 className="mt-4 font-semibold text-slate-900">{title}</h3>
+                                <p className="mt-1 max-w-60 text-sm text-slate-500">{text}</p>
                             </li>
                         ))}
                     </ol>

@@ -1,12 +1,10 @@
 import { Link } from 'react-router-dom'
 
 import Icon from '../Icon/Icon'
+import AddToCartButton from '../Common/AddToCartButton'
 import { concernLabel } from '../../constants/concerns'
 import { inr, onOffer, finalPrice, discountPercent } from '../../utils/price'
 import { slugify } from '../../utils/slug'
-
-import { useDispatch, useSelector } from 'react-redux'
-import { addToCart, removeFromCart, selectIsInCart } from '../../features/cart/cartSlice'
 
 const PREVIEW = 5 // tests shown on the card; the rest are on the package page
 
@@ -14,9 +12,6 @@ export default function PackageCard({ pkg }) {
     const discounted = onOffer(pkg)
     const url = `/package/${slugify(pkg.name)}/${pkg.id}`
     const count = pkg.tests.length
-
-    const dispatch = useDispatch()
-    const inCart = useSelector(selectIsInCart("package", pkg.id))
 
     return (
         // `relative` anchors the stretched title link below, which makes the whole card clickable
@@ -81,25 +76,7 @@ export default function PackageCard({ pkg }) {
                     )}
                     <p className="text-2xl font-bold text-brand-dark">{inr(finalPrice(pkg))}</p>
                 </div>
-                {inCart ?
-                    (
-                        <button
-                            onClick={() => dispatch(removeFromCart(`package-${pkg.id}`))}
-                            type="button"
-                            className="relative z-10 flex items-center gap-1.5 rounded-xl bg-white px-4 py-2 text-sm font-semibold text-red-600 shadow-sm ring-1 ring-red-200 transition hover:bg-red-50 hover:ring-red-300 active:scale-[0.98]">
-                            <Icon name="cart" className="size-4" />Remove
-                        </button>
-                    )
-                    :
-                    (
-                        <button
-                            onClick={() => dispatch(addToCart('package', pkg))}
-                            type="button"
-                            className="relative z-10 flex items-center gap-1.5 rounded-xl bg-brand-dark px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid active:scale-[0.98]">
-                            <Icon name="cart" className="size-4 text-emerald-300" />Add to cart
-                        </button>
-                    )
-                }
+                <AddToCartButton type="package" item={pkg} />
             </div>
         </article>
     )

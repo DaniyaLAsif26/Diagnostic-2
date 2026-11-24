@@ -31,7 +31,7 @@ export default function TestDetails() {
         <>
             {/* Price card sits beside the details on desktop, below them on phones */}
             <DetailsHeader test={test} prepTitle={copy.prepTitle}>
-                <PriceCard test={test} priceLabel={copy.priceLabel} perks={copy.perks} payNote={copy.payNote} />
+                <PriceCard test={test} type="test" priceLabel={copy.priceLabel} perks={copy.perks} payNote={copy.payNote} />
             </DetailsHeader>
 
             <IncludedInPackages packages={test.packages} />
@@ -48,7 +48,7 @@ export default function TestDetails() {
                 />
             </div>
 
-            <MobileBookBar test={test} />
+            <MobileBookBar test={test} type="test" />
         </>
     )
 }

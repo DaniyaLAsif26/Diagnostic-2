@@ -37,7 +37,7 @@ export default function PackageDetails() {
                         </div>
 
                         <aside className="lg:sticky lg:top-24">
-                            <PriceCard test={pkg} priceLabel="Package price" perks={[]} payNote="No hidden charges · Pay online or at collection" />
+                            <PriceCard test={pkg} type="package" priceLabel="Package price" perks={[]} payNote="No hidden charges · Pay online or at collection" />
                         </aside>
                     </div>
                 </div>
@@ -55,7 +55,7 @@ export default function PackageDetails() {
                 />
             </div>
 
-            <MobileBookBar test={pkg} />
+            <MobileBookBar test={pkg} type="package" />
         </>
     )
 }

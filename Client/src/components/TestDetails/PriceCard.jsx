@@ -1,12 +1,12 @@
-import { Link } from 'react-router-dom'
-
 import Icon from '../Icon/Icon'
 import { tel, whatsapp } from '../../constants/contact'
 import { inr, onOffer, finalPrice, discountPercent } from '../../utils/price'
+import { useCartToggle } from '../../hooks/useCartToggle'
 
-/** Price, savings, perks and the Book / Call / WhatsApp actions. */
-export default function PriceCard({ test, priceLabel, perks, payNote }) {
+/** Price, savings, perks and the Add to cart / Call / WhatsApp actions. `type` is 'test' or 'package'. */
+export default function PriceCard({ test, type, priceLabel, perks, payNote }) {
     const discounted = onOffer(test)
+    const { inCart, toggle } = useCartToggle(type, test)
 
     return (
         <div className="overflow-hidden rounded-3xl bg-white shadow-xl shadow-brand/10 ring-1 ring-slate-900/5">
@@ -44,9 +44,15 @@ export default function PriceCard({ test, priceLabel, perks, payNote }) {
                     ))}
                 </ul>
 
-                <Link to="/#book" className={`${perks.length ? 'mt-6' : ''} flex w-full items-center justify-center gap-2 rounded-xl bg-brand-dark py-3 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-mid active:scale-[0.99]`}>
-                    Book now<Icon name="arrow" className="size-4" />
-                </Link>
+                <button
+                    onClick={toggle}
+                    type="button"
+                    className={`${perks.length ? 'mt-6' : ''} flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold transition active:scale-[0.99] ${inCart
+                        ? 'bg-white text-red-600 shadow-sm ring-1 ring-red-200 hover:bg-red-50 hover:ring-red-300'
+                        : 'bg-brand-dark text-white shadow-lg shadow-brand/25 hover:bg-brand-mid'}`}>
+                    <Icon name="cart" className={`size-4 ${inCart ? '' : 'text-emerald-300'}`} />
+                    {inCart ? 'Remove from cart' : 'Add to cart'}
+                </button>
                 <div className="mt-3 grid grid-cols-2 gap-3">
                     <a href={tel} className="flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold text-brand ring-1 ring-slate-200 transition hover:bg-slate-50 hover:ring-brand-light/40">
                         <Icon name="phone" className="size-4" />Call
