@@ -52,10 +52,8 @@ export default function AddTestForm() {
         }
     })
 
-    const addTest = (data) => addTestMutation.mutate(data)
-
     return (
-        <form noValidate onSubmit={handleSubmit(addTest)} className="p-6 lg:p-8">
+        <form noValidate onSubmit={handleSubmit(addTestMutation.mutate)} className="p-6 lg:p-8">
             {/* Header */}
             <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                 <div>

@@ -37,7 +37,7 @@ const highlights = [
   'Transparent rates with no hidden charges.',
 ]
 
-const input ='peer w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 short:py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-light focus:bg-white focus:ring-4 focus:ring-brand-light/15 aria-invalid:border-red-400 aria-invalid:bg-red-50/40 aria-invalid:focus:ring-red-500/15'
+const input = 'peer w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 short:py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-light focus:bg-white focus:ring-4 focus:ring-brand-light/15 aria-invalid:border-red-400 aria-invalid:bg-red-50/40 aria-invalid:focus:ring-red-500/15'
 
 const fieldIcon = 'pointer-events-none absolute left-4 top-1/2 size-4.5 -translate-y-1/2 text-slate-400 transition peer-focus:text-brand'
 
@@ -56,10 +56,8 @@ export default function LoginForm() {
   const [notice, setNotice] = useState('')
   const [showPassword, setShowPassword] = useState(false)
 
-  // /login and /signup render this same form; the URL decides which view shows
   const isSignup = location.pathname === '/signup'
 
-  // history idx 0 means this page was opened directly (no in-app history), so go home instead
   const goBack = () => window.history.state?.idx > 0 ? navigate(-1) : navigate('/')
 
   const {
@@ -72,8 +70,6 @@ export default function LoginForm() {
     mode: 'onBlur'
   })
 
-  // Swap between the log in and sign up forms, starting each one clean.
-  // `replace` keeps Back pointing at the page the user came from, not the other form.
   const switchMode = () => {
     navigate(isSignup ? '/login' : '/signup', { replace: true })
     setError('')
@@ -82,19 +78,20 @@ export default function LoginForm() {
     reset()
   }
 
-  const submitSignup = async ({ email }) => {
+  const submitSignup = async ({email}) => {
     setError('')
     setNotice('')
 
-    try {
-      // Passwordless: the server emails a sign-in link to this address
-      await api.post("/signup", { email })
-      setNotice(`We've sent a sign-in link to ${email}. Check your inbox to finish creating your account.`)
-      reset()
-    }
-    catch (err) {
-      setError(err.message)
-    }
+    console.log(email)
+
+    // try {
+    //   await api.post("/signup", { email })
+    //   setNotice(`We've sent a sign-in link to ${email}. Check your inbox to finish creating your account.`)
+    //   reset()
+    // }
+    // catch (err) {
+    //   setError(err.message)
+    // }
   }
 
   const submitLogin = async (data) => {

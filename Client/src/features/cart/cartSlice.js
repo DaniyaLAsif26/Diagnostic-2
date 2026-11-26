@@ -1,5 +1,4 @@
-import { createSlice, createSelector } from '@reduxjs/toolkit'
-import { finalPrice } from '../../utils/price'
+import { createSlice } from '@reduxjs/toolkit'
 
 const cartSlice = createSlice({
     name: "cart",
